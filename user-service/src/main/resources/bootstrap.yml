@@ -1,0 +1,6 @@
+server:
+  port: 8181
+  contextPath: /uaa
+spring:
+  application:
+    name: user-service

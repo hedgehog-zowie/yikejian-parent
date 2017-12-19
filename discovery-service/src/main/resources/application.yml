@@ -1,0 +1,10 @@
+spring:
+  profiles:
+    active: development
+---
+spring:
+  profiles: development
+eureka:
+  client:
+    register-with-eureka: false
+    fetch-registry: false

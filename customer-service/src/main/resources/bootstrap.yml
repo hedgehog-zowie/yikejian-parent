@@ -1,0 +1,6 @@
+server:
+  port: 8282
+  contextPath: /customer
+spring:
+  application:
+    name: customer-service
