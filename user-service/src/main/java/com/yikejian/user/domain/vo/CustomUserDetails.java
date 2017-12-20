@@ -1,7 +1,7 @@
-package com.yikejian.user.secure;
+package com.yikejian.user.domain.vo;
 
-import com.yikejian.user.entity.Role;
-import com.yikejian.user.entity.User;
+import com.yikejian.user.domain.entity.Role;
+import com.yikejian.user.domain.entity.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

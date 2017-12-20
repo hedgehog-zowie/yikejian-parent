@@ -1,4 +1,4 @@
-package com.yikejian.user.secure;
+package com.yikejian.user.config;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
@@ -15,9 +14,6 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Aut
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
-import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFactory;
-
-import java.security.KeyPair;
 
 /**
  * <code>OAuth2Config</code>.
@@ -61,8 +57,8 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     }
 
     /**
-     * Defines the security constraints on the token endpoints /oauth/token_key and /oauth/check_token
-     * Client credentials are required to access the endpoints
+     * 定义token端点/oauth/token_key和/oauth/check_token的安全约束
+     * 客户端认证需要访问token端点
      *
      * @param oauthServer
      * @throws Exception
@@ -75,7 +71,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     }
 
     /**
-     * Defines the authorization and token endpoints and the token services
+     * 定义授权管理器、token端口和token服务
      *
      * @param endpoints
      * @throws Exception
@@ -102,7 +98,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
                 .withClient("confidential").secret("secret")
                 .authorizedGrantTypes("client_credentials", "authorization_code", "refresh_token")
                 .scopes("read", "write")
-                .redirectUris("http://localhost:8080/client")
+                .redirectUris("http://localhost:8080/client/")
 
                 .and()
 
@@ -110,7 +106,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
                 .withClient("public") // No secret!
                 .authorizedGrantTypes("implicit")
                 .scopes("read")
-                .redirectUris("http://localhost:8080/client")
+                .redirectUris("http://localhost:8080/client/")
 
                 .and()
 
@@ -119,7 +115,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
                 .authorities("ROLE_TRUSTED_CLIENT")
                 .authorizedGrantTypes("client_credentials", "password", "authorization_code", "refresh_token")
                 .scopes("read", "write")
-                .redirectUris("http://localhost:8080/client")
+                .redirectUris("http://localhost:8080/client/")
         ;
     }
 

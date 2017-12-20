@@ -1,4 +1,4 @@
-package com.yikejian.user.entity;
+package com.yikejian.user.domain.entity;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

@@ -18,15 +18,18 @@
         <module>hystrix-dashboard</module>
         <module>user-service</module>
         <module>customer-service</module>
+        <module>test-client</module>
+        <module>test-authserver</module>
+        <module>test-resource</module>
+        <module>test</module>
     </modules>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
-        <spring-boot.version>1.5.9.RELEASE</spring-boot.version>
-        <!--<spring-boot.version>1.4.0.RELEASE</spring-boot.version>-->
-        <spring-cloud.version>Edgware.RELEASE</spring-cloud.version>
+        <spring-boot.version>1.4.5.RELEASE</spring-boot.version>
+        <spring-cloud.version>Camden.SR7</spring-cloud.version>
     </properties>
 
     <dependencyManagement>
@@ -49,10 +52,10 @@
     </dependencyManagement>
 
     <dependencies>
-        <!--<dependency>-->
-            <!--<groupId>org.springframework.boot</groupId>-->
-            <!--<artifactId>spring-boot-starter-actuator</artifactId>-->
-        <!--</dependency>-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

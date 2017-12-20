@@ -1,7 +1,8 @@
-package com.yikejian.user.secure;
+package com.yikejian.user.config;
 
-import com.yikejian.user.entity.Role;
-import com.yikejian.user.entity.User;
+import com.yikejian.user.domain.vo.CustomUserDetails;
+import com.yikejian.user.domain.entity.Role;
+import com.yikejian.user.domain.entity.User;
 import com.yikejian.user.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,25 +49,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     @Autowired // <-- This is crucial otherwise Spring Boot creates its own
     protected void configure(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
-//        if (userRepository.count() == 0) {
-//            LOGGER.info("Defining (3 users)");
-//            userRepository.save(new User("user", "password", Arrays.asList(new Role("USER"))));
-//            userRepository.save(new User("admin", "admin", Arrays.asList(new Role("ADMIN"))));
-//            userRepository.save(new User("employee", "password", Arrays.asList(new Role("EMPLOYEE"))));
-//            userRepository.save(new User("manager", "password", Arrays.asList(new Role("EMPLOYEE"), new Role("MANAGER"))));
-//        }
-//        authenticationManagerBuilder.userDetailsService(userDetailsService(userRepository));
-        authenticationManagerBuilder
-                .inMemoryAuthentication()
-
-                .withUser("user").password("password")
-                .roles("USER")
-
-                .and()
-
-                .withUser("admin").password("password")
-                .roles("USER", "ADMIN")
-        ;
+        if (userRepository.count() == 0) {
+            LOGGER.info("Defining (3 users)");
+            userRepository.save(new User("user", "password", Arrays.asList(new Role("USER"))));
+            userRepository.save(new User("admin", "admin", Arrays.asList(new Role("ADMIN"))));
+            userRepository.save(new User("employee", "password", Arrays.asList(new Role("EMPLOYEE"))));
+            userRepository.save(new User("manager", "password", Arrays.asList(new Role("EMPLOYEE"), new Role("MANAGER"))));
+        }
+        authenticationManagerBuilder.userDetailsService(userDetailsService(userRepository));
     }
 
     @Bean

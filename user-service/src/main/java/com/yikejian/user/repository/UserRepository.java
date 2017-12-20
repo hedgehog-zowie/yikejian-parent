@@ -1,6 +1,6 @@
 package com.yikejian.user.repository;
 
-import com.yikejian.user.entity.User;
+import com.yikejian.user.domain.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
