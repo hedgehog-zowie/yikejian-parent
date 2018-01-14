@@ -18,9 +18,6 @@
         <module>hystrix-dashboard</module>
         <module>user-service</module>
         <module>customer-service</module>
-        <module>test-client</module>
-        <module>test-authserver</module>
-        <module>test-resource</module>
         <module>test</module>
     </modules>
 

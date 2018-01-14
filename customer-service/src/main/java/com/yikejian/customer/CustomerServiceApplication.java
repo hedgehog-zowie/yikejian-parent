@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
  * @author zweig
  */
 @SpringBootApplication
-@EnableEurekaClient
-@EnableHystrix
+//@EnableEurekaClient
+//@EnableHystrix
 @EnableResourceServer
 public class CustomerServiceApplication {
 

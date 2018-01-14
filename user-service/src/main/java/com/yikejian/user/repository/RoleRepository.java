@@ -1,9 +1,8 @@
 package com.yikejian.user.repository;
 
-import com.yikejian.user.domain.user.User;
+import com.yikejian.user.domain.role.Role;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.PagingAndSortingRepository;
-import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
 /**
@@ -15,8 +14,8 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
  * date: 2017/12/19 16:50
  */
 @RepositoryRestResource
-public interface UserRepository extends PagingAndSortingRepository<User, Long>, JpaSpecificationExecutor<User> {
+public interface RoleRepository extends PagingAndSortingRepository<Role, Long>, JpaSpecificationExecutor<Role> {
 
-    User findByUserName(String userName);
+    Role findByRoleId(Long roleId);
 
 }

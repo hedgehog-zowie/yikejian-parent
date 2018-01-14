@@ -98,25 +98,27 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
                 .withClient("confidential").secret("secret")
                 .authorizedGrantTypes("client_credentials", "authorization_code", "refresh_token")
                 .scopes("read", "write")
-                .redirectUris("http://localhost:8080/client/")
+                .redirectUris("http://localhost:8000")
 
                 .and()
 
                 // Public client where client secret is vulnerable (e.g. mobile apps, browsers)
                 .withClient("public") // No secret!
+                .authorities("ROLE_PUBLIC")
+                .autoApprove(true)
                 .authorizedGrantTypes("implicit")
                 .scopes("read")
-                .redirectUris("http://localhost:8080/client/")
+                .redirectUris("http://localhost:8000")
 
                 .and()
 
                 // Trusted client: similar to confidential client but also allowed to handle user password
                 .withClient("trusted").secret("secret")
                 .authorities("ROLE_TRUSTED_CLIENT")
+                .autoApprove(true)
                 .authorizedGrantTypes("client_credentials", "password", "authorization_code", "refresh_token")
                 .scopes("read", "write")
-                .redirectUris("http://localhost:8080/client/")
-        ;
+                .redirectUris("http://localhost:8000");
     }
 
 }
