@@ -68,6 +68,7 @@ public class UserServiceTest {
         assertEquals(8, userService.getAll().getUserList().size());
 
         // update
+        user3.setUserId(8L);
         user3.setRoleId(4L);
         userService.saveUser(user3);
         assertEquals(4, userService.getUserById(8L).getRoleId().intValue());
@@ -82,8 +83,11 @@ public class UserServiceTest {
         assertEquals(11, userService.getAll().getUserList().size());
 
         // batch update
+        user4.setUserId(9L);
         user4.setRoleId(1L);
+        user5.setUserId(10L);
         user5.setRoleId(1L);
+        user6.setUserId(11L);
         user6.setRoleId(1L);
         userService.saveUsers(Arrays.asList(user4, user5, user6));
         assertEquals(1, userService.getUserById(9L).getRoleId().intValue());

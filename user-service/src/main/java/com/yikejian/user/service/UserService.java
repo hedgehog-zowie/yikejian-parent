@@ -83,6 +83,7 @@ public class UserService {
             Role role = roleRepository.findByRoleId(userDto.getRoleId());
             user.setRole(role);
             user.fromUserDto(userDto);
+            userList.add(user);
         }
         return (List<User>) userRepository.save(userList);
     }
