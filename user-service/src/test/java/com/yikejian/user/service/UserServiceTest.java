@@ -151,6 +151,25 @@ public class UserServiceTest {
         assertEquals(2, responseUserDto.getPagination().getCurrentPage().intValue());
         assertEquals(3, responseUserDto.getPagination().getPageSize().intValue());
         assertEquals(3, responseUserDto.getUserList().size());
+
+        userDto.setUserName("user");
+        userDto.setRoleId(1L);
+        requestUserDto.setPagination(new Pagination(1, 3));
+        responseUserDto = userService.getUsers(requestUserDto);
+        assertEquals(2, responseUserDto.getPagination().getTotalPages().intValue());
+        assertEquals(4, responseUserDto.getPagination().getTotalSize().intValue());
+        assertEquals(1, responseUserDto.getPagination().getCurrentPage().intValue());
+        assertEquals(3, responseUserDto.getPagination().getPageSize().intValue());
+        assertEquals(1, responseUserDto.getUserList().size());
+
+        userDto.setRoleId(5L);
+        requestUserDto.setPagination(new Pagination(1, 4));
+        responseUserDto = userService.getUsers(requestUserDto);
+        assertEquals(2, responseUserDto.getPagination().getTotalPages().intValue());
+        assertEquals(5, responseUserDto.getPagination().getTotalSize().intValue());
+        assertEquals(1, responseUserDto.getPagination().getCurrentPage().intValue());
+        assertEquals(4, responseUserDto.getPagination().getPageSize().intValue());
+        assertEquals(1, responseUserDto.getUserList().size());
     }
 
 }

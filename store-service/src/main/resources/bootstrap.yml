@@ -1,0 +1,8 @@
+server:
+  port: 8003
+  contextPath: /store
+spring:
+  application:
+    name: store-service
+  profiles:
+    active: development

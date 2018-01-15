@@ -12,82 +12,82 @@ import java.util.List;
  */
 public enum Authority {
 
-    ROLE_QUERY,
-    ROLE_EDIT,
-    USER_QUERY,
-    USER_EDIT,
-    LOG_QUERY,
-    CUSTOMER_QUERY,
-    CUSTOMER_EDIT,
-    ORDER_QUERY,
-    ORDER_EDIT,
-    STORE_QUERY,
-    STORE_EDIT,
-    PRODUCT_QUERY,
-    PRODUCT_EDIT,
-    DEVICE_QUERY,
-    DEVICE_EDIT,
-    BOOK_QUERY,
-    BOOK_EDIT,;
+    ROLE_READ,
+    ROLE_WRITE,
+    USER_READ,
+    USER_WRITE,
+    LOG_READ,
+    CUSTOMER_READ,
+    CUSTOMER_WRITE,
+    ORDER_READ,
+    ORDER_WRITE,
+    STORE_READ,
+    STORE_WRITE,
+    PRODUCT_READ,
+    PRODUCT_WRITE,
+    DEVICE_READ,
+    DEVICE_WRITE,
+    BOOK_READ,
+    BOOK_WRITE,;
 
     private static final String SPLITTER = ",";
 
     public static String getAdminAuthority() {
         StringBuilder sbd = new StringBuilder();
-        sbd.append(ROLE_QUERY.name()).append(SPLITTER);
-        sbd.append(ROLE_EDIT.name()).append(SPLITTER);
-        sbd.append(USER_QUERY.name()).append(SPLITTER);
-        sbd.append(USER_EDIT.name()).append(SPLITTER);
-        sbd.append(LOG_QUERY.name()).append(SPLITTER);
-        sbd.append(CUSTOMER_QUERY.name()).append(SPLITTER);
-        sbd.append(CUSTOMER_EDIT.name()).append(SPLITTER);
-        sbd.append(ORDER_QUERY.name()).append(SPLITTER);
-        sbd.append(ORDER_EDIT.name()).append(SPLITTER);
-        sbd.append(STORE_QUERY.name()).append(SPLITTER);
-        sbd.append(STORE_EDIT.name()).append(SPLITTER);
-        sbd.append(PRODUCT_QUERY.name()).append(SPLITTER);
-        sbd.append(PRODUCT_EDIT.name()).append(SPLITTER);
-        sbd.append(DEVICE_QUERY.name()).append(SPLITTER);
-        sbd.append(DEVICE_EDIT.name()).append(SPLITTER);
-        sbd.append(BOOK_QUERY.name()).append(SPLITTER);
-        sbd.append(BOOK_EDIT.name());
+        sbd.append(ROLE_READ.name()).append(SPLITTER);
+        sbd.append(ROLE_WRITE.name()).append(SPLITTER);
+        sbd.append(USER_READ.name()).append(SPLITTER);
+        sbd.append(USER_WRITE.name()).append(SPLITTER);
+        sbd.append(LOG_READ.name()).append(SPLITTER);
+        sbd.append(CUSTOMER_READ.name()).append(SPLITTER);
+        sbd.append(CUSTOMER_WRITE.name()).append(SPLITTER);
+        sbd.append(ORDER_READ.name()).append(SPLITTER);
+        sbd.append(ORDER_WRITE.name()).append(SPLITTER);
+        sbd.append(STORE_READ.name()).append(SPLITTER);
+        sbd.append(STORE_WRITE.name()).append(SPLITTER);
+        sbd.append(PRODUCT_READ.name()).append(SPLITTER);
+        sbd.append(PRODUCT_WRITE.name()).append(SPLITTER);
+        sbd.append(DEVICE_READ.name()).append(SPLITTER);
+        sbd.append(DEVICE_WRITE.name()).append(SPLITTER);
+        sbd.append(BOOK_READ.name()).append(SPLITTER);
+        sbd.append(BOOK_WRITE.name());
         return sbd.toString();
     }
 
     public static String getSystemAuthority() {
         StringBuilder sbd = new StringBuilder();
-        sbd.append(ROLE_QUERY.name()).append(SPLITTER);
-        sbd.append(ROLE_EDIT.name()).append(SPLITTER);
-        sbd.append(USER_QUERY.name()).append(SPLITTER);
-        sbd.append(USER_EDIT.name()).append(SPLITTER);
-        sbd.append(LOG_QUERY.name());
+        sbd.append(ROLE_READ.name()).append(SPLITTER);
+        sbd.append(ROLE_WRITE.name()).append(SPLITTER);
+        sbd.append(USER_READ.name()).append(SPLITTER);
+        sbd.append(USER_WRITE.name()).append(SPLITTER);
+        sbd.append(LOG_READ.name());
         return sbd.toString();
     }
 
     public static String getInfoAuthority() {
         StringBuilder sbd = new StringBuilder();
-        sbd.append(STORE_QUERY.name()).append(SPLITTER);
-        sbd.append(STORE_EDIT.name()).append(SPLITTER);
-        sbd.append(PRODUCT_QUERY.name()).append(SPLITTER);
-        sbd.append(PRODUCT_EDIT.name()).append(SPLITTER);
-        sbd.append(DEVICE_QUERY.name()).append(SPLITTER);
-        sbd.append(DEVICE_EDIT.name()).append(SPLITTER);
-        sbd.append(BOOK_QUERY.name()).append(SPLITTER);
-        sbd.append(BOOK_EDIT.name()).append(SPLITTER);
+        sbd.append(STORE_READ.name()).append(SPLITTER);
+        sbd.append(STORE_WRITE.name()).append(SPLITTER);
+        sbd.append(PRODUCT_READ.name()).append(SPLITTER);
+        sbd.append(PRODUCT_WRITE.name()).append(SPLITTER);
+        sbd.append(DEVICE_READ.name()).append(SPLITTER);
+        sbd.append(DEVICE_WRITE.name()).append(SPLITTER);
+        sbd.append(BOOK_READ.name()).append(SPLITTER);
+        sbd.append(BOOK_WRITE.name()).append(SPLITTER);
         return sbd.toString();
     }
 
     public static String getCustomerAuthority() {
         StringBuilder sbd = new StringBuilder();
-        sbd.append(CUSTOMER_QUERY.name()).append(SPLITTER);
-        sbd.append(CUSTOMER_EDIT.name()).append(SPLITTER);
+        sbd.append(CUSTOMER_READ.name()).append(SPLITTER);
+        sbd.append(CUSTOMER_WRITE.name()).append(SPLITTER);
         return sbd.toString();
     }
 
     public static String getOrderAuthority() {
         StringBuilder sbd = new StringBuilder();
-        sbd.append(ORDER_QUERY.name()).append(SPLITTER);
-        sbd.append(ORDER_EDIT.name()).append(SPLITTER);
+        sbd.append(ORDER_READ.name()).append(SPLITTER);
+        sbd.append(ORDER_WRITE.name()).append(SPLITTER);
         return sbd.toString();
     }
 

@@ -8,6 +8,7 @@ import org.apache.commons.lang.StringUtils;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.Objects;
 
 /**
  * <code>User</code>.
@@ -39,6 +40,45 @@ public class User extends BaseEntity {
         this.role = role;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return Objects.equals(userId, user.userId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(userId);
+    }
+
+    public void fromUserDto(UserDto userDto){
+        if (StringUtils.isNotBlank(userDto.getUserName())) {
+            setUserName(userDto.getUserName());
+        }
+        if (userDto.getEffective() != null) {
+            setEffective(userDto.getEffective());
+        }
+        if (userDto.getDeleted() != null) {
+            setDeleted(userDto.getDeleted());
+        }
+    }
+
+    public UserDto toUserDto(){
+        UserDto userDto = new UserDto();
+        userDto.setUserId(getUserId());
+        userDto.setUserName(getUserName());
+        userDto.setRoleId(getRole().getRoleId());
+        userDto.setRoleName(getRole().getRoleName());
+        userDto.setEffective(getEffective());
+        userDto.setDeleted(getDeleted());
+        userDto.setLastModifiedBy(getLastModifiedBy());
+        userDto.setLastModifiedAt(getLastModifiedAt() == null ? null : new Date(getLastModifiedAt()));
+        return userDto;
+    }
+
+
     public Long getUserId() {
         return userId;
     }
@@ -69,31 +109,6 @@ public class User extends BaseEntity {
 
     public void setRole(Role role) {
         this.role = role;
-    }
-
-    public void fromUserDto(UserDto userDto){
-        if (StringUtils.isNotBlank(userDto.getUserName())) {
-            setUserName(userDto.getUserName());
-        }
-        if (userDto.getEffective() != null) {
-            setEffective(userDto.getEffective());
-        }
-        if (userDto.getDeleted() != null) {
-            setDeleted(userDto.getDeleted());
-        }
-    }
-
-    public UserDto toUserDto(){
-        UserDto userDto = new UserDto();
-        userDto.setUserId(getUserId());
-        userDto.setUserName(getUserName());
-        userDto.setRoleId(getRole().getRoleId());
-        userDto.setRoleName(getRole().getRoleName());
-        userDto.setEffective(getEffective());
-        userDto.setDeleted(getDeleted());
-        userDto.setLastModifiedBy(getLastModifiedBy());
-        userDto.setLastModifiedAt(getLastModifiedAt() == null ? null : new Date(getLastModifiedAt()));
-        return userDto;
     }
 
 }

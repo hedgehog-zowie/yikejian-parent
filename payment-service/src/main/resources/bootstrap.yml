@@ -1,0 +1,8 @@
+server:
+  port: 8007
+  contextPath: /payment
+spring:
+  application:
+    name: payment-service
+  profiles:
+    active: development

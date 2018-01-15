@@ -18,7 +18,14 @@
         <module>hystrix-dashboard</module>
         <module>user-service</module>
         <module>customer-service</module>
-        <module>test</module>
+        <module>store-service</module>
+        <module>product-service</module>
+        <module>inventory-service</module>
+        <module>order-service</module>
+        <module>payment-service</module>
+        <module>gift-service</module>
+        <module>coupon-service</module>
+        <module>data-service</module>
     </modules>
 
     <properties>

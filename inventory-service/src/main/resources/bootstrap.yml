@@ -1,0 +1,8 @@
+server:
+  port: 8005
+  contextPath: /inventory
+spring:
+  application:
+    name: inventory-service
+  profiles:
+    active: development

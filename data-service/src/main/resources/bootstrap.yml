@@ -1,0 +1,8 @@
+server:
+  port: 8010
+  contextPath: /data
+spring:
+  application:
+    name: data-service
+  profiles:
+    active: development

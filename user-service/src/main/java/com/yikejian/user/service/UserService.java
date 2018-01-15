@@ -145,7 +145,7 @@ public class UserService {
                     predicateList.add(cb.like(root.get("userName").as(String.class), "%" + userDto.getUserName() + "%"));
                 }
                 if (userDto.getRoleId() != null) {
-                    Join<User, Role> roleJoin = root.join(root.getModel().getSingularAttribute("roleId", Role.class), JoinType.LEFT);
+                    Join<User, Role> roleJoin = root.join(root.getModel().getSingularAttribute("role", Role.class), JoinType.LEFT);
                     predicateList.add(cb.equal(roleJoin.get("roleId").as(Long.class), userDto.getRoleId()));
                 }
             }
