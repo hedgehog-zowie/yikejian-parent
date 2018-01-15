@@ -1,23 +1,23 @@
-package com.yikejian.user.domain.request;
+package com.yikejian.user.api.v1.dto;
 
 /**
  * @author jackalope
  * @Title: QueryUser
- * @Package com.yikejian.user.domain.request
+ * @Package com.yikejian.user.request
  * @Description: TODO
  * @date 2018/1/14 21:50
  */
-public class QueryUser {
+public class RequestUserDto {
 
-    private RequestUser user;
+    private UserDto user;
     private Pagination pagination;
     private Sort sort;
 
-    public RequestUser getUser() {
+    public UserDto getUser() {
         return user;
     }
 
-    public void setUser(RequestUser user) {
+    public void setUser(UserDto user) {
         this.user = user;
     }
 

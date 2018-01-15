@@ -1,10 +1,13 @@
 package com.yikejian.user.domain.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.yikejian.user.api.v1.dto.UserDto;
 import com.yikejian.user.domain.BaseEntity;
 import com.yikejian.user.domain.role.Role;
+import org.apache.commons.lang.StringUtils;
 
 import javax.persistence.*;
+import java.util.Date;
 
 /**
  * <code>User</code>.
@@ -66,6 +69,31 @@ public class User extends BaseEntity {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    public void fromUserDto(UserDto userDto){
+        if (StringUtils.isNotBlank(userDto.getUserName())) {
+            setUserName(userDto.getUserName());
+        }
+        if (userDto.getEffective() != null) {
+            setEffective(userDto.getEffective());
+        }
+        if (userDto.getDeleted() != null) {
+            setDeleted(userDto.getDeleted());
+        }
+    }
+
+    public UserDto toUserDto(){
+        UserDto userDto = new UserDto();
+        userDto.setUserId(getUserId());
+        userDto.setUserName(getUserName());
+        userDto.setRoleId(getRole().getRoleId());
+        userDto.setRoleName(getRole().getRoleName());
+        userDto.setEffective(getEffective());
+        userDto.setDeleted(getDeleted());
+        userDto.setLastModifiedBy(getLastModifiedBy());
+        userDto.setLastModifiedAt(getLastModifiedAt() == null ? null : new Date(getLastModifiedAt()));
+        return userDto;
     }
 
 }

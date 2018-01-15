@@ -1,5 +1,8 @@
 package com.yikejian.user.domain.role;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * @author jackalope
  * @Title: Authority
@@ -88,8 +91,8 @@ public enum Authority {
         return sbd.toString();
     }
 
-    public static String[] transToArray(String authorities){
-        return authorities.split(SPLITTER);
+    public static List<String> transToArray(String authorities){
+        return Arrays.asList(authorities.split(SPLITTER));
     }
 
 }

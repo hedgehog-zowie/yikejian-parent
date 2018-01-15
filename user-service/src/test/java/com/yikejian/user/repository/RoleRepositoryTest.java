@@ -20,10 +20,9 @@ import static org.junit.Assert.assertEquals;
  * @Description: TODO
  * @date 2018/1/14 22:21
  */
-//@RunWith(SpringRunner.class)
-//@DataJpaTest
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = UserServiceApplication.class)
+//@DataJpaTest
 public class RoleRepositoryTest {
 
     @Autowired

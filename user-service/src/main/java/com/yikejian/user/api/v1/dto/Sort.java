@@ -1,18 +1,18 @@
-package com.yikejian.user.domain.request;
+package com.yikejian.user.api.v1.dto;
 
 import org.springframework.data.domain.Sort.Direction;
 
 /**
  * @author jackalope
  * @Title: Sort
- * @Package com.yikejian.user.domain.request
+ * @Package com.yikejian.user.request
  * @Description: TODO
  * @date 2018/1/14 18:22
  */
 public class Sort {
 
     private String field;
-    private Direction direction;
+    private String direction;
 
     public String getField() {
         return field;
@@ -22,11 +22,11 @@ public class Sort {
         this.field = field;
     }
 
-    public Direction getDirection() {
+    public String getDirection() {
         return direction;
     }
 
-    public void setDirection(Direction direction) {
+    public void setDirection(String direction) {
         this.direction = direction;
     }
 

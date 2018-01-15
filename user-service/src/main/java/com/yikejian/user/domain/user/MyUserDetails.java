@@ -1,15 +1,14 @@
 package com.yikejian.user.domain.user;
 
+import com.google.common.collect.Lists;
 import com.yikejian.user.domain.role.Authority;
 import com.yikejian.user.domain.role.Role;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * <code>MyUserDetails</code>.
@@ -33,22 +32,10 @@ public class MyUserDetails implements UserDetails {
     }
 
     private Collection<? extends GrantedAuthority> translate(Role role) {
-        List<GrantedAuthority> authorityList = new ArrayList<>();
-        Arrays.stream(Authority.transToArray(role.getAuthorities())).forEach(
-                authority -> authorityList.add(new SimpleGrantedAuthority(authority.toUpperCase()))
-        );
-
-//        roles.stream().map(
-//                role -> Arrays.stream(Authority.transToArray(role.getAuthorities())).map(
-//                        authority -> authorityList.add(new SimpleGrantedAuthority(authority.toUpperCase()))));
-
-//        for (Role role : roles) {
-//            String authorities = role.getAuthorities();
-//            for (String authority : Authority.transToArray(authorities)) {
-//                authorityList.add(new SimpleGrantedAuthority(authority.toUpperCase()));
-//            }
-//        }
-        return authorityList;
+        return Lists.newArrayList(
+                Authority.transToArray(role.getAuthorities()).stream().
+                        map(authority -> new SimpleGrantedAuthority(authority.toUpperCase())).
+                        collect(Collectors.toList()));
     }
 
     @Override

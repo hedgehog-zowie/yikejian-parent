@@ -1,23 +1,23 @@
-package com.yikejian.user.domain.request;
+package com.yikejian.user.api.v1.dto;
 
 /**
  * @author jackalope
  * @Title: QueryRole
- * @Package com.yikejian.user.domain.request
+ * @Package com.yikejian.user.request
  * @Description: TODO
  * @date 2018/1/14 21:51
  */
-public class QueryRole {
+public class RequestRoleDto {
 
-    private RequestRole role;
+    private RoleDto role;
     private Pagination pagination;
     private Sort sort;
 
-    public RequestRole getRole() {
+    public RoleDto getRole() {
         return role;
     }
 
-    public void setRole(RequestRole role) {
+    public void setRole(RoleDto role) {
         this.role = role;
     }
 

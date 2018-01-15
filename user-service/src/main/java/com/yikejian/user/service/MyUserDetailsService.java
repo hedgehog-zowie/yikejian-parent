@@ -48,11 +48,12 @@ public class MyUserDetailsService implements UserDetailsService {
         Role role4 = new Role("CUSTOMER", Authority.getCustomerAuthority());
         Role role5 = new Role("ORDER", Authority.getOrderAuthority());
         roleRepository.save(Arrays.asList(role1, role2, role3, role4, role5));
-        userRepository.save(new User("admin", "admin", role1));
-        userRepository.save(new User("system", "system", role2));
-        userRepository.save(new User("info", "info", role3));
-        userRepository.save(new User("customer", "customer", role4));
-        userRepository.save(new User("order", "order", role5));
+        User user1 = new User("admin", "admin", role1);
+        User user2 = new User("system", "system", role2);
+        User user3 = new User("info", "info", role3);
+        User user4 = new User("customer", "customer", role4);
+        User user5 = new User("order", "order", role5);
+        userRepository.save(Arrays.asList(user1, user2, user3, user4, user5));
     }
 
     private void addDefaultUsers() {
