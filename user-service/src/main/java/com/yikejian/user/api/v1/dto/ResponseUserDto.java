@@ -15,6 +15,9 @@ public class ResponseUserDto {
     private List<UserDto> userList;
     private Pagination pagination;
 
+    public ResponseUserDto() {
+    }
+
     public ResponseUserDto(List<UserDto> userList) {
         this.userList = userList;
     }

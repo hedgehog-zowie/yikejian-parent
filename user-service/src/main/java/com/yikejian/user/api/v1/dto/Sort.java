@@ -1,7 +1,5 @@
 package com.yikejian.user.api.v1.dto;
 
-import org.springframework.data.domain.Sort.Direction;
-
 /**
  * @author jackalope
  * @Title: Sort

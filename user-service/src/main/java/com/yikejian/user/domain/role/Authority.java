@@ -91,7 +91,7 @@ public enum Authority {
         return sbd.toString();
     }
 
-    public static List<String> transToArray(String authorities){
+    public static List<String> transToArray(String authorities) {
         return Arrays.asList(authorities.split(SPLITTER));
     }
 

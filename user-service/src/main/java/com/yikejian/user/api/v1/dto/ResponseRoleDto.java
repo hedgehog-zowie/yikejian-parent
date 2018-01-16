@@ -15,6 +15,9 @@ public class ResponseRoleDto {
     private List<RoleDto> roleList;
     private Pagination pagination;
 
+    public ResponseRoleDto() {
+    }
+
     public ResponseRoleDto(List<RoleDto> roleList) {
         this.roleList = roleList;
     }

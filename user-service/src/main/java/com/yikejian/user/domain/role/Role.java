@@ -5,8 +5,14 @@ import com.yikejian.user.domain.BaseEntity;
 import com.yikejian.user.domain.user.User;
 import org.apache.commons.lang.StringUtils;
 
-import javax.persistence.*;
-import java.util.*;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import java.util.Date;
+import java.util.Objects;
+import java.util.Set;
 
 /**
  * <code>Role</code>.

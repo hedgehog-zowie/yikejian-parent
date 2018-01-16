@@ -3,7 +3,7 @@ package com.yikejian.user.repository;
 import com.yikejian.user.domain.role.Role;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.PagingAndSortingRepository;
-import org.springframework.data.rest.core.annotation.RepositoryRestResource;
+import org.springframework.stereotype.Repository;
 
 /**
  * <code>UserRepository</code>.
@@ -13,7 +13,7 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
  * @version: 1.0-SNAPSHOT
  * date: 2017/12/19 16:50
  */
-@RepositoryRestResource
+@Repository
 public interface RoleRepository extends PagingAndSortingRepository<Role, Long>, JpaSpecificationExecutor<Role> {
 
     Role findByRoleId(Long roleId);

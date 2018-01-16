@@ -6,7 +6,12 @@ import com.yikejian.user.domain.BaseEntity;
 import com.yikejian.user.domain.role.Role;
 import org.apache.commons.lang.StringUtils;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import java.util.Date;
 import java.util.Objects;
 
@@ -53,7 +58,7 @@ public class User extends BaseEntity {
         return Objects.hash(userId);
     }
 
-    public void fromUserDto(UserDto userDto){
+    public void fromUserDto(UserDto userDto) {
         if (StringUtils.isNotBlank(userDto.getUserName())) {
             setUserName(userDto.getUserName());
         }
@@ -65,7 +70,7 @@ public class User extends BaseEntity {
         }
     }
 
-    public UserDto toUserDto(){
+    public UserDto toUserDto() {
         UserDto userDto = new UserDto();
         userDto.setUserId(getUserId());
         userDto.setUserName(getUserName());

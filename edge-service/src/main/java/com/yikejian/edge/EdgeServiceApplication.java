@@ -9,6 +9,7 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 
 /**
  * 网关服务
+ *
  * @author zweig
  */
 @SpringBootApplication
@@ -18,7 +19,7 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 @EnableHystrix
 public class EdgeServiceApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(EdgeServiceApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(EdgeServiceApplication.class, args);
+    }
 }
