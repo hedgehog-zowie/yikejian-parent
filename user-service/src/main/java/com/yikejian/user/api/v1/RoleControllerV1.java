@@ -8,6 +8,7 @@ import com.yikejian.user.util.JsonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -62,7 +63,7 @@ public class RoleControllerV1 {
                 .orElseThrow(() -> new UserServiceException("Not found role."));
     }
 
-    @RequestMapping(value = "/roles", method = RequestMethod.GET)
+    @GetMapping("/roles")
     public ResponseEntity getRoles(final @RequestParam(value = "params") String params) {
         RequestRoleDto requestRoleDto;
         try {
