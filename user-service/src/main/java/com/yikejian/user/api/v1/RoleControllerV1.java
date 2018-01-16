@@ -8,14 +8,7 @@ import com.yikejian.user.util.JsonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -48,7 +41,8 @@ public class RoleControllerV1 {
     }
 
     @PostMapping("/role")
-    public ResponseEntity addRole(final RoleDto roleDto) {
+    public ResponseEntity addRole(@RequestBody final RoleDto roleDto) {
+        roleDto.setRoleId(null);
         // todo send log
         return Optional.ofNullable(roleService.saveRole(roleDto))
                 .map(a -> new ResponseEntity<>(a, HttpStatus.OK))
@@ -56,7 +50,10 @@ public class RoleControllerV1 {
     }
 
     @PutMapping("/role")
-    public ResponseEntity updateRole(final RoleDto roleDto) {
+    public ResponseEntity updateRole(@RequestBody final RoleDto roleDto) {
+        if (roleDto.getRoleId() == null) {
+            throw new UserServiceException("未知的角色");
+        }
         // todo send log
         return Optional.ofNullable(roleService.saveRole(roleDto))
                 .map(a -> new ResponseEntity<>(a, HttpStatus.OK))
@@ -77,4 +74,11 @@ public class RoleControllerV1 {
                 .orElseThrow(() -> new UserServiceException("Not found any role."));
     }
 
+    @GetMapping("/roles2")
+    public ResponseEntity getRoles(@RequestBody final RequestRoleDto requestRoleDto) {
+        // todo send log
+        return Optional.ofNullable(roleService.getRoles(requestRoleDto))
+                .map(a -> new ResponseEntity<>(a, HttpStatus.OK))
+                .orElseThrow(() -> new UserServiceException("Not found any role."));
+    }
 }

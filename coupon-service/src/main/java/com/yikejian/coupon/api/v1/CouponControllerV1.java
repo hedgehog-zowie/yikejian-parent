@@ -1,7 +1,7 @@
-package com.yikejian.coupon.api.vi;
+package com.yikejian.coupon.api.v1;
 
-import com.yikejian.coupon.api.vi.dto.CouponDto;
-import com.yikejian.coupon.api.vi.dto.RequestCouponDto;
+import com.yikejian.coupon.api.v1.dto.CouponDto;
+import com.yikejian.coupon.api.v1.dto.RequestCouponDto;
 import com.yikejian.coupon.exception.CouponServiceException;
 import com.yikejian.coupon.service.CouponService;
 import org.springframework.beans.factory.annotation.Autowired;

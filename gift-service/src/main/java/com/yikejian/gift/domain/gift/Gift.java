@@ -21,41 +21,26 @@ public class Gift extends BaseEntity {
     @Id
     @GeneratedValue
     private Long giftId;
+    /**
+     * 礼物名称
+     */
     private String giftName;
-    private Integer startTime;
-    private Integer endTime;
-
-    public Long getGiftId() {
-        return giftId;
-    }
-
-    public void setGiftId(Long giftId) {
-        this.giftId = giftId;
-    }
-
-    public String getGiftName() {
-        return giftName;
-    }
-
-    public void setGiftName(String giftName) {
-        this.giftName = giftName;
-    }
-
-    public Integer getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(Integer startTime) {
-        this.startTime = startTime;
-    }
-
-    public Integer getEndTime() {
-        return endTime;
-    }
-
-    public void setEndTime(Integer endTime) {
-        this.endTime = endTime;
-    }
+    /**
+     * 价格
+     */
+    private Double price;
+    /**
+     * LOGO
+     */
+    private byte[] logo;
+    /**
+     * 开始时间戳
+     */
+    private Long startTimeStamp;
+    /**
+     * 结束时间戳
+     */
+    private Long endTimeStamp;
 
     public void fromGiftDto(GiftDto giftDto) {
         if (StringUtils.isNotBlank(giftDto.getGiftName())) {
@@ -79,12 +64,57 @@ public class Gift extends BaseEntity {
         GiftDto giftDto = new GiftDto();
         giftDto.setGiftId(getGiftId());
         giftDto.setGiftName(getGiftName());
-        giftDto.setStartTime(getStartTime());
-        giftDto.setEndTime(getEndTime());
         giftDto.setEffective(getEffective());
         giftDto.setLastModifiedBy(getLastModifiedBy());
         giftDto.setLastModifiedAt(getLastModifiedAt() == null ? null : new Date(getLastModifiedAt()));
         return giftDto;
     }
 
+    public Long getGiftId() {
+        return giftId;
+    }
+
+    public void setGiftId(Long giftId) {
+        this.giftId = giftId;
+    }
+
+    public String getGiftName() {
+        return giftName;
+    }
+
+    public void setGiftName(String giftName) {
+        this.giftName = giftName;
+    }
+
+    public Double getPrice() {
+        return price;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
+    }
+
+    public byte[] getLogo() {
+        return logo;
+    }
+
+    public void setLogo(byte[] logo) {
+        this.logo = logo;
+    }
+
+    public Long getStartTimeStamp() {
+        return startTimeStamp;
+    }
+
+    public void setStartTimeStamp(Long startTimeStamp) {
+        this.startTimeStamp = startTimeStamp;
+    }
+
+    public Long getEndTimeStamp() {
+        return endTimeStamp;
+    }
+
+    public void setEndTimeStamp(Long endTimeStamp) {
+        this.endTimeStamp = endTimeStamp;
+    }
 }

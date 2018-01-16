@@ -21,9 +21,35 @@ public class Payment extends BaseEntity {
     @Id
     @GeneratedValue
     private Long paymentId;
-    private String paymentName;
-    private Integer startTime;
-    private Integer endTime;
+    /**
+     * 客户ID
+     */
+    private Long customerId;
+    /**
+     * 订单ID
+     */
+    private Long orderId;
+    /**
+     * 礼品卡ID
+     */
+    private Long giftId;
+    /**
+     * 合计（金额）
+     */
+    private Double amount;
+    /**
+     * 支付方式
+     */
+    private PaymentType paymentType;
+
+    public void fromPaymentDto(PaymentDto paymentDto) {
+    }
+
+    public PaymentDto toPaymentDto() {
+        PaymentDto paymentDto = new PaymentDto();
+        paymentDto.setPaymentId(getPaymentId());
+        return paymentDto;
+    }
 
     public Long getPaymentId() {
         return paymentId;
@@ -33,58 +59,43 @@ public class Payment extends BaseEntity {
         this.paymentId = paymentId;
     }
 
-    public String getPaymentName() {
-        return paymentName;
+    public Long getCustomerId() {
+        return customerId;
     }
 
-    public void setPaymentName(String paymentName) {
-        this.paymentName = paymentName;
+    public void setCustomerId(Long customerId) {
+        this.customerId = customerId;
     }
 
-    public Integer getStartTime() {
-        return startTime;
+    public Long getOrderId() {
+        return orderId;
     }
 
-    public void setStartTime(Integer startTime) {
-        this.startTime = startTime;
+    public void setOrderId(Long orderId) {
+        this.orderId = orderId;
     }
 
-    public Integer getEndTime() {
-        return endTime;
+    public Long getGiftId() {
+        return giftId;
     }
 
-    public void setEndTime(Integer endTime) {
-        this.endTime = endTime;
+    public void setGiftId(Long giftId) {
+        this.giftId = giftId;
     }
 
-    public void fromPaymentDto(PaymentDto paymentDto) {
-        if (StringUtils.isNotBlank(paymentDto.getPaymentName())) {
-            setPaymentName(paymentDto.getPaymentName());
-        }
-        if (paymentDto.getStartTime() != null) {
-            setDeleted(paymentDto.getDeleted());
-        }
-        if (paymentDto.getEndTime() != null) {
-            setDeleted(paymentDto.getDeleted());
-        }
-        if (paymentDto.getEffective() != null) {
-            setEffective(paymentDto.getEffective());
-        }
-        if (paymentDto.getDeleted() != null) {
-            setDeleted(paymentDto.getDeleted());
-        }
+    public Double getAmount() {
+        return amount;
     }
 
-    public PaymentDto toPaymentDto() {
-        PaymentDto paymentDto = new PaymentDto();
-        paymentDto.setPaymentId(getPaymentId());
-        paymentDto.setPaymentName(getPaymentName());
-        paymentDto.setStartTime(getStartTime());
-        paymentDto.setEndTime(getEndTime());
-        paymentDto.setEffective(getEffective());
-        paymentDto.setLastModifiedBy(getLastModifiedBy());
-        paymentDto.setLastModifiedAt(getLastModifiedAt() == null ? null : new Date(getLastModifiedAt()));
-        return paymentDto;
+    public void setAmount(Double amount) {
+        this.amount = amount;
     }
 
+    public PaymentType getPaymentType() {
+        return paymentType;
+    }
+
+    public void setPaymentType(PaymentType paymentType) {
+        this.paymentType = paymentType;
+    }
 }

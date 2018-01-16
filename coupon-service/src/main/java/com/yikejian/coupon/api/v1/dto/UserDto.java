@@ -1,4 +1,4 @@
-package com.yikejian.coupon.api.vi.dto;
+package com.yikejian.coupon.api.v1.dto;
 
 import java.util.Date;
 

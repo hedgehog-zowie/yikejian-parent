@@ -24,13 +24,6 @@ public class BaseEntity implements Serializable {
     private String createdBy;
     @CreatedDate
     private Long createdAt;
-    @LastModifiedBy
-    private String lastModifiedBy;
-    @LastModifiedDate
-    private Long lastModifiedAt;
-
-    private Integer effective;
-    private Integer deleted;
 
     public String getCreatedBy() {
         return createdBy;
@@ -46,38 +39,6 @@ public class BaseEntity implements Serializable {
 
     public void setCreatedAt(Long createdAt) {
         this.createdAt = createdAt;
-    }
-
-    public String getLastModifiedBy() {
-        return lastModifiedBy;
-    }
-
-    public void setLastModifiedBy(String lastModifiedBy) {
-        this.lastModifiedBy = lastModifiedBy;
-    }
-
-    public Long getLastModifiedAt() {
-        return lastModifiedAt;
-    }
-
-    public void setLastModifiedAt(Long lastModifiedAt) {
-        this.lastModifiedAt = lastModifiedAt;
-    }
-
-    public Integer getEffective() {
-        return effective;
-    }
-
-    public void setEffective(Integer effective) {
-        this.effective = effective;
-    }
-
-    public Integer getDeleted() {
-        return deleted;
-    }
-
-    public void setDeleted(Integer deleted) {
-        this.deleted = deleted;
     }
 
 }
