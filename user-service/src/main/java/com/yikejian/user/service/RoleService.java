@@ -7,7 +7,6 @@ import com.yikejian.user.api.v1.dto.RequestRoleDto;
 import com.yikejian.user.api.v1.dto.ResponseRoleDto;
 import com.yikejian.user.api.v1.dto.RoleDto;
 import com.yikejian.user.domain.role.Role;
-import com.yikejian.user.exception.UserServiceException;
 import com.yikejian.user.repository.RoleRepository;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,9 +43,6 @@ public class RoleService {
         Role role;
         if (roleDto.getRoleId() != null) {
             role = roleRepository.findByRoleId(roleDto.getRoleId());
-            if (role == null) {
-                throw new UserServiceException("未知的角色");
-            }
         } else {
             role = new Role();
         }

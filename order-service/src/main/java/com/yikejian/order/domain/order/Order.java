@@ -2,15 +2,11 @@ package com.yikejian.order.domain.order;
 
 import com.yikejian.order.api.vi.dto.OrderDto;
 import com.yikejian.order.domain.BaseEntity;
-import com.yikejian.order.domain.item.Item;
 import org.apache.commons.lang.StringUtils;
 
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import java.util.Date;
-import java.util.Set;
 
 /**
  * <code>Order</code>.
@@ -25,35 +21,9 @@ public class Order extends BaseEntity {
     @Id
     @GeneratedValue
     private Long orderId;
-    /**
-     * 客户ID
-     */
-    private Long customerId;
-    /**
-     * 店铺ID
-     */
-    private Long storeId;
-    /**
-     * 订单金额
-     */
-    private Double amount;
-    /**
-     * 实付金额
-     */
-    private Double actualAmount;
-    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
-    private Set<Item> itemSet;
-    /**
-     * 附加信息
-     */
-    private OrderExtra orderExtra;
-
-    public void fromOrderDto(OrderDto orderDto) {
-    }
-
-    public OrderDto toOrderDto() {
-        return null;
-    }
+    private String orderName;
+    private Integer startTime;
+    private Integer endTime;
 
     public Long getOrderId() {
         return orderId;
@@ -63,43 +33,58 @@ public class Order extends BaseEntity {
         this.orderId = orderId;
     }
 
-    public Long getCustomerId() {
-        return customerId;
+    public String getOrderName() {
+        return orderName;
     }
 
-    public void setCustomerId(Long customerId) {
-        this.customerId = customerId;
+    public void setOrderName(String orderName) {
+        this.orderName = orderName;
     }
 
-    public Long getStoreId() {
-        return storeId;
+    public Integer getStartTime() {
+        return startTime;
     }
 
-    public void setStoreId(Long storeId) {
-        this.storeId = storeId;
+    public void setStartTime(Integer startTime) {
+        this.startTime = startTime;
     }
 
-    public Double getAmount() {
-        return amount;
+    public Integer getEndTime() {
+        return endTime;
     }
 
-    public void setAmount(Double amount) {
-        this.amount = amount;
+    public void setEndTime(Integer endTime) {
+        this.endTime = endTime;
     }
 
-    public Double getActualAmount() {
-        return actualAmount;
+    public void fromOrderDto(OrderDto orderDto) {
+        if (StringUtils.isNotBlank(orderDto.getOrderName())) {
+            setOrderName(orderDto.getOrderName());
+        }
+        if (orderDto.getStartTime() != null) {
+            setDeleted(orderDto.getDeleted());
+        }
+        if (orderDto.getEndTime() != null) {
+            setDeleted(orderDto.getDeleted());
+        }
+        if (orderDto.getEffective() != null) {
+            setEffective(orderDto.getEffective());
+        }
+        if (orderDto.getDeleted() != null) {
+            setDeleted(orderDto.getDeleted());
+        }
     }
 
-    public void setActualAmount(Double actualAmount) {
-        this.actualAmount = actualAmount;
+    public OrderDto toOrderDto() {
+        OrderDto orderDto = new OrderDto();
+        orderDto.setOrderId(getOrderId());
+        orderDto.setOrderName(getOrderName());
+        orderDto.setStartTime(getStartTime());
+        orderDto.setEndTime(getEndTime());
+        orderDto.setEffective(getEffective());
+        orderDto.setLastModifiedBy(getLastModifiedBy());
+        orderDto.setLastModifiedAt(getLastModifiedAt() == null ? null : new Date(getLastModifiedAt()));
+        return orderDto;
     }
 
-    public Set<Item> getItemSet() {
-        return itemSet;
-    }
-
-    public void setItemSet(Set<Item> itemSet) {
-        this.itemSet = itemSet;
-    }
 }

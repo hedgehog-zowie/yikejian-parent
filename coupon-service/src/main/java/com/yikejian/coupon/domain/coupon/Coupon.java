@@ -1,6 +1,6 @@
 package com.yikejian.coupon.domain.coupon;
 
-import com.yikejian.coupon.api.v1.dto.CouponDto;
+import com.yikejian.coupon.api.vi.dto.CouponDto;
 import com.yikejian.coupon.domain.BaseEntity;
 import org.apache.commons.lang.StringUtils;
 
@@ -22,14 +22,8 @@ public class Coupon extends BaseEntity {
     @GeneratedValue
     private Long couponId;
     private String couponName;
-    /**
-     * 开始时间戳
-     */
-    private Long startTimeStamp;
-    /**
-     * 结束时间戳
-     */
-    private Long endTimeStamp;
+    private Integer startTime;
+    private Integer endTime;
 
     public Long getCouponId() {
         return couponId;
@@ -45,6 +39,22 @@ public class Coupon extends BaseEntity {
 
     public void setCouponName(String couponName) {
         this.couponName = couponName;
+    }
+
+    public Integer getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(Integer startTime) {
+        this.startTime = startTime;
+    }
+
+    public Integer getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(Integer endTime) {
+        this.endTime = endTime;
     }
 
     public void fromCouponDto(CouponDto couponDto) {
@@ -69,6 +79,8 @@ public class Coupon extends BaseEntity {
         CouponDto couponDto = new CouponDto();
         couponDto.setCouponId(getCouponId());
         couponDto.setCouponName(getCouponName());
+        couponDto.setStartTime(getStartTime());
+        couponDto.setEndTime(getEndTime());
         couponDto.setEffective(getEffective());
         couponDto.setLastModifiedBy(getLastModifiedBy());
         couponDto.setLastModifiedAt(getLastModifiedAt() == null ? null : new Date(getLastModifiedAt()));

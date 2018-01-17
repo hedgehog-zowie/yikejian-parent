@@ -1,7 +1,6 @@
 package com.yikejian.user.api.v1.dto;
 
 import java.util.Date;
-import java.util.Objects;
 
 /**
  * @author jackalope
@@ -25,20 +24,6 @@ public class RoleDto {
     public RoleDto(String roleName, String authorities) {
         this.roleName = roleName;
         this.authorities = authorities;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        RoleDto roleDto = (RoleDto) o;
-        return Objects.equals(roleId, roleDto.roleId);
-    }
-
-    @Override
-    public int hashCode() {
-
-        return Objects.hash(roleId);
     }
 
     public Long getRoleId() {
