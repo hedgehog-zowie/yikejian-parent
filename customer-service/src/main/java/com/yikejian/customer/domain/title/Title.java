@@ -2,6 +2,7 @@ package com.yikejian.customer.domain.title;
 
 import com.yikejian.customer.domain.BaseEntity;
 
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
@@ -12,6 +13,7 @@ import javax.persistence.Id;
  * @Description: TODO
  * @date 2018/1/17 1:32
  */
+@Entity
 public class Title extends BaseEntity {
 
     @Id

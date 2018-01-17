@@ -12,7 +12,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
 /**
- * <code>UserWebSecurityConfigurerAdapter</code>.
+ * <code>SecurityConfig</code>.
  * ${DESCRIPTION}
  *
  * @author zweig

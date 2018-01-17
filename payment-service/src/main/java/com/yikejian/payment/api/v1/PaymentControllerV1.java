@@ -1,7 +1,7 @@
-package com.yikejian.payment.api.vi;
+package com.yikejian.payment.api.v1;
 
-import com.yikejian.payment.api.vi.dto.PaymentDto;
-import com.yikejian.payment.api.vi.dto.RequestPaymentDto;
+import com.yikejian.payment.api.v1.dto.PaymentDto;
+import com.yikejian.payment.api.v1.dto.RequestPaymentDto;
 import com.yikejian.payment.exception.PaymentServiceException;
 import com.yikejian.payment.service.PaymentService;
 import org.springframework.beans.factory.annotation.Autowired;

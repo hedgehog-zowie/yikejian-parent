@@ -1,6 +1,6 @@
 package com.yikejian.inventory.domain.inventory;
 
-import com.yikejian.inventory.api.vi.dto.InventoryDto;
+import com.yikejian.inventory.api.v1.dto.InventoryDto;
 import com.yikejian.inventory.domain.BaseEntity;
 import org.apache.commons.lang.StringUtils;
 

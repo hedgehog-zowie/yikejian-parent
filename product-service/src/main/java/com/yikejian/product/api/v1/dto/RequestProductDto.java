@@ -1,4 +1,4 @@
-package com.yikejian.product.api.vi.dto;
+package com.yikejian.product.api.v1.dto;
 
 /**
  * @author jackalope

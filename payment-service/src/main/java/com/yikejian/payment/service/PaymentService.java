@@ -2,10 +2,10 @@ package com.yikejian.payment.service;
 
 import com.google.common.collect.Lists;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
-import com.yikejian.payment.api.vi.dto.Pagination;
-import com.yikejian.payment.api.vi.dto.PaymentDto;
-import com.yikejian.payment.api.vi.dto.RequestPaymentDto;
-import com.yikejian.payment.api.vi.dto.ResponsePaymentDto;
+import com.yikejian.payment.api.v1.dto.Pagination;
+import com.yikejian.payment.api.v1.dto.PaymentDto;
+import com.yikejian.payment.api.v1.dto.RequestPaymentDto;
+import com.yikejian.payment.api.v1.dto.ResponsePaymentDto;
 import com.yikejian.payment.domain.payment.Payment;
 import com.yikejian.payment.repository.PaymentRepository;
 import org.apache.commons.lang.StringUtils;

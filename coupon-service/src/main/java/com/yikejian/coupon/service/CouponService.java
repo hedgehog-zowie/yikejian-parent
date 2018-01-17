@@ -2,10 +2,10 @@ package com.yikejian.coupon.service;
 
 import com.google.common.collect.Lists;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
-import com.yikejian.coupon.api.vi.dto.Pagination;
-import com.yikejian.coupon.api.vi.dto.CouponDto;
-import com.yikejian.coupon.api.vi.dto.RequestCouponDto;
-import com.yikejian.coupon.api.vi.dto.ResponseCouponDto;
+import com.yikejian.coupon.api.v1.dto.CouponDto;
+import com.yikejian.coupon.api.v1.dto.Pagination;
+import com.yikejian.coupon.api.v1.dto.RequestCouponDto;
+import com.yikejian.coupon.api.v1.dto.ResponseCouponDto;
 import com.yikejian.coupon.domain.coupon.Coupon;
 import com.yikejian.coupon.repository.CouponRepository;
 import org.apache.commons.lang.StringUtils;

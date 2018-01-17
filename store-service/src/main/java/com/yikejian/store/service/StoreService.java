@@ -2,10 +2,10 @@ package com.yikejian.store.service;
 
 import com.google.common.collect.Lists;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
-import com.yikejian.store.api.vi.dto.Pagination;
-import com.yikejian.store.api.vi.dto.StoreDto;
-import com.yikejian.store.api.vi.dto.RequestStoreDto;
-import com.yikejian.store.api.vi.dto.ResponseStoreDto;
+import com.yikejian.store.api.v1.dto.Pagination;
+import com.yikejian.store.api.v1.dto.StoreDto;
+import com.yikejian.store.api.v1.dto.RequestStoreDto;
+import com.yikejian.store.api.v1.dto.ResponseStoreDto;
 import com.yikejian.store.domain.store.Store;
 import com.yikejian.store.repository.StoreRepository;
 import org.apache.commons.lang.StringUtils;

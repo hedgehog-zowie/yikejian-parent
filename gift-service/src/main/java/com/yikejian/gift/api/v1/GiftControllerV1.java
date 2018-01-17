@@ -1,7 +1,7 @@
-package com.yikejian.gift.api.vi;
+package com.yikejian.gift.api.v1;
 
-import com.yikejian.gift.api.vi.dto.GiftDto;
-import com.yikejian.gift.api.vi.dto.RequestGiftDto;
+import com.yikejian.gift.api.v1.dto.GiftDto;
+import com.yikejian.gift.api.v1.dto.RequestGiftDto;
 import com.yikejian.gift.exception.GiftServiceException;
 import com.yikejian.gift.service.GiftService;
 import org.springframework.beans.factory.annotation.Autowired;

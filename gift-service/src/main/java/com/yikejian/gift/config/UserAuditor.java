@@ -1,6 +1,6 @@
 package com.yikejian.gift.config;
 
-import com.yikejian.gift.api.vi.dto.UserDto;
+import com.yikejian.gift.api.v1.dto.UserDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;

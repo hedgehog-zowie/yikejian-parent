@@ -1,6 +1,6 @@
 package com.yikejian.data.config;
 
-import com.yikejian.data.api.vi.dto.UserDto;
+import com.yikejian.data.api.v1.dto.UserDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;

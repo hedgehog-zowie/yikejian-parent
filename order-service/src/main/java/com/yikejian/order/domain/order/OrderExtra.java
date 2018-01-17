@@ -16,10 +16,6 @@ public class OrderExtra {
     @GeneratedValue
     private Long extraId;
     /**
-     * 订单编号
-     */
-    private Long orderId;
-    /**
      * 饮料
      */
     private String drink;
@@ -34,14 +30,6 @@ public class OrderExtra {
 
     public void setExtraId(Long extraId) {
         this.extraId = extraId;
-    }
-
-    public Long getOrderId() {
-        return orderId;
-    }
-
-    public void setOrderId(Long orderId) {
-        this.orderId = orderId;
     }
 
     public String getDrink() {

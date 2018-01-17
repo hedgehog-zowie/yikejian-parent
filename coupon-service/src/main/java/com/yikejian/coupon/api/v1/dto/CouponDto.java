@@ -14,8 +14,12 @@ public class CouponDto {
 
     private Long couponId;
     private String couponName;
-    private Integer startTime;
-    private Integer endTime;
+    private String couponType;
+    private Integer number;
+    private Integer surplus;
+    private Double money;
+    private Date startTime;
+    private Date endTime;
     private Integer effective;
     private Integer deleted;
     private String lastModifiedBy;
@@ -37,19 +41,51 @@ public class CouponDto {
         this.couponName = couponName;
     }
 
-    public Integer getStartTime() {
+    public String getCouponType() {
+        return couponType;
+    }
+
+    public void setCouponType(String couponType) {
+        this.couponType = couponType;
+    }
+
+    public Integer getNumber() {
+        return number;
+    }
+
+    public void setNumber(Integer number) {
+        this.number = number;
+    }
+
+    public Integer getSurplus() {
+        return surplus;
+    }
+
+    public void setSurplus(Integer surplus) {
+        this.surplus = surplus;
+    }
+
+    public Double getMoney() {
+        return money;
+    }
+
+    public void setMoney(Double money) {
+        this.money = money;
+    }
+
+    public Date getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(Integer startTime) {
+    public void setStartTime(Date startTime) {
         this.startTime = startTime;
     }
 
-    public Integer getEndTime() {
+    public Date getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(Integer endTime) {
+    public void setEndTime(Date endTime) {
         this.endTime = endTime;
     }
 

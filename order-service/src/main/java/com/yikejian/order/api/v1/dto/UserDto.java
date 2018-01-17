@@ -1,4 +1,4 @@
-package com.yikejian.order.api.vi.dto;
+package com.yikejian.order.api.v1.dto;
 
 import java.util.Date;
 

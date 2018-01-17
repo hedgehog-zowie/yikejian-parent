@@ -1,7 +1,7 @@
-package com.yikejian.inventory.api.vi;
+package com.yikejian.inventory.api.v1;
 
-import com.yikejian.inventory.api.vi.dto.InventoryDto;
-import com.yikejian.inventory.api.vi.dto.RequestInventoryDto;
+import com.yikejian.inventory.api.v1.dto.InventoryDto;
+import com.yikejian.inventory.api.v1.dto.RequestInventoryDto;
 import com.yikejian.inventory.exception.InventoryServiceException;
 import com.yikejian.inventory.service.InventoryService;
 import org.springframework.beans.factory.annotation.Autowired;

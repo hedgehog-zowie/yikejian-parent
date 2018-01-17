@@ -1,4 +1,4 @@
-package com.yikejian.gift.api.vi.dto;
+package com.yikejian.gift.api.v1.dto;
 
 import java.util.List;
 

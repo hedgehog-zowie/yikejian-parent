@@ -1,7 +1,7 @@
-package com.yikejian.product.api.vi;
+package com.yikejian.product.api.v1;
 
-import com.yikejian.product.api.vi.dto.ProductDto;
-import com.yikejian.product.api.vi.dto.RequestProductDto;
+import com.yikejian.product.api.v1.dto.ProductDto;
+import com.yikejian.product.api.v1.dto.RequestProductDto;
 import com.yikejian.product.exception.ProductServiceException;
 import com.yikejian.product.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;

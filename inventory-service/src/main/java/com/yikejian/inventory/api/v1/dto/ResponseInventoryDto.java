@@ -1,4 +1,4 @@
-package com.yikejian.inventory.api.vi.dto;
+package com.yikejian.inventory.api.v1.dto;
 
 import java.util.List;
 

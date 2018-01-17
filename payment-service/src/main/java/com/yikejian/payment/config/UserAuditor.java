@@ -1,6 +1,6 @@
 package com.yikejian.payment.config;
 
-import com.yikejian.payment.api.vi.dto.UserDto;
+import com.yikejian.payment.api.v1.dto.UserDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;

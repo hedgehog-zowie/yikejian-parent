@@ -1,6 +1,6 @@
 package com.yikejian.data.domain.data;
 
-import com.yikejian.data.api.vi.dto.DataDto;
+import com.yikejian.data.api.v1.dto.DataDto;
 import com.yikejian.data.domain.BaseEntity;
 import org.apache.commons.lang.StringUtils;
 

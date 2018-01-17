@@ -1,7 +1,7 @@
-package com.yikejian.data.api.vi;
+package com.yikejian.data.api.v1;
 
-import com.yikejian.data.api.vi.dto.DataDto;
-import com.yikejian.data.api.vi.dto.RequestDataDto;
+import com.yikejian.data.api.v1.dto.DataDto;
+import com.yikejian.data.api.v1.dto.RequestDataDto;
 import com.yikejian.data.exception.DataServiceException;
 import com.yikejian.data.service.DataService;
 import org.springframework.beans.factory.annotation.Autowired;

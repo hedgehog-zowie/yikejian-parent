@@ -2,10 +2,10 @@ package com.yikejian.order.service;
 
 import com.google.common.collect.Lists;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
-import com.yikejian.order.api.vi.dto.Pagination;
-import com.yikejian.order.api.vi.dto.OrderDto;
-import com.yikejian.order.api.vi.dto.RequestOrderDto;
-import com.yikejian.order.api.vi.dto.ResponseOrderDto;
+import com.yikejian.order.api.v1.dto.Pagination;
+import com.yikejian.order.api.v1.dto.OrderDto;
+import com.yikejian.order.api.v1.dto.RequestOrderDto;
+import com.yikejian.order.api.v1.dto.ResponseOrderDto;
 import com.yikejian.order.domain.order.Order;
 import com.yikejian.order.repository.OrderRepository;
 import org.apache.commons.lang.StringUtils;

@@ -1,12 +1,18 @@
 package com.yikejian.order.domain.order;
 
-import com.yikejian.order.api.vi.dto.OrderDto;
+import com.yikejian.order.api.v1.dto.OrderDto;
 import com.yikejian.order.domain.BaseEntity;
+import com.yikejian.order.domain.item.OrderItem;
 import org.apache.commons.lang.StringUtils;
 
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import java.util.Date;
+import java.util.Set;
 
 /**
  * <code>Order</code>.
@@ -21,9 +27,37 @@ public class Order extends BaseEntity {
     @Id
     @GeneratedValue
     private Long orderId;
-    private String orderName;
-    private Integer startTime;
-    private Integer endTime;
+    /**
+     * 客户ID
+     */
+    private Long customerId;
+    /**
+     * 店铺ID
+     */
+    private Long storeId;
+    /**
+     * 订单金额
+     */
+    private Double amount;
+    /**
+     * 实付金额
+     */
+    private Double actualAmount;
+    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
+    private Set<OrderItem> itemSet;
+    /**
+     * 附加信息
+     */
+    @OneToOne(targetEntity = OrderExtra.class)
+    @JoinColumn(name = "extra_id", referencedColumnName = "extra_id")
+    private OrderExtra orderExtra;
+
+    public void fromOrderDto(OrderDto orderDto) {
+    }
+
+    public OrderDto toOrderDto() {
+        return null;
+    }
 
     public Long getOrderId() {
         return orderId;
@@ -33,58 +67,51 @@ public class Order extends BaseEntity {
         this.orderId = orderId;
     }
 
-    public String getOrderName() {
-        return orderName;
+    public Long getCustomerId() {
+        return customerId;
     }
 
-    public void setOrderName(String orderName) {
-        this.orderName = orderName;
+    public void setCustomerId(Long customerId) {
+        this.customerId = customerId;
     }
 
-    public Integer getStartTime() {
-        return startTime;
+    public Long getStoreId() {
+        return storeId;
     }
 
-    public void setStartTime(Integer startTime) {
-        this.startTime = startTime;
+    public void setStoreId(Long storeId) {
+        this.storeId = storeId;
     }
 
-    public Integer getEndTime() {
-        return endTime;
+    public Double getAmount() {
+        return amount;
     }
 
-    public void setEndTime(Integer endTime) {
-        this.endTime = endTime;
+    public void setAmount(Double amount) {
+        this.amount = amount;
     }
 
-    public void fromOrderDto(OrderDto orderDto) {
-        if (StringUtils.isNotBlank(orderDto.getOrderName())) {
-            setOrderName(orderDto.getOrderName());
-        }
-        if (orderDto.getStartTime() != null) {
-            setDeleted(orderDto.getDeleted());
-        }
-        if (orderDto.getEndTime() != null) {
-            setDeleted(orderDto.getDeleted());
-        }
-        if (orderDto.getEffective() != null) {
-            setEffective(orderDto.getEffective());
-        }
-        if (orderDto.getDeleted() != null) {
-            setDeleted(orderDto.getDeleted());
-        }
+    public Double getActualAmount() {
+        return actualAmount;
     }
 
-    public OrderDto toOrderDto() {
-        OrderDto orderDto = new OrderDto();
-        orderDto.setOrderId(getOrderId());
-        orderDto.setOrderName(getOrderName());
-        orderDto.setStartTime(getStartTime());
-        orderDto.setEndTime(getEndTime());
-        orderDto.setEffective(getEffective());
-        orderDto.setLastModifiedBy(getLastModifiedBy());
-        orderDto.setLastModifiedAt(getLastModifiedAt() == null ? null : new Date(getLastModifiedAt()));
-        return orderDto;
+    public void setActualAmount(Double actualAmount) {
+        this.actualAmount = actualAmount;
     }
 
+    public Set<OrderItem> getItemSet() {
+        return itemSet;
+    }
+
+    public void setItemSet(Set<OrderItem> itemSet) {
+        this.itemSet = itemSet;
+    }
+
+    public OrderExtra getOrderExtra() {
+        return orderExtra;
+    }
+
+    public void setOrderExtra(OrderExtra orderExtra) {
+        this.orderExtra = orderExtra;
+    }
 }

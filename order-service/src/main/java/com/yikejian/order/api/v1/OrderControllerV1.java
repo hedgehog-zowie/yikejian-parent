@@ -1,7 +1,7 @@
-package com.yikejian.order.api.vi;
+package com.yikejian.order.api.v1;
 
-import com.yikejian.order.api.vi.dto.OrderDto;
-import com.yikejian.order.api.vi.dto.RequestOrderDto;
+import com.yikejian.order.api.v1.dto.OrderDto;
+import com.yikejian.order.api.v1.dto.RequestOrderDto;
 import com.yikejian.order.exception.OrderServiceException;
 import com.yikejian.order.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,7 +1,7 @@
-package com.yikejian.store.api.vi;
+package com.yikejian.store.api.v1;
 
-import com.yikejian.store.api.vi.dto.StoreDto;
-import com.yikejian.store.api.vi.dto.RequestStoreDto;
+import com.yikejian.store.api.v1.dto.StoreDto;
+import com.yikejian.store.api.v1.dto.RequestStoreDto;
 import com.yikejian.store.exception.StoreServiceException;
 import com.yikejian.store.service.StoreService;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -2,10 +2,10 @@ package com.yikejian.gift.service;
 
 import com.google.common.collect.Lists;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
-import com.yikejian.gift.api.vi.dto.Pagination;
-import com.yikejian.gift.api.vi.dto.GiftDto;
-import com.yikejian.gift.api.vi.dto.RequestGiftDto;
-import com.yikejian.gift.api.vi.dto.ResponseGiftDto;
+import com.yikejian.gift.api.v1.dto.Pagination;
+import com.yikejian.gift.api.v1.dto.GiftDto;
+import com.yikejian.gift.api.v1.dto.RequestGiftDto;
+import com.yikejian.gift.api.v1.dto.ResponseGiftDto;
 import com.yikejian.gift.domain.gift.Gift;
 import com.yikejian.gift.repository.GiftRepository;
 import org.apache.commons.lang.StringUtils;

@@ -1,6 +1,6 @@
 package com.yikejian.order.config;
 
-import com.yikejian.order.api.vi.dto.UserDto;
+import com.yikejian.order.api.v1.dto.UserDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;

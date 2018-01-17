@@ -12,7 +12,7 @@ import javax.persistence.*;
  * @Description: TODO
  * @date 2018/1/17 1:14
  */
-public class Item extends BaseEntity {
+public class OrderItem extends BaseEntity {
 
     @Id
     @GeneratedValue
