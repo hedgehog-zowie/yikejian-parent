@@ -28,9 +28,14 @@ public class BaseEntity implements Serializable {
     private String lastModifiedBy;
     @LastModifiedDate
     private Long lastModifiedAt;
-
-    private Integer effective;
-    private Integer deleted;
+    /**
+     * 有效标识
+     */
+    private Integer effective = 1;
+    /**
+     * 删除标识
+     */
+    private Integer deleted = 0;
 
     public String getCreatedBy() {
         return createdBy;

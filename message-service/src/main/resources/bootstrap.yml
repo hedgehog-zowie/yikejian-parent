@@ -1,0 +1,8 @@
+server:
+  port: 8011
+  contextPath: /message
+spring:
+  application:
+    name: message-service
+  profiles:
+    active: development

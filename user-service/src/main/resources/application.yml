@@ -1,14 +1,10 @@
 spring:
   profiles:
     active: development
----
-spring:
-  profiles: development
-
-#
-# IMPORTANT NOTICE: 
-# You have to replace this keypair and make sure the private key remains private!
-#
+###################################################################################
+#                                 IMPORTANT NOTICE:                               #
+# You have to replace this keypair and make sure the private key remains private! #
+###################################################################################
 config:
     oauth2:
         # openssl genrsa -out jwt.pem 2048
@@ -38,9 +34,37 @@ config:
             /myh1zM6m8cbL5cYFPyP099thbVxzJkjHWqywvQih/qOOjliomKbM9pxG8Z1dB26
             hL9dSAZuA8xExjlPmQIDAQAB
             -----END PUBLIC KEY-----
-
+##############
+# log config #
+##############
 logging:
   level:
     ROOT: INFO
 #    org.hibernate: DEBUG
-            
+#    org.springframework.security: DEBUG
+
+---
+spring:
+  profiles: development
+  jpa:
+    show_sql: false
+    database: H2
+  datasource:
+    url: jdbc:h2:mem:testdb;DB_CLOSE_ON_EXIT=FALSE
+    initialize: false
+---
+spring:
+  profiles: test
+  datasource:
+    url: jdbc:mysql://192.168.99.100:3306/dev
+    username: root
+    password: dbpass
+    initialize: true
+---
+spring:
+  profiles: production
+  datasource:
+    url: jdbc:mysql://${rds}:3306/dev
+    username: ${username}
+    password: ${password}
+    initialize: true

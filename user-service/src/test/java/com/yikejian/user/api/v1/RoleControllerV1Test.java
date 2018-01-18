@@ -5,6 +5,7 @@ import com.yikejian.user.api.v1.dto.RequestRoleDto;
 import com.yikejian.user.api.v1.dto.ResponseRoleDto;
 import com.yikejian.user.api.v1.dto.RoleDto;
 import com.yikejian.user.api.v1.dto.UserDto;
+import com.yikejian.user.domain.role.Role;
 import com.yikejian.user.util.JsonUtils;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -39,7 +40,7 @@ public class RoleControllerV1Test {
     private static final String GET_ROLE_URL_TEMPLATE = "http://localhost:8001/uaa/v1/role/%s?access_token=%s";
     private static final String GET_ROLES_URL_TEMPLATE = "http://localhost:8001/uaa/v1/roles?access_token=%s&params=%s";
     private static final String GET_ROLES_URL_TEMPLATE2 = "http://localhost:8001/uaa/v1/roles2?access_token=%s";
-    private static final String ACCESS_TOKEN = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MTYxMzQwOTcsInVzZXJfbmFtZSI6ImFkbWluIiwiYXV0aG9yaXRpZXMiOlsiUFJPRFVDVF9XUklURSIsIkRFVklDRV9SRUFEIiwiQk9PS19XUklURSIsIlVTRVJfV1JJVEUiLCJPUkRFUl9SRUFEIiwiQk9PS19SRUFEIiwiU1RPUkVfUkVBRCIsIkNVU1RPTUVSX1JFQUQiLCJPUkRFUl9XUklURSIsIlJPTEVfV1JJVEUiLCJDVVNUT01FUl9XUklURSIsIlNUT1JFX1dSSVRFIiwiREVWSUNFX1dSSVRFIiwiVVNFUl9SRUFEIiwiUk9MRV9SRUFEIiwiTE9HX1JFQUQiLCJQUk9EVUNUX1JFQUQiXSwianRpIjoiNmQzZjA1NTktMDk3ZS00YjAyLWIwMzctNjcwZTBmNDM1NjMwIiwiY2xpZW50X2lkIjoidHJ1c3RlZCIsInNjb3BlIjpbInJlYWQiLCJ3cml0ZSJdfQ.PtFQwBb7Ka121teHIKb1sQpT3lKsep3N7umBN7X-AMmpEaYdQ8DQEsvwJJF7zOPjG-uJ1yY9BsyFeBjslMHTYnGmEmA0rDXzqnAobKCeK-yCWs2eJ5YOkaS3PGX-f8Cx-krM6MeaqOT5C3-OMeJFUva1XuhVCrQ2YFrP9OSXKbE";
+    private static final String ACCESS_TOKEN = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MTYyMTE5MzIsInVzZXJfbmFtZSI6ImFkbWluIiwiYXV0aG9yaXRpZXMiOlsiUFJPRFVDVF9XUklURSIsIkRFVklDRV9SRUFEIiwiQk9PS19XUklURSIsIlVTRVJfV1JJVEUiLCJPUkRFUl9SRUFEIiwiQk9PS19SRUFEIiwiU1RPUkVfUkVBRCIsIkNVU1RPTUVSX1JFQUQiLCJPUkRFUl9XUklURSIsIlJPTEVfV1JJVEUiLCJDVVNUT01FUl9XUklURSIsIlNUT1JFX1dSSVRFIiwiREVWSUNFX1dSSVRFIiwiVVNFUl9SRUFEIiwiUk9MRV9SRUFEIiwiTE9HX1JFQUQiLCJQUk9EVUNUX1JFQUQiXSwianRpIjoiNGVjYjg5N2QtZDk4YS00ZTBhLWI0NGUtNDRhY2Q0NTgxNzUxIiwiY2xpZW50X2lkIjoidHJ1c3RlZCIsInNjb3BlIjpbInJlYWQiLCJ3cml0ZSJdfQ.YGUuTfcHCKTkd_5lQfm-jFTkZlUccLw0QTTYz9zOrkDDgt0NAHsgHy7GTqu9EG1oWO-0tYwllw3TpT0DgQmB6iYWrKIFV_nqitDCEhxHXECa6CgLLTV8TZmkRRM-hW01z-YDWoPaDFjPfyWUYNkde1Jmpebdg-fmspn2Hy-F7W4X3XY7UQMOoVu5WUnDNWysaeIQkJJltyUCG3zJw20a8JhgntUjBZ9k5LpPA7innhjHxY3ZG9hRQZYQTvZb4aVxOQsrwwvxuwi6r4yKTBntKH4ucmhaTHVb9IAiGljZ6CIYglqIdrKHCnsdGVJwocQgi0KI2AXgS8caIJJyDXqqfQ";
 
     @BeforeClass
     public static void beforeClass() {
@@ -87,9 +88,9 @@ public class RoleControllerV1Test {
         assertEquals(10, responseRoleDto.getPagination().getPageSize().intValue());
         assertEquals(0, responseRoleDto.getPagination().getCurrentPage().intValue());
 
-        String url2 = String.format(GET_ROLES_URL_TEMPLATE2, ACCESS_TOKEN);
-        ResponseRoleDto responseRoleDto2 =  restTemplate.getForObject(url2, ResponseRoleDto.class, requestRoleDto);
-        System.out.println(responseRoleDto2);
+//        String url2 = String.format(GET_ROLES_URL_TEMPLATE2, ACCESS_TOKEN);
+//        ResponseRoleDto responseRoleDto2 = restTemplate.getForObject(url2, ResponseRoleDto.class, requestRoleDto);
+//        System.out.println(responseRoleDto2);
     }
 
     @Test
@@ -99,6 +100,7 @@ public class RoleControllerV1Test {
         roleDto.setAuthorities("auth1,auth2");
         String url = String.format(POST_ROLE_URL_TEMPLATE, ACCESS_TOKEN);
         RoleDto roleDto2 = restTemplate.postForObject(url, roleDto, RoleDto.class);
+        Role role = restTemplate.postForObject(url, roleDto, Role.class);
         assertEquals("ADMIN2", roleDto2.getRoleName());
         assertEquals("auth1,auth2", roleDto2.getAuthorities());
     }

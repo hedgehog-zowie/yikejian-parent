@@ -88,30 +88,4 @@ public class Role extends BaseEntity {
         this.userSet = userSet;
     }
 
-    public void fromRoleDto(RoleDto roleDto) {
-        if (StringUtils.isNotBlank(roleDto.getRoleName())) {
-            setRoleName(roleDto.getRoleName());
-        }
-        if (StringUtils.isNotBlank(roleDto.getAuthorities())) {
-            setAuthorities(roleDto.getAuthorities());
-        }
-        if (roleDto.getEffective() != null) {
-            setEffective(roleDto.getEffective());
-        }
-        if (roleDto.getDeleted() != null) {
-            setDeleted(roleDto.getDeleted());
-        }
-    }
-
-    public RoleDto toRoleDto() {
-        RoleDto roleDto = new RoleDto();
-        roleDto.setRoleId(getRoleId());
-        roleDto.setRoleName(getRoleName());
-        roleDto.setAuthorities(getAuthorities());
-        roleDto.setEffective(getEffective());
-        roleDto.setLastModifiedBy(getLastModifiedBy());
-        roleDto.setLastModifiedAt(getLastModifiedAt() == null ? null : new Date(getLastModifiedAt()));
-        return roleDto;
-    }
-
 }

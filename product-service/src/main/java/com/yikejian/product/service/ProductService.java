@@ -7,6 +7,7 @@ import com.yikejian.product.api.v1.dto.ProductDto;
 import com.yikejian.product.api.v1.dto.RequestProductDto;
 import com.yikejian.product.api.v1.dto.ResponseProductDto;
 import com.yikejian.product.domain.product.Product;
+import com.yikejian.product.exception.ProductServiceException;
 import com.yikejian.product.repository.ProductRepository;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.criteria.Predicate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -41,43 +43,30 @@ public class ProductService {
 
     @HystrixCommand
     public Product saveProduct(ProductDto productDto) {
-        Product product;
-        if (productDto.getProductId() != null) {
-            product = productRepository.findByProductId(productDto.getProductId());
-        } else {
-            product = new Product();
-        }
-        product.fromProductDto(productDto);
-        return productRepository.save(product);
+        return productRepository.save(productDtoToProduct(productDto));
     }
 
     @HystrixCommand
     public List<Product> saveProducts(List<ProductDto> productDtoList) {
-        List<Product> productList = Lists.newArrayList();
-        for (ProductDto productDto : productDtoList) {
-            Product product;
-            if (productDto.getProductId() != null) {
-                product = productRepository.findByProductId(productDto.getProductId());
-            } else {
-                product = new Product();
-            }
-            product.fromProductDto(productDto);
-            productList.add(product);
-        }
+        List<Product> productList = Lists.newArrayList(productDtoList.stream().
+                map(this::productDtoToProduct).collect(Collectors.toList()));
         return (List<Product>) productRepository.save(productList);
     }
 
     @HystrixCommand
     public ProductDto getProductById(Long productId) {
         Product product = productRepository.findByProductId(productId);
-        return product.toProductDto();
+        if (product == null) {
+            throw new ProductServiceException("未知的产品");
+        }
+        return productToProductDto(product);
     }
 
     @HystrixCommand
     public ResponseProductDto getAll() {
         List<Product> productList = (List<Product>) productRepository.findAll();
         List<ProductDto> productDtoList = Lists.newArrayList(
-                productList.stream().map(Product::toProductDto).collect(Collectors.toList())
+                productList.stream().map(this::productToProductDto).collect(Collectors.toList())
         );
         return new ResponseProductDto(productDtoList);
     }
@@ -105,7 +94,7 @@ public class ProductService {
         pagination.setTotalPages(page.getTotalPages());
         pagination.setTotalSize(page.getTotalElements());
         List<ProductDto> productDtoList = Lists.newArrayList(page.getContent().stream().
-                map(Product::toProductDto).collect(Collectors.toList()));
+                map(this::productToProductDto).collect(Collectors.toList()));
         return new ResponseProductDto(productDtoList, pagination);
     }
 
@@ -132,6 +121,63 @@ public class ProductService {
             Predicate[] predicates = new Predicate[predicateList.size()];
             return cb.and(predicateList.toArray(predicates));
         };
+    }
+
+    private Product productDtoToProduct(ProductDto productDto) {
+        Product product;
+        if (productDto.getProductId() != null) {
+            product = productRepository.findByProductId(productDto.getProductId());
+            if (product == null) {
+                throw new ProductServiceException("未知的产品");
+            }
+        } else {
+            product = new Product();
+        }
+        if (StringUtils.isNotBlank(productDto.getProductName())) {
+            product.setProductName(productDto.getProductName());
+        }
+        if (productDto.getPrice() != null) {
+            product.setPrice(productDto.getPrice());
+        }
+        if (productDto.getDuration() != null) {
+            product.setDuration(productDto.getDuration());
+        }
+        if (productDto.getStartTime() != null) {
+            product.setStartTime(productDto.getDeleted());
+        }
+        if (productDto.getEndTime() != null) {
+            product.setEndTime(productDto.getDeleted());
+        }
+        if (StringUtils.isNotBlank(productDto.getIntroduction())) {
+            product.setIntroduction(productDto.getIntroduction());
+        }
+        if (productDto.getLogo() != null && productDto.getLogo().length > 0) {
+            product.setLogo(productDto.getLogo());
+        }
+        if (productDto.getEffective() != null) {
+            product.setEffective(productDto.getEffective());
+        }
+        if (productDto.getDeleted() != null) {
+            product.setDeleted(productDto.getDeleted());
+        }
+        return product;
+    }
+
+    private ProductDto productToProductDto(Product product) {
+        ProductDto productDto = new ProductDto();
+        productDto.setProductId(product.getProductId());
+        productDto.setProductName(product.getProductName());
+        productDto.setPrice(product.getPrice());
+        productDto.setDuration(product.getDuration());
+        productDto.setStartTime(product.getStartTime());
+        productDto.setEndTime(product.getEndTime());
+        productDto.setIntroduction(product.getIntroduction());
+        productDto.setLogo(product.getLogo());
+        productDto.setEffective(product.getEffective());
+        productDto.setDeleted(product.getDeleted());
+        productDto.setLastModifiedBy(product.getLastModifiedBy());
+        productDto.setLastModifiedAt(product.getLastModifiedAt() == null ? null : new Date(product.getLastModifiedAt()));
+        return productDto;
     }
 
 }

@@ -4,6 +4,7 @@ import com.yikejian.product.api.v1.dto.ProductDto;
 import com.yikejian.product.domain.BaseEntity;
 import org.apache.commons.lang.StringUtils;
 
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import java.util.Date;
@@ -16,6 +17,7 @@ import java.util.Date;
  * @version: 1.0-SNAPSHOT
  * date: 2018/1/16 9:55
  */
+@Entity
 public class Product extends BaseEntity {
 
     @Id
@@ -34,11 +36,11 @@ public class Product extends BaseEntity {
      */
     private Integer duration;
     /**
-     * 开始时间
+     * 开始时间(小时，如10表示10点整)
      */
     private Integer startTime;
     /**
-     * 结束时间
+     * 结束时间(小时，如23表示23点整)
      */
     private Integer endTime;
     /**
@@ -49,36 +51,6 @@ public class Product extends BaseEntity {
      * LOGO
      */
     private byte[] logo;
-
-    public void fromProductDto(ProductDto productDto) {
-        if (StringUtils.isNotBlank(productDto.getProductName())) {
-            setProductName(productDto.getProductName());
-        }
-        if (productDto.getStartTime() != null) {
-            setDeleted(productDto.getDeleted());
-        }
-        if (productDto.getEndTime() != null) {
-            setDeleted(productDto.getDeleted());
-        }
-        if (productDto.getEffective() != null) {
-            setEffective(productDto.getEffective());
-        }
-        if (productDto.getDeleted() != null) {
-            setDeleted(productDto.getDeleted());
-        }
-    }
-
-    public ProductDto toProductDto() {
-        ProductDto productDto = new ProductDto();
-        productDto.setProductId(getProductId());
-        productDto.setProductName(getProductName());
-        productDto.setStartTime(getStartTime());
-        productDto.setEndTime(getEndTime());
-        productDto.setEffective(getEffective());
-        productDto.setLastModifiedBy(getLastModifiedBy());
-        productDto.setLastModifiedAt(getLastModifiedAt() == null ? null : new Date(getLastModifiedAt()));
-        return productDto;
-    }
 
     public Long getProductId() {
         return productId;

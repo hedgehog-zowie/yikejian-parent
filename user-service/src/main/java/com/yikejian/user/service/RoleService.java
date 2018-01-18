@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.criteria.Predicate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -41,47 +42,30 @@ public class RoleService {
 
     @HystrixCommand
     public Role saveRole(RoleDto roleDto) {
-        Role role;
-        if (roleDto.getRoleId() != null) {
-            role = roleRepository.findByRoleId(roleDto.getRoleId());
-            if (role == null) {
-                throw new UserServiceException("未知的角色");
-            }
-        } else {
-            role = new Role();
-        }
-        role.fromRoleDto(roleDto);
-        return roleRepository.save(role);
+        return roleRepository.save(roleDtoToRole(roleDto));
     }
 
     @HystrixCommand
     public List<Role> saveRoles(List<RoleDto> roleDtoList) {
-        List<Role> roleList = Lists.newArrayList();
-        for (RoleDto roleDto : roleDtoList) {
-            Role role;
-            if (roleDto.getRoleId() != null) {
-                role = roleRepository.findByRoleId(roleDto.getRoleId());
-            } else {
-                role = new Role();
-            }
-            role.fromRoleDto(roleDto);
-            roleList.add(role);
-        }
+        List<Role> roleList = Lists.newArrayList(roleDtoList.stream().
+                map(this::roleDtoToRole).collect(Collectors.toList()));
         return (List<Role>) roleRepository.save(roleList);
     }
 
     @HystrixCommand
     public RoleDto getRoleById(Long roleId) {
         Role role = roleRepository.findByRoleId(roleId);
-        return role.toRoleDto();
+        if (role == null) {
+            throw new UserServiceException("未知的角色");
+        }
+        return roleToRoleDto(role);
     }
 
     @HystrixCommand
     public ResponseRoleDto getAll() {
         List<Role> roleList = (List<Role>) roleRepository.findAll();
-        List<RoleDto> roleDtoList = Lists.newArrayList(
-                roleList.stream().map(Role::toRoleDto).collect(Collectors.toList())
-        );
+        List<RoleDto> roleDtoList = Lists.newArrayList(roleList.stream().
+                map(this::roleToRoleDto).collect(Collectors.toList()));
         return new ResponseRoleDto(roleDtoList);
     }
 
@@ -108,7 +92,7 @@ public class RoleService {
         pagination.setTotalPages(page.getTotalPages());
         pagination.setTotalSize(page.getTotalElements());
         List<RoleDto> roleDtoList = Lists.newArrayList(page.getContent().stream().
-                map(Role::toRoleDto).collect(Collectors.toList()));
+                map(this::roleToRoleDto).collect(Collectors.toList()));
         return new ResponseRoleDto(roleDtoList, pagination);
     }
 
@@ -132,6 +116,43 @@ public class RoleService {
             Predicate[] predicates = new Predicate[predicateList.size()];
             return cb.and(predicateList.toArray(predicates));
         };
+    }
+
+    private Role roleDtoToRole(RoleDto roleDto) {
+        Role role;
+        if (roleDto.getRoleId() != null) {
+            role = roleRepository.findByRoleId(roleDto.getRoleId());
+            if (role == null) {
+                throw new UserServiceException("未知的角色");
+            }
+        } else {
+            role = new Role();
+        }
+        if (StringUtils.isNotBlank(roleDto.getRoleName())) {
+            role.setRoleName(roleDto.getRoleName());
+        }
+        if (StringUtils.isNotBlank(roleDto.getAuthorities())) {
+            role.setAuthorities(roleDto.getAuthorities());
+        }
+        if (roleDto.getEffective() != null) {
+            role.setEffective(roleDto.getEffective());
+        }
+        if (roleDto.getDeleted() != null) {
+            role.setDeleted(roleDto.getDeleted());
+        }
+        return role;
+    }
+
+    private RoleDto roleToRoleDto(Role role) {
+        RoleDto roleDto = new RoleDto();
+        roleDto.setRoleId(role.getRoleId());
+        roleDto.setRoleName(role.getRoleName());
+        roleDto.setAuthorities(role.getAuthorities());
+        roleDto.setEffective(role.getEffective());
+        roleDto.setDeleted(role.getDeleted());
+        roleDto.setLastModifiedBy(role.getLastModifiedBy());
+        roleDto.setLastModifiedAt(role.getLastModifiedAt() == null ? null : new Date(role.getLastModifiedAt()));
+        return roleDto;
     }
 
 }

@@ -23,6 +23,7 @@ import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -52,54 +53,30 @@ public class UserService {
 
     @HystrixCommand
     public User saveUser(UserDto userDto) {
-        User user;
-        if (userDto.getUserId() != null) {
-            user = userRepository.findByUserId(userDto.getUserId());
-        } else {
-            user = new User();
-        }
-        if (userDto.getRoleId() == null) {
-            throw new UserServiceException("role is null");
-        }
-        Role role = roleRepository.findByRoleId(userDto.getRoleId());
-        user.setRole(role);
-        user.fromUserDto(userDto);
-        return userRepository.save(user);
+        return userRepository.save(userDtoToUser(userDto));
     }
 
     @HystrixCommand
     public List<User> saveUsers(List<UserDto> userDtoList) {
-        List<User> userList = Lists.newArrayList();
-        for (UserDto userDto : userDtoList) {
-            User user;
-            if (userDto.getUserId() != null) {
-                user = userRepository.findByUserId(userDto.getUserId());
-            } else {
-                user = new User();
-            }
-            if (userDto.getRoleId() == null) {
-                throw new UserServiceException("role is null");
-            }
-            Role role = roleRepository.findByRoleId(userDto.getRoleId());
-            user.setRole(role);
-            user.fromUserDto(userDto);
-            userList.add(user);
-        }
+        List<User> userList = Lists.newArrayList(userDtoList.stream().
+                map(this::userDtoToUser).collect(Collectors.toList()));
         return (List<User>) userRepository.save(userList);
     }
 
     @HystrixCommand
     public UserDto getUserById(Long userId) {
         User user = userRepository.findByUserId(userId);
-        return user.toUserDto();
+        if (user == null) {
+            throw new UserServiceException("未知的用户");
+        }
+        return userToUserDto(user);
     }
 
     @HystrixCommand
     public ResponseUserDto getAll() {
         List<User> userList = (List<User>) userRepository.findAll();
-        List<UserDto> userDtoList = Lists.newArrayList(
-                userList.stream().map(User::toUserDto).collect(Collectors.toList())
-        );
+        List<UserDto> userDtoList = Lists.newArrayList(userList.stream().
+                map(this::userToUserDto).collect(Collectors.toList()));
         return new ResponseUserDto(userDtoList);
     }
 
@@ -127,7 +104,8 @@ public class UserService {
         pagination.setTotalSize(page.getTotalElements());
 
         List<UserDto> userDtoList = Lists.newArrayList(page.getContent().stream().
-                map(User::toUserDto).collect(Collectors.toList()));
+                map(this::userToUserDto).collect(Collectors.toList()));
+
         return new ResponseUserDto(userDtoList, pagination);
     }
 
@@ -152,6 +130,49 @@ public class UserService {
             Predicate[] predicates = new Predicate[predicateList.size()];
             return cb.and(predicateList.toArray(predicates));
         };
+    }
+
+    private User userDtoToUser(UserDto userDto) {
+        User user;
+        if (userDto.getUserId() != null) {
+            user = userRepository.findByUserId(userDto.getUserId());
+            if (user == null) {
+                throw new UserServiceException("未知的用户");
+            }
+        } else {
+            user = new User();
+        }
+        if (userDto.getRoleId() == null) {
+            throw new UserServiceException("未设置用户角色");
+        }
+        Role role = roleRepository.findByRoleId(userDto.getRoleId());
+        if (role == null) {
+            throw new UserServiceException("未知的角色");
+        }
+        user.setRole(role);
+        if (StringUtils.isNotBlank(userDto.getUserName())) {
+            user.setUserName(userDto.getUserName());
+        }
+        if (userDto.getEffective() != null) {
+            user.setEffective(userDto.getEffective());
+        }
+        if (userDto.getDeleted() != null) {
+            user.setDeleted(userDto.getDeleted());
+        }
+        return user;
+    }
+
+    private UserDto userToUserDto(User user) {
+        UserDto userDto = new UserDto();
+        userDto.setUserId(user.getUserId());
+        userDto.setUserName(user.getUserName());
+        userDto.setRoleId(user.getRole().getRoleId());
+        userDto.setRoleName(user.getRole().getRoleName());
+        userDto.setEffective(user.getEffective());
+        userDto.setDeleted(user.getDeleted());
+        userDto.setLastModifiedBy(user.getLastModifiedBy());
+        userDto.setLastModifiedAt(user.getLastModifiedAt() == null ? null : new Date(user.getLastModifiedAt()));
+        return userDto;
     }
 
 }

@@ -7,8 +7,6 @@ import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-import java.security.Principal;
-
 /**
  * <code>UserAuditorBean</code>.
  * ${DESCRIPTION}
@@ -40,8 +38,8 @@ public class UserAuditor implements AuditorAware<String> {
             return null;
         }
         Object principal = securityContext.getAuthentication().getPrincipal();
-        if (principal.getClass().isAssignableFrom(Principal.class)) {
-            return ((Principal) principal).getName();
+        if (principal.getClass().isAssignableFrom(String.class)) {
+            return (String) principal;
         } else {
             return null;
         }

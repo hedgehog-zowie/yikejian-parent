@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
@@ -14,6 +15,9 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Aut
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
+import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFactory;
+
+import java.security.KeyPair;
 
 /**
  * <code>OAuth2Config</code>.
@@ -39,21 +43,25 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     private AuthenticationManager authenticationManager;
 
     @Bean
-    public JwtAccessTokenConverter accessTokenConverter() {
-        LOGGER.info("Initializing JWT with public key:\n" + publicKey);
+    public JwtAccessTokenConverter jwtAccessTokenConverter() {
+        // 使用配置文件
+//        LOGGER.info("Initializing JWT with public key:\n" + publicKey);
+//        JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
+//        converter.setSigningKey(privateKey);
+//        converter.setVerifierKey(publicKey);
+
+        // 使用keytool
         JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
-        converter.setSigningKey(privateKey);
-        converter.setVerifierKey(publicKey);
-//        KeyPair keyPair = new KeyStoreKeyFactory(
-//                new ClassPathResource("keystore.jks"), "foobar".toCharArray())
-//                .getKeyPair("test");
-//        converter.setKeyPair(keyPair);
+        KeyPair keyPair = new KeyStoreKeyFactory(
+                new ClassPathResource("keystore.jks"), "foobar".toCharArray())
+                .getKeyPair("test");
+        converter.setKeyPair(keyPair);
         return converter;
     }
 
     @Bean
     public JwtTokenStore tokenStore() {
-        return new JwtTokenStore(accessTokenConverter());
+        return new JwtTokenStore(jwtAccessTokenConverter());
     }
 
     /**
@@ -79,14 +87,16 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
         endpoints
-
                 // Which authenticationManager should be used for the password grant
                 // If not provided, ResourceOwnerPasswordTokenGranter is not configured
                 .authenticationManager(authenticationManager)
 
-                // Use JwtTokenStore and our accessTokenConverter
+                // Use JwtTokenStore and our jwtAccessTokenConverter
                 .tokenStore(tokenStore())
-                .accessTokenConverter(accessTokenConverter())
+                .accessTokenConverter(jwtAccessTokenConverter())
+
+                // Just use our jwtAccessTokenConverter
+//                .accessTokenConverter(jwtAccessTokenConverter());
         ;
     }
 
