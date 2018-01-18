@@ -1,5 +1,7 @@
 package com.yikejian.product.api.v1.dto;
 
+import com.yikejian.product.domain.product.Product;
+
 /**
  * @author jackalope
  * @Title: QueryRole
@@ -9,15 +11,15 @@ package com.yikejian.product.api.v1.dto;
  */
 public class RequestProductDto {
 
-    private ProductDto product;
+    private Product product;
     private Pagination pagination;
     private Sort sort;
 
-    public ProductDto getProduct() {
+    public Product getProduct() {
         return product;
     }
 
-    public void setProduct(ProductDto product) {
+    public void setProduct(Product product) {
         this.product = product;
     }
 

@@ -1,24 +1,13 @@
 package com.yikejian.user.api.v1;
 
-import com.yikejian.user.UserServiceApplication;
-import com.yikejian.user.api.v1.dto.RequestRoleDto;
-import com.yikejian.user.api.v1.dto.ResponseRoleDto;
-import com.yikejian.user.api.v1.dto.RoleDto;
-import com.yikejian.user.api.v1.dto.UserDto;
+import com.yikejian.user.api.v1.dto.RequestRole;
+import com.yikejian.user.api.v1.dto.ResponseRole;
 import com.yikejian.user.domain.role.Role;
 import com.yikejian.user.util.JsonUtils;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.junit.*;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.UnsupportedEncodingException;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
 
@@ -62,60 +51,59 @@ public class RoleControllerV1Test {
     @Test
     public void testGetRole() {
         String url = String.format(GET_ROLE_URL_TEMPLATE, 1, ACCESS_TOKEN);
-        RoleDto roleDto = restTemplate.getForObject(url, RoleDto.class);
-        assertEquals("ADMIN", roleDto.getRoleName());
+        Role role = restTemplate.getForObject(url, Role.class);
+        assertEquals("ADMIN", role.getRoleName());
         assertEquals("ROLE_READ,ROLE_WRITE,USER_READ,USER_WRITE,LOG_READ,CUSTOMER_READ,CUSTOMER_WRITE,ORDER_READ,ORDER_WRITE,STORE_READ,STORE_WRITE,PRODUCT_READ,PRODUCT_WRITE,DEVICE_READ,DEVICE_WRITE,BOOK_READ,BOOK_WRITE",
-                roleDto.getAuthorities());
+                role.getAuthorities());
     }
 
     @Test
     public void testGetRoles() throws UnsupportedEncodingException, URISyntaxException {
-        RoleDto roleDto = new RoleDto();
-        roleDto.setRoleName("ADMIN");
-        RequestRoleDto requestRoleDto = new RequestRoleDto();
-        requestRoleDto.setRole(roleDto);
-        String params = URLEncoder.encode(JsonUtils.toJson(requestRoleDto), "UTF-8");
+        Role role = new Role();
+        role.setRoleName("ADMIN");
+        RequestRole requestRole = new RequestRole();
+        requestRole.setRole(role);
+        String params = URLEncoder.encode(JsonUtils.toJson(requestRole), "UTF-8");
         String url = String.format(GET_ROLES_URL_TEMPLATE, ACCESS_TOKEN, params);
-        ResponseRoleDto responseRoleDto = restTemplate.getForObject(url, ResponseRoleDto.class);
-//        String params = JsonUtils.toJson(requestRoleDto);
+        ResponseRole responseRole = restTemplate.getForObject(url, ResponseRole.class);
+//        String params = JsonUtils.toJson(requestRole);
 //        String url = URLEncoder.encode(String.format(GET_ROLES_URL_TEMPLATE, ACCESS_TOKEN, params), "UTF-8");
 //        URI uri = new URI(url);
-//        ResponseRoleDto responseRoleDto = restTemplate.getForObject(uri, ResponseRoleDto.class);
+//        ResponseRole responseRole = restTemplate.getForObject(uri, ResponseRole.class);
 
-        assertEquals(1, responseRoleDto.getRoleList().size());
-        assertEquals(1, responseRoleDto.getPagination().getTotalPages().intValue());
-        assertEquals(1, responseRoleDto.getPagination().getTotalSize().intValue());
-        assertEquals(10, responseRoleDto.getPagination().getPageSize().intValue());
-        assertEquals(0, responseRoleDto.getPagination().getCurrentPage().intValue());
+        assertEquals(1, responseRole.getRoleList().size());
+        assertEquals(1, responseRole.getPagination().getTotalPages().intValue());
+        assertEquals(1, responseRole.getPagination().getTotalSize().intValue());
+        assertEquals(10, responseRole.getPagination().getPageSize().intValue());
+        assertEquals(0, responseRole.getPagination().getCurrentPage().intValue());
 
 //        String url2 = String.format(GET_ROLES_URL_TEMPLATE2, ACCESS_TOKEN);
-//        ResponseRoleDto responseRoleDto2 = restTemplate.getForObject(url2, ResponseRoleDto.class, requestRoleDto);
-//        System.out.println(responseRoleDto2);
+//        ResponseRole responseRole2 = restTemplate.getForObject(url2, ResponseRole.class, requestRole);
+//        System.out.println(responseRole2);
     }
 
     @Test
     public void testPostRole(){
-        RoleDto roleDto = new RoleDto();
-        roleDto.setRoleName("ADMIN2");
-        roleDto.setAuthorities("auth1,auth2");
+        Role role = new Role();
+        role.setRoleName("ADMIN2");
+        role.setAuthorities("auth1,auth2");
         String url = String.format(POST_ROLE_URL_TEMPLATE, ACCESS_TOKEN);
-        RoleDto roleDto2 = restTemplate.postForObject(url, roleDto, RoleDto.class);
-        Role role = restTemplate.postForObject(url, roleDto, Role.class);
-        assertEquals("ADMIN2", roleDto2.getRoleName());
-        assertEquals("auth1,auth2", roleDto2.getAuthorities());
+        Role role2 = restTemplate.postForObject(url, role, Role.class);
+        assertEquals("ADMIN2", role2.getRoleName());
+        assertEquals("auth1,auth2", role2.getAuthorities());
     }
 
     @Test
     public void testPutRole()  {
-        RoleDto roleDto = new RoleDto();
-        roleDto.setRoleId(6L);
-        roleDto.setRoleName("ADMIN6");
+        Role role = new Role();
+        role.setRoleId(6L);
+        role.setRoleName("ADMIN6");
         String url = String.format(PUT_ROLE_URL_TEMPLATE, ACCESS_TOKEN);
-        restTemplate.put(url, roleDto);
+        restTemplate.put(url, role);
         String getUrl = String.format(GET_ROLE_URL_TEMPLATE, 6, ACCESS_TOKEN);
-        RoleDto roleDto2 = restTemplate.getForObject(getUrl, RoleDto.class);
-        assertEquals(6, roleDto2.getRoleId().intValue());
-        assertEquals("ADMIN6", roleDto2.getRoleName());
+        Role role2 = restTemplate.getForObject(getUrl, Role.class);
+        assertEquals(6, role2.getRoleId().intValue());
+        assertEquals("ADMIN6", role2.getRoleName());
     }
 
 }

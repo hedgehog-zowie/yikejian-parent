@@ -19,7 +19,7 @@
         <module>user-service</module>
         <module>customer-service</module>
         <module>store-service</module>
-        <module>productId-service</module>
+        <module>product-service</module>
         <module>inventory-service</module>
         <module>order-service</module>
         <module>payment-service</module>

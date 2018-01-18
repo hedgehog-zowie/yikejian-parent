@@ -2,12 +2,8 @@ package com.yikejian.store.domain.store;
 
 import com.yikejian.store.domain.BaseEntity;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
+import java.util.Objects;
 
 /**
  * <code>StoreProduct</code>.
@@ -28,11 +24,30 @@ public class StoreProduct extends BaseEntity {
      */
     private Long productId;
     /**
+     * 产品名称
+     */
+    @Transient
+    private String productName;
+    /**
      * 店铺
      */
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "store_id")
     private Store store;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        StoreProduct that = (StoreProduct) o;
+        return Objects.equals(productId, that.productId);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(productId);
+    }
 
     public Long getId() {
         return id;
@@ -48,6 +63,14 @@ public class StoreProduct extends BaseEntity {
 
     public void setProductId(Long productId) {
         this.productId = productId;
+    }
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
     }
 
     public Store getStore() {

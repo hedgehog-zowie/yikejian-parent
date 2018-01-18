@@ -1,16 +1,13 @@
 package com.yikejian.user.domain.role;
 
-import com.yikejian.user.api.v1.dto.RoleDto;
 import com.yikejian.user.domain.BaseEntity;
 import com.yikejian.user.domain.user.User;
-import org.apache.commons.lang.StringUtils;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import java.util.Date;
 import java.util.Objects;
 import java.util.Set;
 
@@ -36,6 +33,10 @@ public class Role extends BaseEntity {
     private Set<User> userSet;
 
     public Role() {
+    }
+
+    public Role(Long roleId) {
+        this.roleId = roleId;
     }
 
     public Role(String roleName, String authorities) {

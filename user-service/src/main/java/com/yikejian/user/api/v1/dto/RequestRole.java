@@ -1,5 +1,7 @@
 package com.yikejian.user.api.v1.dto;
 
+import com.yikejian.user.domain.role.Role;
+
 /**
  * @author jackalope
  * @Title: QueryRole
@@ -7,17 +9,17 @@ package com.yikejian.user.api.v1.dto;
  * @Description: TODO
  * @date 2018/1/14 21:51
  */
-public class RequestRoleDto {
+public class RequestRole {
 
-    private RoleDto role;
+    private Role role;
     private Pagination pagination;
     private Sort sort;
 
-    public RoleDto getRole() {
+    public Role getRole() {
         return role;
     }
 
-    public void setRole(RoleDto role) {
+    public void setRole(Role role) {
         this.role = role;
     }
 

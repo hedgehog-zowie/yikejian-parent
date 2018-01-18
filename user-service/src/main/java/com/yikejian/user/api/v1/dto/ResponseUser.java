@@ -1,37 +1,39 @@
 package com.yikejian.user.api.v1.dto;
 
+import com.yikejian.user.domain.user.User;
+
 import java.util.List;
 
 /**
- * <code>ResponseUserDto</code>.
+ * <code>ResponseUser</code>.
  * ${DESCRIPTION}
  *
  * @author zweig
  * @version: 1.0-SNAPSHOT
  * date: 2018/1/15 11:28
  */
-public class ResponseUserDto {
+public class ResponseUser {
 
-    private List<UserDto> userList;
+    private List<User> userList;
     private Pagination pagination;
 
-    public ResponseUserDto() {
+    public ResponseUser() {
     }
 
-    public ResponseUserDto(List<UserDto> userList) {
+    public ResponseUser(List<User> userList) {
         this.userList = userList;
     }
 
-    public ResponseUserDto(List<UserDto> userList, Pagination pagination) {
+    public ResponseUser(List<User> userList, Pagination pagination) {
         this.userList = userList;
         this.pagination = pagination;
     }
 
-    public List<UserDto> getUserList() {
+    public List<User> getUserList() {
         return userList;
     }
 
-    public void setUserList(List<UserDto> userList) {
+    public void setUserList(List<User> userList) {
         this.userList = userList;
     }
 

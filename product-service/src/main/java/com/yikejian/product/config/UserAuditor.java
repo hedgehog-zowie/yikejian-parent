@@ -1,6 +1,6 @@
 package com.yikejian.product.config;
 
-import com.yikejian.product.api.v1.dto.UserDto;
+import com.yikejian.product.domain.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
@@ -30,7 +30,7 @@ public class UserAuditor implements AuditorAware<String> {
 
     @Override
     public String getCurrentAuditor() {
-        UserDto user = oAuth2RestTemplate.getForObject(userUrl, UserDto.class);
+        User user = oAuth2RestTemplate.getForObject(userUrl, User.class);
         if (user != null) {
             return user.getUserName();
         } else {

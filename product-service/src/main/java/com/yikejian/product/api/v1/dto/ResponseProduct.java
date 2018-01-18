@@ -1,5 +1,7 @@
 package com.yikejian.product.api.v1.dto;
 
+import com.yikejian.product.domain.product.Product;
+
 import java.util.List;
 
 /**
@@ -10,25 +12,25 @@ import java.util.List;
  * @version: 1.0-SNAPSHOT
  * date: 2018/1/15 11:28
  */
-public class ResponseProductDto {
+public class ResponseProduct {
 
-    private List<ProductDto> productList;
+    private List<Product> productList;
     private Pagination pagination;
 
-    public ResponseProductDto(List<ProductDto> productList) {
+    public ResponseProduct(List<Product> productList) {
         this.productList = productList;
     }
 
-    public ResponseProductDto(List<ProductDto> productList, Pagination pagination) {
+    public ResponseProduct(List<Product> productList, Pagination pagination) {
         this.productList = productList;
         this.pagination = pagination;
     }
 
-    public List<ProductDto> getProductList() {
+    public List<Product> getProductList() {
         return productList;
     }
 
-    public void setProductList(List<ProductDto> productList) {
+    public void setProductList(List<Product> productList) {
         this.productList = productList;
     }
 

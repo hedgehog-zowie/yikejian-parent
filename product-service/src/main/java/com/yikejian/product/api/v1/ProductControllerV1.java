@@ -1,7 +1,7 @@
 package com.yikejian.product.api.v1;
 
-import com.yikejian.product.api.v1.dto.ProductDto;
 import com.yikejian.product.api.v1.dto.RequestProductDto;
+import com.yikejian.product.domain.product.Product;
 import com.yikejian.product.exception.ProductServiceException;
 import com.yikejian.product.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -35,26 +36,34 @@ public class ProductControllerV1 {
         this.productService = productService;
     }
 
-    @RequestMapping(value = "/product/{product_id}", method = RequestMethod.GET)
-    public ResponseEntity getProducts(final @PathVariable(value = "product_id") Long productId) {
-        // todo send log
-        return Optional.ofNullable(productService.getProductById(productId))
-                .map(a -> new ResponseEntity<>(a, HttpStatus.OK))
-                .orElseThrow(() -> new ProductServiceException("Not found product."));
-    }
-
     @PostMapping("/product")
-    public ResponseEntity addProduct(final ProductDto productDto) {
+    public ResponseEntity addProduct(final Product product) {
         // todo send log
-        return Optional.ofNullable(productService.saveProduct(productDto))
+        return Optional.ofNullable(productService.saveProduct(product))
                 .map(a -> new ResponseEntity<>(a, HttpStatus.OK))
                 .orElseThrow(() -> new ProductServiceException("Not found product."));
     }
 
     @PutMapping("/product")
-    public ResponseEntity updateProduct(final ProductDto productDto) {
+    public ResponseEntity updateProduct(final Product product) {
         // todo send log
-        return Optional.ofNullable(productService.saveProduct(productDto))
+        return Optional.ofNullable(productService.saveProduct(product))
+                .map(a -> new ResponseEntity<>(a, HttpStatus.OK))
+                .orElseThrow(() -> new ProductServiceException("Not found product."));
+    }
+
+    @PutMapping("/products")
+    public ResponseEntity updateProducts(final List<Product> productList) {
+        // todo send log
+        return Optional.ofNullable(productService.saveProducts(productList))
+                .map(a -> new ResponseEntity<>(a, HttpStatus.OK))
+                .orElseThrow(() -> new ProductServiceException("Not found product."));
+    }
+
+    @RequestMapping(value = "/product/{product_id}", method = RequestMethod.GET)
+    public ResponseEntity getProducts(final @PathVariable(value = "product_id") Long productId) {
+        // todo send log
+        return Optional.ofNullable(productService.getProductById(productId))
                 .map(a -> new ResponseEntity<>(a, HttpStatus.OK))
                 .orElseThrow(() -> new ProductServiceException("Not found product."));
     }

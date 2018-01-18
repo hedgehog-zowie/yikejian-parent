@@ -1,24 +1,26 @@
-package com.yikejian.user.api.v1.dto;
+package com.yikejian.store.api.v1.dto;
+
+import com.yikejian.store.domain.store.Store;
 
 /**
  * @author jackalope
- * @Title: QueryUser
+ * @Title: QueryRole
  * @Package com.yikejian.user.request
  * @Description: TODO
- * @date 2018/1/14 21:50
+ * @date 2018/1/14 21:51
  */
-public class RequestUserDto {
+public class RequestStore {
 
-    private UserDto user;
+    private Store store;
     private Pagination pagination;
     private Sort sort;
 
-    public UserDto getUser() {
-        return user;
+    public Store getStore() {
+        return store;
     }
 
-    public void setUser(UserDto user) {
-        this.user = user;
+    public void setStore(Store store) {
+        this.store = store;
     }
 
     public Pagination getPagination() {

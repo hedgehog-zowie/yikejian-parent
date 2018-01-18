@@ -1,23 +1,20 @@
 package com.yikejian.user.api.v1;
 
-import com.yikejian.user.api.v1.dto.RequestUserDto;
-import com.yikejian.user.api.v1.dto.UserDto;
+import com.yikejian.user.api.v1.dto.RequestUser;
 import com.yikejian.user.domain.user.User;
 import com.yikejian.user.exception.UserServiceException;
 import com.yikejian.user.service.UserService;
+import com.yikejian.user.util.JsonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.security.Principal;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -38,16 +35,28 @@ public class UserControllerV1 {
         this.userService = userService;
     }
 
-    @GetMapping("/me")
-    public ResponseEntity me(Principal principal) {
-        User user = null;
-        if (principal != null) {
-            user = userService.getUserByUsername(principal.getName());
-        }
-
-        return Optional.ofNullable(user)
+    @PostMapping("/user")
+    public ResponseEntity addUser(final User user) {
+        // todo send log
+        return Optional.ofNullable(userService.saveUser(user))
                 .map(a -> new ResponseEntity<>(a, HttpStatus.OK))
-                .orElseThrow(() -> new UsernameNotFoundException("Username not found"));
+                .orElseThrow(() -> new UserServiceException("Not found user."));
+    }
+
+    @PutMapping("/user")
+    public ResponseEntity updateUser(final User user) {
+        // todo send log
+        return Optional.ofNullable(userService.saveUser(user))
+                .map(a -> new ResponseEntity<>(a, HttpStatus.OK))
+                .orElseThrow(() -> new UserServiceException("Not found user."));
+    }
+
+    @PutMapping("/users")
+    public ResponseEntity updateUsers(final List<User> userList) {
+        // todo send log
+        return Optional.ofNullable(userService.saveUsers(userList))
+                .map(a -> new ResponseEntity<>(a, HttpStatus.OK))
+                .orElseThrow(() -> new UserServiceException("Not found user."));
     }
 
     @RequestMapping(value = "/user/{user_id}", method = RequestMethod.GET)
@@ -58,28 +67,30 @@ public class UserControllerV1 {
                 .orElseThrow(() -> new UserServiceException("Not found user."));
     }
 
-    @PostMapping("/user")
-    public ResponseEntity addUser(final UserDto userDto) {
+    @GetMapping("/roles")
+    public ResponseEntity getUsers(final @RequestParam(value = "params") String params) {
+        RequestUser requestUser;
+        try {
+            requestUser = JsonUtils.fromJson(URLDecoder.decode(params, "UTF-8"), RequestUser.class);
+        } catch (UnsupportedEncodingException e) {
+            throw new UserServiceException(e.getLocalizedMessage());
+        }
         // todo send log
-        return Optional.ofNullable(userService.saveUser(userDto))
+        return Optional.ofNullable(userService.getUsers(requestUser))
                 .map(a -> new ResponseEntity<>(a, HttpStatus.OK))
-                .orElseThrow(() -> new UserServiceException("Not found user."));
+                .orElseThrow(() -> new UserServiceException("Not found any role."));
     }
 
-    @PutMapping("/user")
-    public ResponseEntity updateUser(final UserDto userDto) {
-        // todo send log
-        return Optional.ofNullable(userService.saveUser(userDto))
-                .map(a -> new ResponseEntity<>(a, HttpStatus.OK))
-                .orElseThrow(() -> new UserServiceException("Not found user."));
-    }
+    @GetMapping("/me")
+    public ResponseEntity me(Principal principal) {
+        User user = null;
+        if (principal != null) {
+            user = userService.getUserByUsername(principal.getName());
+        }
 
-    @GetMapping("/users")
-    public ResponseEntity getUsers(final RequestUserDto requestUserDto) {
-        // todo send log
-        return Optional.ofNullable(userService.getUsers(requestUserDto))
+        return Optional.ofNullable(user)
                 .map(a -> new ResponseEntity<>(a, HttpStatus.OK))
-                .orElseThrow(() -> new UserServiceException("Not found any user."));
+                .orElseThrow(() -> new UsernameNotFoundException("Username not found"));
     }
 
 }

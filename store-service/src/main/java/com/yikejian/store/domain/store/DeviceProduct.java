@@ -1,6 +1,5 @@
-package com.yikejian.store.domain.device;
+package com.yikejian.store.domain.store;
 
-import com.yikejian.store.api.v1.dto.DeviceProductDto;
 import com.yikejian.store.domain.BaseEntity;
 
 import javax.persistence.Entity;
@@ -10,6 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import java.util.Date;
+import java.util.Objects;
 
 /**
  * <code>DeviceProduct</code>.
@@ -26,7 +26,7 @@ public class DeviceProduct extends BaseEntity {
     @GeneratedValue
     private Long id;
     /**
-     * 产品名称
+     * 产品ID
      */
     private Long productId;
     /**
@@ -36,43 +36,18 @@ public class DeviceProduct extends BaseEntity {
     @JoinColumn(name = "device_id")
     private Device device;
 
-    public void fromProductDto(DeviceProductDto deviceProductDto) {
-        if (deviceProductDto.getId() != null) {
-            setId(deviceProductDto.getId());
-        }
-        if (deviceProductDto.getProductId() != null) {
-            setProductId(deviceProductDto.getProductId());
-        }
-    }
-
-    public DeviceProductDto toDeviceProductDto(){
-        DeviceProductDto deviceProductDto = new DeviceProductDto();
-        deviceProductDto.setId(getId());
-        deviceProductDto.setProductId(getProductId());
-        deviceProductDto.setEffective(getEffective());
-        deviceProductDto.setDeleted(getDeleted());
-        deviceProductDto.setLastModifiedBy(getLastModifiedBy());
-        deviceProductDto.setLastModifiedAt(getLastModifiedAt() == null ? null : new Date(getLastModifiedAt()));
-        return deviceProductDto;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         DeviceProduct that = (DeviceProduct) o;
-
-        if (!id.equals(that.id)) return false;
-        return productId.equals(that.productId);
-
+        return Objects.equals(productId, that.productId);
     }
 
     @Override
     public int hashCode() {
-        int result = id.hashCode();
-        result = 31 * result + productId.hashCode();
-        return result;
+
+        return Objects.hash(productId);
     }
 
     public Long getId() {

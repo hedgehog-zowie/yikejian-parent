@@ -1,17 +1,9 @@
 package com.yikejian.store.domain.store;
 
-import com.yikejian.store.api.v1.dto.StoreDto;
 import com.yikejian.store.domain.BaseEntity;
-import com.yikejian.store.domain.device.Device;
 import org.apache.commons.lang.StringUtils;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import java.util.Date;
+import javax.persistence.*;
 import java.util.Set;
 
 /**
@@ -79,56 +71,46 @@ public class Store extends BaseEntity {
     @OneToMany(mappedBy = "store", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<Device> deviceSet;
 
-//    public void fromStoreDto(StoreDto storeDto) {
-//        if (StringUtils.isNotBlank(storeDto.getStoreName())) {
-//            setStoreName(storeDto.getStoreName());
-//        }
-//        if (StringUtils.isNotBlank(storeDto.getAddress())) {
-//            setAddress(storeDto.getAddress());
-//        }
-//        if (StringUtils.isNotBlank(storeDto.getPhoneNumber())) {
-//            setPhoneNumber(storeDto.getPhoneNumber());
-//        }
-//        if (storeDto.getStartTime() != null) {
-//            setStartTime(storeDto.getDeleted());
-//        }
-//        if (storeDto.getEndTime() != null) {
-//            setEndTime(storeDto.getDeleted());
-//        }
-//        if (StringUtils.isNotBlank(storeDto.getTraffic())) {
-//            setTraffic(storeDto.getTraffic());
-//        }
-//        if (storeDto.getLongitude() != null) {
-//            setLongitude(storeDto.getLongitude());
-//        }
-//        if (storeDto.getLatitude() != null) {
-//            setLatitude(storeDto.getLatitude());
-//        }
-//        if (storeDto.getEffective() != null) {
-//            setEffective(storeDto.getEffective());
-//        }
-//        if (storeDto.getDeleted() != null) {
-//            setDeleted(storeDto.getDeleted());
-//        }
-//    }
-//
-//    public StoreDto toStoreDto() {
-//        StoreDto storeDto = new StoreDto();
-//        storeDto.setStoreId(getStoreId());
-//        storeDto.setStoreName(getStoreName());
-//        storeDto.setAddress(getAddress());
-//        storeDto.setPhoneNumber(getPhoneNumber());
-//        storeDto.setStartTime(getStartTime());
-//        storeDto.setEndTime(getEndTime());
-//        storeDto.setTraffic(getTraffic());
-//        storeDto.setLongitude(getLongitude());
-//        storeDto.setLatitude(getLatitude());
-//        storeDto.setEffective(getEffective());
-//        storeDto.setDeleted(getDeleted());
-//        storeDto.setLastModifiedBy(getLastModifiedBy());
-//        storeDto.setLastModifiedAt(getLastModifiedAt() == null ? null : new Date(getLastModifiedAt()));
-//        return storeDto;
-//    }
+    public void mergeOtherStore(Store store) {
+        if (StringUtils.isNotBlank(store.getStoreName())) {
+            setStoreName(store.getStoreName());
+        }
+        if (StringUtils.isNotBlank(store.getAddress())) {
+            setAddress(store.getAddress());
+        }
+        if (StringUtils.isNotBlank(store.getPhoneNumber())) {
+            setPhoneNumber(store.getPhoneNumber());
+        }
+        if (store.getStartTime() != null) {
+            setStartTime(store.getDeleted());
+        }
+        if (store.getEndTime() != null) {
+            setEndTime(store.getDeleted());
+        }
+        if (StringUtils.isNotBlank(store.getTraffic())) {
+            setTraffic(store.getTraffic());
+        }
+        if (store.getLongitude() != null) {
+            setLongitude(store.getLongitude());
+        }
+        if (store.getLatitude() != null) {
+            setLatitude(store.getLatitude());
+        }
+        if (store.getEffective() != null) {
+            setEffective(store.getEffective());
+        }
+        if (store.getDeleted() != null) {
+            setDeleted(store.getDeleted());
+        }
+        // check product set
+        if (store.getStoreProductSet() != null && store.getStoreProductSet().size() > 0) {
+            storeProductSet.addAll(store.getStoreProductSet());
+        }
+        // check device set
+        if (store.getDeviceSet() != null && store.getDeviceSet().size() > 0) {
+            deviceSet.addAll(store.getDeviceSet());
+        }
+    }
 
     public Long getStoreId() {
         return storeId;

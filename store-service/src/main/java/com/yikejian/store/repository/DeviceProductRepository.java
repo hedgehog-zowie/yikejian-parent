@@ -1,7 +1,6 @@
 package com.yikejian.store.repository;
 
-import com.yikejian.store.domain.device.Device;
-import com.yikejian.store.domain.device.DeviceProduct;
+import com.yikejian.store.domain.store.DeviceProduct;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.PagingAndSortingRepository;
 

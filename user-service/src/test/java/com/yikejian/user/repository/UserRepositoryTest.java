@@ -87,7 +87,11 @@ public class UserRepositoryTest {
         User user = userRepository.findByUserId(8L);
         assertEquals(user.getRole().getRoleName(), "admin3");
         user.setRole(role);
-        assertEquals(user.getRole().getRoleName(), "asdf");
+        assertEquals(userRepository.save(user).getRole().getRoleName(), "asdf");
+
+        Role role2 = new Role(1L);
+        user.setRole(role2);
+        assertEquals(userRepository.save(user).getRole().getRoleName(), "ADMIN");
 
         List<User> userList = userRepository.findByRole(role);
         assertEquals(userList.size(), 2);

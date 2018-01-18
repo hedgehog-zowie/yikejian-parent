@@ -1,7 +1,7 @@
 package com.yikejian.store.api.v1;
 
-import com.yikejian.store.api.v1.dto.StoreDto;
-import com.yikejian.store.api.v1.dto.RequestStoreDto;
+import com.yikejian.store.api.v1.dto.RequestStore;
+import com.yikejian.store.domain.store.Store;
 import com.yikejian.store.exception.StoreServiceException;
 import com.yikejian.store.service.StoreService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +35,22 @@ public class StoreControllerV1 {
         this.storeService = storeService;
     }
 
+    @PostMapping("/store")
+    public ResponseEntity addStore(final Store store) {
+        // todo send log
+        return Optional.ofNullable(storeService.saveStore(store))
+                .map(a -> new ResponseEntity<>(a, HttpStatus.OK))
+                .orElseThrow(() -> new StoreServiceException("Not found store."));
+    }
+
+    @PutMapping("/store")
+    public ResponseEntity updateStore(final Store storeDto) {
+        // todo send log
+        return Optional.ofNullable(storeService.saveStore(storeDto))
+                .map(a -> new ResponseEntity<>(a, HttpStatus.OK))
+                .orElseThrow(() -> new StoreServiceException("Not found store."));
+    }
+
     @RequestMapping(value = "/store/{store_id}", method = RequestMethod.GET)
     public ResponseEntity getStores(final @PathVariable(value = "store_id") Long storeId) {
         // todo send log
@@ -43,26 +59,10 @@ public class StoreControllerV1 {
                 .orElseThrow(() -> new StoreServiceException("Not found store."));
     }
 
-    @PostMapping("/store")
-    public ResponseEntity addStore(final StoreDto storeDto) {
-        // todo send log
-        return Optional.ofNullable(storeService.saveStore(storeDto))
-                .map(a -> new ResponseEntity<>(a, HttpStatus.OK))
-                .orElseThrow(() -> new StoreServiceException("Not found store."));
-    }
-
-    @PutMapping("/store")
-    public ResponseEntity updateStore(final StoreDto storeDto) {
-        // todo send log
-        return Optional.ofNullable(storeService.saveStore(storeDto))
-                .map(a -> new ResponseEntity<>(a, HttpStatus.OK))
-                .orElseThrow(() -> new StoreServiceException("Not found store."));
-    }
-
     @GetMapping("/stores")
-    public ResponseEntity getStores(final RequestStoreDto requestStoreDto) {
+    public ResponseEntity getStores(final RequestStore requestStore) {
         // todo send log
-        return Optional.ofNullable(storeService.getStores(requestStoreDto))
+        return Optional.ofNullable(storeService.getStores(requestStore))
                 .map(a -> new ResponseEntity<>(a, HttpStatus.OK))
                 .orElseThrow(() -> new StoreServiceException("Not found any store."));
     }

@@ -1,11 +1,7 @@
 package com.yikejian.user.api.v1;
 
-import com.yikejian.user.api.v1.dto.UserDto;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import com.yikejian.user.domain.user.User;
+import org.junit.*;
 import org.springframework.web.client.RestTemplate;
 
 import static junit.framework.TestCase.assertEquals;
@@ -43,9 +39,9 @@ public class UserControllerV1Test {
 
     @Test
     public void testMe() {
-        UserDto userDto = restTemplate.getForObject(String.format(ME_URL_TEMPLATE, ACCESS_TOKEN),
-                UserDto.class);
-        assertEquals("admin", userDto.getUserName());
+        User user = restTemplate.getForObject(String.format(ME_URL_TEMPLATE, ACCESS_TOKEN),
+                User.class);
+        assertEquals("admin", user.getUserName());
     }
 
 }

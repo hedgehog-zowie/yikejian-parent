@@ -1,24 +1,26 @@
-package com.yikejian.inventory.api.v1.dto;
+package com.yikejian.user.api.v1.dto;
+
+import com.yikejian.user.domain.user.User;
 
 /**
  * @author jackalope
- * @Title: QueryRole
+ * @Title: QueryUser
  * @Package com.yikejian.user.request
  * @Description: TODO
- * @date 2018/1/14 21:51
+ * @date 2018/1/14 21:50
  */
-public class RequestInventoryDto {
+public class RequestUser {
 
-    private InventoryDto inventory;
+    private User user;
     private Pagination pagination;
     private Sort sort;
 
-    public InventoryDto getInventory() {
-        return inventory;
+    public User getUser() {
+        return user;
     }
 
-    public void setInventory(InventoryDto inventory) {
-        this.inventory = inventory;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public Pagination getPagination() {

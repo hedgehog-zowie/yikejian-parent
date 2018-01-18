@@ -1,7 +1,6 @@
 package com.yikejian.inventory.api.v1;
 
-import com.yikejian.inventory.api.v1.dto.InventoryDto;
-import com.yikejian.inventory.api.v1.dto.RequestInventoryDto;
+import com.yikejian.inventory.domain.inventory.Inventory;
 import com.yikejian.inventory.exception.InventoryServiceException;
 import com.yikejian.inventory.service.InventoryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -35,34 +35,18 @@ public class InventoryControllerV1 {
         this.inventoryService = inventoryService;
     }
 
-    @RequestMapping(value = "/inventory/{inventory_id}", method = RequestMethod.GET)
-    public ResponseEntity getInventorys(final @PathVariable(value = "inventory_id") Long inventoryId) {
-        // todo send log
-        return Optional.ofNullable(inventoryService.getInventoryById(inventoryId))
-                .map(a -> new ResponseEntity<>(a, HttpStatus.OK))
-                .orElseThrow(() -> new InventoryServiceException("Not found inventory."));
-    }
-
-    @PostMapping("/inventory")
-    public ResponseEntity addInventory(final InventoryDto inventoryDto) {
-        // todo send log
-        return Optional.ofNullable(inventoryService.saveInventory(inventoryDto))
-                .map(a -> new ResponseEntity<>(a, HttpStatus.OK))
-                .orElseThrow(() -> new InventoryServiceException("Not found inventory."));
-    }
-
     @PutMapping("/inventory")
-    public ResponseEntity updateInventory(final InventoryDto inventoryDto) {
+    public ResponseEntity updateInventory(final Inventory inventory) {
         // todo send log
-        return Optional.ofNullable(inventoryService.saveInventory(inventoryDto))
+        return Optional.ofNullable(inventoryService.saveInventory(inventory))
                 .map(a -> new ResponseEntity<>(a, HttpStatus.OK))
                 .orElseThrow(() -> new InventoryServiceException("Not found inventory."));
     }
 
-    @GetMapping("/inventorys")
-    public ResponseEntity getInventorys(final RequestInventoryDto requestInventoryDto) {
+    @GetMapping("/inventories")
+    public ResponseEntity getInventories(final Inventory inventory) {
         // todo send log
-        return Optional.ofNullable(inventoryService.getInventorys(requestInventoryDto))
+        return Optional.ofNullable(inventoryService.getInventories(inventory))
                 .map(a -> new ResponseEntity<>(a, HttpStatus.OK))
                 .orElseThrow(() -> new InventoryServiceException("Not found any inventory."));
     }

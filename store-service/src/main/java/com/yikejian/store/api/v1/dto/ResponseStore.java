@@ -1,5 +1,7 @@
 package com.yikejian.store.api.v1.dto;
 
+import com.yikejian.store.domain.store.Store;
+
 import java.util.List;
 
 /**
@@ -10,25 +12,25 @@ import java.util.List;
  * @version: 1.0-SNAPSHOT
  * date: 2018/1/15 11:28
  */
-public class ResponseStoreDto {
+public class ResponseStore {
 
-    private List<StoreDto> storeList;
+    private List<Store> storeList;
     private Pagination pagination;
 
-    public ResponseStoreDto(List<StoreDto> storeList) {
+    public ResponseStore(List<Store> storeList) {
         this.storeList = storeList;
     }
 
-    public ResponseStoreDto(List<StoreDto> storeList, Pagination pagination) {
+    public ResponseStore(List<Store> storeList, Pagination pagination) {
         this.storeList = storeList;
         this.pagination = pagination;
     }
 
-    public List<StoreDto> getStoreList() {
+    public List<Store> getStoreList() {
         return storeList;
     }
 
-    public void setStoreList(List<StoreDto> storeList) {
+    public void setStoreList(List<Store> storeList) {
         this.storeList = storeList;
     }
 

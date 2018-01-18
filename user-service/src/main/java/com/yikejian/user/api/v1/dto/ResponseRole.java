@@ -1,37 +1,39 @@
 package com.yikejian.user.api.v1.dto;
 
+import com.yikejian.user.domain.role.Role;
+
 import java.util.List;
 
 /**
- * <code>ResponseRoleDto</code>.
+ * <code>ResponseRole</code>.
  * ${DESCRIPTION}
  *
  * @author zweig
  * @version: 1.0-SNAPSHOT
  * date: 2018/1/15 11:28
  */
-public class ResponseRoleDto {
+public class ResponseRole {
 
-    private List<RoleDto> roleList;
+    private List<Role> roleList;
     private Pagination pagination;
 
-    public ResponseRoleDto() {
+    public ResponseRole() {
     }
 
-    public ResponseRoleDto(List<RoleDto> roleList) {
+    public ResponseRole(List<Role> roleList) {
         this.roleList = roleList;
     }
 
-    public ResponseRoleDto(List<RoleDto> roleList, Pagination pagination) {
+    public ResponseRole(List<Role> roleList, Pagination pagination) {
         this.roleList = roleList;
         this.pagination = pagination;
     }
 
-    public List<RoleDto> getRoleList() {
+    public List<Role> getRoleList() {
         return roleList;
     }
 
-    public void setRoleList(List<RoleDto> roleList) {
+    public void setRoleList(List<Role> roleList) {
         this.roleList = roleList;
     }
 

@@ -2,9 +2,9 @@ package com.yikejian.user.service;
 
 import com.yikejian.user.UserServiceApplication;
 import com.yikejian.user.api.v1.dto.Pagination;
-import com.yikejian.user.api.v1.dto.RequestRoleDto;
-import com.yikejian.user.api.v1.dto.ResponseRoleDto;
-import com.yikejian.user.api.v1.dto.RoleDto;
+import com.yikejian.user.api.v1.dto.RequestRole;
+import com.yikejian.user.api.v1.dto.ResponseRole;
+import com.yikejian.user.domain.role.Role;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -55,13 +55,13 @@ public class RoleServiceTest {
 
     @Test
     public void test() {
-        RoleDto role = roleService.getRoleById(1L);
+        Role role = roleService.getRoleById(1L);
         assertEquals(role.getRoleName(), "ADMIN");
 
         // add
-        RoleDto role1 = new RoleDto("admin1", "auth1, auth2, auth3");
-        RoleDto role2 = new RoleDto("admin2", "auth1, auth2, auth3, auth4, auth5, auth6");
-        RoleDto role3 = new RoleDto("admin3", "auth4, auth5, auth6");
+        Role role1 = new Role("admin1", "auth1, auth2, auth3");
+        Role role2 = new Role("admin2", "auth1, auth2, auth3, auth4, auth5, auth6");
+        Role role3 = new Role("admin3", "auth4, auth5, auth6");
         roleService.saveRole(role1);
         roleService.saveRole(role2);
         roleService.saveRole(role3);
@@ -75,10 +75,10 @@ public class RoleServiceTest {
         assertEquals(8, roleService.getAll().getRoleList().size());
 
         // batch add
-        RoleDto role4 = new RoleDto("admin4", "auth6, auth7, auth8");
-        RoleDto role5 = new RoleDto("admin5", "auth1, auth2, auth3, auth4, auth5, auth6");
-        RoleDto role6 = new RoleDto("admin6", "auth4, auth5, auth6");
-        List<RoleDto> roleDtoList = Arrays.asList(role4, role5, role6);
+        Role role4 = new Role("admin4", "auth6, auth7, auth8");
+        Role role5 = new Role("admin5", "auth1, auth2, auth3, auth4, auth5, auth6");
+        Role role6 = new Role("admin6", "auth4, auth5, auth6");
+        List<Role> roleDtoList = Arrays.asList(role4, role5, role6);
         roleService.saveRoles(roleDtoList);
         assertEquals(11, roleService.getAll().getRoleList().size());
 
@@ -96,61 +96,61 @@ public class RoleServiceTest {
         assertEquals(11, roleService.getAll().getRoleList().size());
 
         // get roles
-        RequestRoleDto requestRoleDto = new RequestRoleDto();
-        ResponseRoleDto responseRoleDto = roleService.getRoles(requestRoleDto);
-        assertEquals(2, responseRoleDto.getPagination().getTotalPages().intValue());
-        assertEquals(11, responseRoleDto.getPagination().getTotalSize().intValue());
-        assertEquals(0, responseRoleDto.getPagination().getCurrentPage().intValue());
-        assertEquals(10, responseRoleDto.getPagination().getPageSize().intValue());
-        assertEquals(10, responseRoleDto.getRoleList().size());
+        RequestRole requestRole = new RequestRole();
+        ResponseRole responseRole = roleService.getRoles(requestRole);
+        assertEquals(2, responseRole.getPagination().getTotalPages().intValue());
+        assertEquals(11, responseRole.getPagination().getTotalSize().intValue());
+        assertEquals(0, responseRole.getPagination().getCurrentPage().intValue());
+        assertEquals(10, responseRole.getPagination().getPageSize().intValue());
+        assertEquals(10, responseRole.getRoleList().size());
 
-        RoleDto roleDto = new RoleDto();
+        Role roleDto = new Role();
         roleDto.setRoleName("ADMIN");
-        requestRoleDto.setRole(roleDto);
-        responseRoleDto = roleService.getRoles(requestRoleDto);
-        assertEquals(1, responseRoleDto.getPagination().getTotalPages().intValue());
-        assertEquals(1, responseRoleDto.getPagination().getTotalSize().intValue());
-        assertEquals(0, responseRoleDto.getPagination().getCurrentPage().intValue());
-        assertEquals(10, responseRoleDto.getPagination().getPageSize().intValue());
-        assertEquals(1, responseRoleDto.getRoleList().size());
+        requestRole.setRole(roleDto);
+        responseRole = roleService.getRoles(requestRole);
+        assertEquals(1, responseRole.getPagination().getTotalPages().intValue());
+        assertEquals(1, responseRole.getPagination().getTotalSize().intValue());
+        assertEquals(0, responseRole.getPagination().getCurrentPage().intValue());
+        assertEquals(10, responseRole.getPagination().getPageSize().intValue());
+        assertEquals(1, responseRole.getRoleList().size());
 
         roleDto.setRoleName("admin");
-        requestRoleDto.setRole(roleDto);
-        responseRoleDto = roleService.getRoles(requestRoleDto);
-        assertEquals(1, responseRoleDto.getPagination().getTotalPages().intValue());
-        assertEquals(6, responseRoleDto.getPagination().getTotalSize().intValue());
-        assertEquals(0, responseRoleDto.getPagination().getCurrentPage().intValue());
-        assertEquals(10, responseRoleDto.getPagination().getPageSize().intValue());
-        assertEquals(6, responseRoleDto.getRoleList().size());
+        requestRole.setRole(roleDto);
+        responseRole = roleService.getRoles(requestRole);
+        assertEquals(1, responseRole.getPagination().getTotalPages().intValue());
+        assertEquals(6, responseRole.getPagination().getTotalSize().intValue());
+        assertEquals(0, responseRole.getPagination().getCurrentPage().intValue());
+        assertEquals(10, responseRole.getPagination().getPageSize().intValue());
+        assertEquals(6, responseRole.getRoleList().size());
 
-        RoleDto role7 = new RoleDto("admin7", "auth6, auth7, auth8");
-        RoleDto role8 = new RoleDto("admin8", "auth1, auth2, auth3, auth4, auth5, auth6");
-        RoleDto role9 = new RoleDto("admin9", "auth4, auth5, auth6");
-        RoleDto role10 = new RoleDto("admin10", "auth4, auth5, auth6");
-        RoleDto role11 = new RoleDto("admin11", "auth4, auth5, auth6");
+        Role role7 = new Role("admin7", "auth6, auth7, auth8");
+        Role role8 = new Role("admin8", "auth1, auth2, auth3, auth4, auth5, auth6");
+        Role role9 = new Role("admin9", "auth4, auth5, auth6");
+        Role role10 = new Role("admin10", "auth4, auth5, auth6");
+        Role role11 = new Role("admin11", "auth4, auth5, auth6");
         roleService.saveRoles(Arrays.asList(role7, role8, role9, role10, role11));
-        responseRoleDto = roleService.getRoles(requestRoleDto);
-        assertEquals(2, responseRoleDto.getPagination().getTotalPages().intValue());
-        assertEquals(11, responseRoleDto.getPagination().getTotalSize().intValue());
-        assertEquals(0, responseRoleDto.getPagination().getCurrentPage().intValue());
-        assertEquals(10, responseRoleDto.getPagination().getPageSize().intValue());
-        assertEquals(10, responseRoleDto.getRoleList().size());
+        responseRole = roleService.getRoles(requestRole);
+        assertEquals(2, responseRole.getPagination().getTotalPages().intValue());
+        assertEquals(11, responseRole.getPagination().getTotalSize().intValue());
+        assertEquals(0, responseRole.getPagination().getCurrentPage().intValue());
+        assertEquals(10, responseRole.getPagination().getPageSize().intValue());
+        assertEquals(10, responseRole.getRoleList().size());
 
-        requestRoleDto.setPagination(new Pagination(1, 10));
-        responseRoleDto = roleService.getRoles(requestRoleDto);
-        assertEquals(2, responseRoleDto.getPagination().getTotalPages().intValue());
-        assertEquals(11, responseRoleDto.getPagination().getTotalSize().intValue());
-        assertEquals(1, responseRoleDto.getPagination().getCurrentPage().intValue());
-        assertEquals(10, responseRoleDto.getPagination().getPageSize().intValue());
-        assertEquals(1, responseRoleDto.getRoleList().size());
+        requestRole.setPagination(new Pagination(1, 10));
+        responseRole = roleService.getRoles(requestRole);
+        assertEquals(2, responseRole.getPagination().getTotalPages().intValue());
+        assertEquals(11, responseRole.getPagination().getTotalSize().intValue());
+        assertEquals(1, responseRole.getPagination().getCurrentPage().intValue());
+        assertEquals(10, responseRole.getPagination().getPageSize().intValue());
+        assertEquals(1, responseRole.getRoleList().size());
 
-        requestRoleDto.setPagination(new Pagination(2, 3));
-        responseRoleDto = roleService.getRoles(requestRoleDto);
-        assertEquals(4, responseRoleDto.getPagination().getTotalPages().intValue());
-        assertEquals(11, responseRoleDto.getPagination().getTotalSize().intValue());
-        assertEquals(2, responseRoleDto.getPagination().getCurrentPage().intValue());
-        assertEquals(3, responseRoleDto.getPagination().getPageSize().intValue());
-        assertEquals(3, responseRoleDto.getRoleList().size());
+        requestRole.setPagination(new Pagination(2, 3));
+        responseRole = roleService.getRoles(requestRole);
+        assertEquals(4, responseRole.getPagination().getTotalPages().intValue());
+        assertEquals(11, responseRole.getPagination().getTotalSize().intValue());
+        assertEquals(2, responseRole.getPagination().getCurrentPage().intValue());
+        assertEquals(3, responseRole.getPagination().getPageSize().intValue());
+        assertEquals(3, responseRole.getRoleList().size());
     }
 
 }

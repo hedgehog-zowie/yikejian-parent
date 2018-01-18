@@ -1,13 +1,10 @@
 package com.yikejian.user.service;
 
-import com.google.common.collect.Lists;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.yikejian.user.api.v1.dto.Pagination;
-import com.yikejian.user.api.v1.dto.RequestRoleDto;
-import com.yikejian.user.api.v1.dto.ResponseRoleDto;
-import com.yikejian.user.api.v1.dto.RoleDto;
+import com.yikejian.user.api.v1.dto.RequestRole;
+import com.yikejian.user.api.v1.dto.ResponseRole;
 import com.yikejian.user.domain.role.Role;
-import com.yikejian.user.exception.UserServiceException;
 import com.yikejian.user.repository.RoleRepository;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +16,7 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.criteria.Predicate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author jackalope
@@ -41,118 +36,71 @@ public class RoleService {
     }
 
     @HystrixCommand
-    public Role saveRole(RoleDto roleDto) {
-        return roleRepository.save(roleDtoToRole(roleDto));
+    public Role saveRole(Role role) {
+        return roleRepository.save(role);
     }
 
     @HystrixCommand
-    public List<Role> saveRoles(List<RoleDto> roleDtoList) {
-        List<Role> roleList = Lists.newArrayList(roleDtoList.stream().
-                map(this::roleDtoToRole).collect(Collectors.toList()));
+    public List<Role> saveRoles(List<Role> roleList) {
         return (List<Role>) roleRepository.save(roleList);
     }
 
     @HystrixCommand
-    public RoleDto getRoleById(Long roleId) {
-        Role role = roleRepository.findByRoleId(roleId);
-        if (role == null) {
-            throw new UserServiceException("未知的角色");
-        }
-        return roleToRoleDto(role);
+    public Role getRoleById(Long roleId) {
+        return roleRepository.findByRoleId(roleId);
     }
 
     @HystrixCommand
-    public ResponseRoleDto getAll() {
-        List<Role> roleList = (List<Role>) roleRepository.findAll();
-        List<RoleDto> roleDtoList = Lists.newArrayList(roleList.stream().
-                map(this::roleToRoleDto).collect(Collectors.toList()));
-        return new ResponseRoleDto(roleDtoList);
+    public ResponseRole getAll() {
+        return new ResponseRole((List<Role>) roleRepository.findAll());
     }
 
     @HystrixCommand
-    public ResponseRoleDto getRoles(RequestRoleDto requestRoleDto) {
+    public ResponseRole getRoles(RequestRole requestRole) {
         Pagination pagination;
-        if (requestRoleDto != null && requestRoleDto.getPagination() != null) {
-            pagination = requestRoleDto.getPagination();
+        if (requestRole != null && requestRole.getPagination() != null) {
+            pagination = requestRole.getPagination();
         } else {
             pagination = new Pagination();
         }
 
         Sort sort = null;
-        if (requestRoleDto != null && requestRoleDto.getSort() != null) {
-            sort = new Sort(requestRoleDto.getSort().getDirection(), requestRoleDto.getSort().getField());
+        if (requestRole != null && requestRole.getSort() != null) {
+            sort = new Sort(requestRole.getSort().getDirection(), requestRole.getSort().getField());
         }
 
         PageRequest pageRequest = new PageRequest(
                 pagination.getCurrentPage(),
                 pagination.getPageSize(),
                 sort);
-        Page<Role> page = roleRepository.findAll(roleSpec(requestRoleDto.getRole()), pageRequest);
+        Page<Role> page = roleRepository.findAll(roleSpec(requestRole.getRole()), pageRequest);
 
         pagination.setTotalPages(page.getTotalPages());
         pagination.setTotalSize(page.getTotalElements());
-        List<RoleDto> roleDtoList = Lists.newArrayList(page.getContent().stream().
-                map(this::roleToRoleDto).collect(Collectors.toList()));
-        return new ResponseRoleDto(roleDtoList, pagination);
+        List<Role> roleList = page.getContent();
+        return new ResponseRole(roleList, pagination);
     }
 
-    private Specification<Role> roleSpec(final RoleDto roleDto) {
+    private Specification<Role> roleSpec(final Role role) {
         return (root, query, cb) -> {
             List<Predicate> predicateList = new ArrayList<>();
-            if (roleDto != null) {
-                if (roleDto.getDeleted() != null) {
-                    predicateList.add(cb.equal(root.get("deleted").as(Integer.class), roleDto.getDeleted()));
+            if (role != null) {
+                if (role.getDeleted() != null) {
+                    predicateList.add(cb.equal(root.get("deleted").as(Integer.class), role.getDeleted()));
                 }
-                if (roleDto.getEffective() != null) {
-                    predicateList.add(cb.equal(root.get("effective").as(Integer.class), roleDto.getEffective()));
+                if (role.getEffective() != null) {
+                    predicateList.add(cb.equal(root.get("effective").as(Integer.class), role.getEffective()));
                 }
-                if (StringUtils.isNotBlank(roleDto.getRoleName())) {
-                    predicateList.add(cb.like(root.get("roleName").as(String.class), "%" + roleDto.getRoleName() + "%"));
+                if (StringUtils.isNotBlank(role.getRoleName())) {
+                    predicateList.add(cb.like(root.get("roleName").as(String.class), "%" + role.getRoleName() + "%"));
                 }
-                if (roleDto.getAuthorities() != null) {
-                    predicateList.add(cb.like(root.get("authorities").as(String.class), "%" + roleDto.getAuthorities() + "%"));
+                if (role.getAuthorities() != null) {
+                    predicateList.add(cb.like(root.get("authorities").as(String.class), "%" + role.getAuthorities() + "%"));
                 }
             }
             Predicate[] predicates = new Predicate[predicateList.size()];
             return cb.and(predicateList.toArray(predicates));
         };
-    }
-
-    private Role roleDtoToRole(RoleDto roleDto) {
-        Role role;
-        if (roleDto.getRoleId() != null) {
-            role = roleRepository.findByRoleId(roleDto.getRoleId());
-            if (role == null) {
-                throw new UserServiceException("未知的角色");
-            }
-        } else {
-            role = new Role();
-        }
-        if (StringUtils.isNotBlank(roleDto.getRoleName())) {
-            role.setRoleName(roleDto.getRoleName());
-        }
-        if (StringUtils.isNotBlank(roleDto.getAuthorities())) {
-            role.setAuthorities(roleDto.getAuthorities());
-        }
-        if (roleDto.getEffective() != null) {
-            role.setEffective(roleDto.getEffective());
-        }
-        if (roleDto.getDeleted() != null) {
-            role.setDeleted(roleDto.getDeleted());
-        }
-        return role;
-    }
-
-    private RoleDto roleToRoleDto(Role role) {
-        RoleDto roleDto = new RoleDto();
-        roleDto.setRoleId(role.getRoleId());
-        roleDto.setRoleName(role.getRoleName());
-        roleDto.setAuthorities(role.getAuthorities());
-        roleDto.setEffective(role.getEffective());
-        roleDto.setDeleted(role.getDeleted());
-        roleDto.setLastModifiedBy(role.getLastModifiedBy());
-        roleDto.setLastModifiedAt(role.getLastModifiedAt() == null ? null : new Date(role.getLastModifiedAt()));
-        return roleDto;
     }
 
 }

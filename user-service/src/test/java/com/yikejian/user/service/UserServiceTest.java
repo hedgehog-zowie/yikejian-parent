@@ -2,14 +2,11 @@ package com.yikejian.user.service;
 
 import com.yikejian.user.UserServiceApplication;
 import com.yikejian.user.api.v1.dto.Pagination;
-import com.yikejian.user.api.v1.dto.RequestUserDto;
-import com.yikejian.user.api.v1.dto.ResponseUserDto;
-import com.yikejian.user.api.v1.dto.UserDto;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import com.yikejian.user.api.v1.dto.RequestUser;
+import com.yikejian.user.api.v1.dto.ResponseUser;
+import com.yikejian.user.domain.role.Role;
+import com.yikejian.user.domain.user.User;
+import org.junit.*;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -55,13 +52,13 @@ public class UserServiceTest {
 
     @Test
     public void test() {
-        UserDto user = userService.getUserById(1L);
+        User user = userService.getUserById(1L);
         assertEquals(user.getUserName(), "admin");
 
         // add
-        UserDto user1 = new UserDto("user1", 1L);
-        UserDto user2 = new UserDto("user2", 2L);
-        UserDto user3 = new UserDto("user3", 3L);
+        User user1 = new User("user1", "", new Role(1L));
+        User user2 = new User("user2", "", new Role(2L));
+        User user3 = new User("user3", "", new Role(3L));
         userService.saveUser(user1);
         userService.saveUser(user2);
         userService.saveUser(user3);
@@ -69,107 +66,107 @@ public class UserServiceTest {
 
         // update
         user3.setUserId(8L);
-        user3.setRoleId(4L);
+        user3.setRole(new Role(4L));
         userService.saveUser(user3);
-        assertEquals(4, userService.getUserById(8L).getRoleId().intValue());
+        assertEquals(4, userService.getUserById(8L).getRole().getRoleId().intValue());
         assertEquals(8, userService.getAll().getUserList().size());
 
         // batch add
-        UserDto user4 = new UserDto("user4", 1L);
-        UserDto user5 = new UserDto("user5", 2L);
-        UserDto user6 = new UserDto("user6", 3L);
-        List<UserDto> userDtoList = Arrays.asList(user4, user5, user6);
+        User user4 = new User("user4", "", new Role(1L));
+        User user5 = new User("user5", "", new Role(2L));
+        User user6 = new User("user6", "", new Role(3L));
+        List<User> userDtoList = Arrays.asList(user4, user5, user6);
         userService.saveUsers(userDtoList);
         assertEquals(11, userService.getAll().getUserList().size());
 
         // batch update
         user4.setUserId(9L);
-        user4.setRoleId(1L);
+        user4.setRole(new Role(1L));
         user5.setUserId(10L);
-        user5.setRoleId(1L);
+        user5.setRole(new Role(1L));
         user6.setUserId(11L);
-        user6.setRoleId(1L);
+        user6.setRole(new Role(1L));
         userService.saveUsers(Arrays.asList(user4, user5, user6));
-        assertEquals(1, userService.getUserById(9L).getRoleId().intValue());
-        assertEquals(1, userService.getUserById(10L).getRoleId().intValue());
-        assertEquals(1, userService.getUserById(11L).getRoleId().intValue());
+        assertEquals(1, userService.getUserById(9L).getRole().getRoleId().intValue());
+        assertEquals(1, userService.getUserById(10L).getRole().getRoleId().intValue());
+        assertEquals(1, userService.getUserById(11L).getRole().getRoleId().intValue());
         assertEquals(11, userService.getAll().getUserList().size());
 
         // get users
-        RequestUserDto requestUserDto = new RequestUserDto();
-        ResponseUserDto responseUserDto = userService.getUsers(requestUserDto);
-        assertEquals(2, responseUserDto.getPagination().getTotalPages().intValue());
-        assertEquals(11, responseUserDto.getPagination().getTotalSize().intValue());
-        assertEquals(0, responseUserDto.getPagination().getCurrentPage().intValue());
-        assertEquals(10, responseUserDto.getPagination().getPageSize().intValue());
-        assertEquals(10, responseUserDto.getUserList().size());
+        RequestUser requestUser = new RequestUser();
+        ResponseUser responseUser = userService.getUsers(requestUser);
+        assertEquals(2, responseUser.getPagination().getTotalPages().intValue());
+        assertEquals(11, responseUser.getPagination().getTotalSize().intValue());
+        assertEquals(0, responseUser.getPagination().getCurrentPage().intValue());
+        assertEquals(10, responseUser.getPagination().getPageSize().intValue());
+        assertEquals(10, responseUser.getUserList().size());
 
-        UserDto userDto = new UserDto();
+        User userDto = new User();
         userDto.setUserName("admin");
-        requestUserDto.setUser(userDto);
-        responseUserDto = userService.getUsers(requestUserDto);
-        assertEquals(1, responseUserDto.getPagination().getTotalPages().intValue());
-        assertEquals(1, responseUserDto.getPagination().getTotalSize().intValue());
-        assertEquals(0, responseUserDto.getPagination().getCurrentPage().intValue());
-        assertEquals(10, responseUserDto.getPagination().getPageSize().intValue());
-        assertEquals(1, responseUserDto.getUserList().size());
+        requestUser.setUser(userDto);
+        responseUser = userService.getUsers(requestUser);
+        assertEquals(1, responseUser.getPagination().getTotalPages().intValue());
+        assertEquals(1, responseUser.getPagination().getTotalSize().intValue());
+        assertEquals(0, responseUser.getPagination().getCurrentPage().intValue());
+        assertEquals(10, responseUser.getPagination().getPageSize().intValue());
+        assertEquals(1, responseUser.getUserList().size());
 
         userDto.setUserName("user");
-        requestUserDto.setUser(userDto);
-        responseUserDto = userService.getUsers(requestUserDto);
-        assertEquals(1, responseUserDto.getPagination().getTotalPages().intValue());
-        assertEquals(6, responseUserDto.getPagination().getTotalSize().intValue());
-        assertEquals(0, responseUserDto.getPagination().getCurrentPage().intValue());
-        assertEquals(10, responseUserDto.getPagination().getPageSize().intValue());
-        assertEquals(6, responseUserDto.getUserList().size());
+        requestUser.setUser(userDto);
+        responseUser = userService.getUsers(requestUser);
+        assertEquals(1, responseUser.getPagination().getTotalPages().intValue());
+        assertEquals(6, responseUser.getPagination().getTotalSize().intValue());
+        assertEquals(0, responseUser.getPagination().getCurrentPage().intValue());
+        assertEquals(10, responseUser.getPagination().getPageSize().intValue());
+        assertEquals(6, responseUser.getUserList().size());
 
-        UserDto user7 = new UserDto("user7", 5L);
-        UserDto user8 = new UserDto("user8", 5L);
-        UserDto user9 = new UserDto("user9", 5L);
-        UserDto user10 = new UserDto("user10", 5L);
-        UserDto user11 = new UserDto("user11", 5L);
+        User user7 = new User("user7", "", new Role(5L));
+        User user8 = new User("user8", "", new Role(5L));
+        User user9 = new User("user9", "", new Role(5L));
+        User user10 = new User("user10", "", new Role(5L));
+        User user11 = new User("user11", "", new Role(5L));
         userService.saveUsers(Arrays.asList(user7, user8, user9, user10, user11));
-        responseUserDto = userService.getUsers(requestUserDto);
-        assertEquals(2, responseUserDto.getPagination().getTotalPages().intValue());
-        assertEquals(11, responseUserDto.getPagination().getTotalSize().intValue());
-        assertEquals(0, responseUserDto.getPagination().getCurrentPage().intValue());
-        assertEquals(10, responseUserDto.getPagination().getPageSize().intValue());
-        assertEquals(10, responseUserDto.getUserList().size());
+        responseUser = userService.getUsers(requestUser);
+        assertEquals(2, responseUser.getPagination().getTotalPages().intValue());
+        assertEquals(11, responseUser.getPagination().getTotalSize().intValue());
+        assertEquals(0, responseUser.getPagination().getCurrentPage().intValue());
+        assertEquals(10, responseUser.getPagination().getPageSize().intValue());
+        assertEquals(10, responseUser.getUserList().size());
 
-        requestUserDto.setPagination(new Pagination(1, 10));
-        responseUserDto = userService.getUsers(requestUserDto);
-        assertEquals(2, responseUserDto.getPagination().getTotalPages().intValue());
-        assertEquals(11, responseUserDto.getPagination().getTotalSize().intValue());
-        assertEquals(1, responseUserDto.getPagination().getCurrentPage().intValue());
-        assertEquals(10, responseUserDto.getPagination().getPageSize().intValue());
-        assertEquals(1, responseUserDto.getUserList().size());
+        requestUser.setPagination(new Pagination(1, 10));
+        responseUser = userService.getUsers(requestUser);
+        assertEquals(2, responseUser.getPagination().getTotalPages().intValue());
+        assertEquals(11, responseUser.getPagination().getTotalSize().intValue());
+        assertEquals(1, responseUser.getPagination().getCurrentPage().intValue());
+        assertEquals(10, responseUser.getPagination().getPageSize().intValue());
+        assertEquals(1, responseUser.getUserList().size());
 
-        requestUserDto.setPagination(new Pagination(2, 3));
-        responseUserDto = userService.getUsers(requestUserDto);
-        assertEquals(4, responseUserDto.getPagination().getTotalPages().intValue());
-        assertEquals(11, responseUserDto.getPagination().getTotalSize().intValue());
-        assertEquals(2, responseUserDto.getPagination().getCurrentPage().intValue());
-        assertEquals(3, responseUserDto.getPagination().getPageSize().intValue());
-        assertEquals(3, responseUserDto.getUserList().size());
+        requestUser.setPagination(new Pagination(2, 3));
+        responseUser = userService.getUsers(requestUser);
+        assertEquals(4, responseUser.getPagination().getTotalPages().intValue());
+        assertEquals(11, responseUser.getPagination().getTotalSize().intValue());
+        assertEquals(2, responseUser.getPagination().getCurrentPage().intValue());
+        assertEquals(3, responseUser.getPagination().getPageSize().intValue());
+        assertEquals(3, responseUser.getUserList().size());
 
         userDto.setUserName("user");
-        userDto.setRoleId(1L);
-        requestUserDto.setPagination(new Pagination(1, 3));
-        responseUserDto = userService.getUsers(requestUserDto);
-        assertEquals(2, responseUserDto.getPagination().getTotalPages().intValue());
-        assertEquals(4, responseUserDto.getPagination().getTotalSize().intValue());
-        assertEquals(1, responseUserDto.getPagination().getCurrentPage().intValue());
-        assertEquals(3, responseUserDto.getPagination().getPageSize().intValue());
-        assertEquals(1, responseUserDto.getUserList().size());
+        userDto.setRole(new Role(1L));
+        requestUser.setPagination(new Pagination(1, 3));
+        responseUser = userService.getUsers(requestUser);
+        assertEquals(2, responseUser.getPagination().getTotalPages().intValue());
+        assertEquals(4, responseUser.getPagination().getTotalSize().intValue());
+        assertEquals(1, responseUser.getPagination().getCurrentPage().intValue());
+        assertEquals(3, responseUser.getPagination().getPageSize().intValue());
+        assertEquals(1, responseUser.getUserList().size());
 
-        userDto.setRoleId(5L);
-        requestUserDto.setPagination(new Pagination(1, 4));
-        responseUserDto = userService.getUsers(requestUserDto);
-        assertEquals(2, responseUserDto.getPagination().getTotalPages().intValue());
-        assertEquals(5, responseUserDto.getPagination().getTotalSize().intValue());
-        assertEquals(1, responseUserDto.getPagination().getCurrentPage().intValue());
-        assertEquals(4, responseUserDto.getPagination().getPageSize().intValue());
-        assertEquals(1, responseUserDto.getUserList().size());
+        userDto.setRole(new Role(5L));
+        requestUser.setPagination(new Pagination(1, 4));
+        responseUser = userService.getUsers(requestUser);
+        assertEquals(2, responseUser.getPagination().getTotalPages().intValue());
+        assertEquals(5, responseUser.getPagination().getTotalSize().intValue());
+        assertEquals(1, responseUser.getPagination().getCurrentPage().intValue());
+        assertEquals(4, responseUser.getPagination().getPageSize().intValue());
+        assertEquals(1, responseUser.getUserList().size());
     }
 
 }

@@ -16,6 +16,4 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface InventoryRepository extends PagingAndSortingRepository<Inventory, Long>, JpaSpecificationExecutor<Inventory> {
 
-    Inventory findByInventoryId(Long inventoryId);
-
 }
