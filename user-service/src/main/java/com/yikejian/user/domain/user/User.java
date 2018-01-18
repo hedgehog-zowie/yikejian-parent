@@ -32,7 +32,7 @@ public class User extends BaseEntity {
     private String userName;
     @JsonIgnore
     private String password;
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(name = "role_id")
     private Role role;
 

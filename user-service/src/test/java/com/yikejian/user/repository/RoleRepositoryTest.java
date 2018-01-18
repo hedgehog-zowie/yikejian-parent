@@ -9,11 +9,10 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 
@@ -32,9 +31,6 @@ import static org.junit.Assert.assertEquals;
 //@RunWith(SpringRunner.class)
 //@DataJpaTest
 public class RoleRepositoryTest {
-
-    @Autowired
-    private TestEntityManager entityManager;
 
     @Autowired
     private RoleRepository roleRepository;
@@ -67,8 +63,11 @@ public class RoleRepositoryTest {
     }
 
     @Test
+    @Transactional
     public void findById() {
-        assertEquals(roleRepository.findByRoleId(6L).getRoleName(), "admin1");
+        Role role = roleRepository.findByRoleId(1L);
+        assertEquals("ADMIN", role.getRoleName());
+        assertEquals(1, role.getUserSet().size());
     }
 
     @Test

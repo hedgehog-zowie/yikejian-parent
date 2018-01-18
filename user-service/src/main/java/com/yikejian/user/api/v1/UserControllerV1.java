@@ -45,7 +45,7 @@ public class UserControllerV1 {
             user = userService.getUserByUsername(principal.getName());
         }
 
-        return Optional.ofNullable(user.toUserDto())
+        return Optional.ofNullable(user)
                 .map(a -> new ResponseEntity<>(a, HttpStatus.OK))
                 .orElseThrow(() -> new UsernameNotFoundException("Username not found"));
     }
