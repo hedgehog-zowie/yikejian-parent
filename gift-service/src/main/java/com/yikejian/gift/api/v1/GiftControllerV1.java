@@ -1,7 +1,7 @@
 package com.yikejian.gift.api.v1;
 
-import com.yikejian.gift.api.v1.dto.GiftDto;
-import com.yikejian.gift.api.v1.dto.RequestGiftDto;
+import com.yikejian.gift.api.v1.dto.RequestGift;
+import com.yikejian.gift.domain.gift.Gift;
 import com.yikejian.gift.exception.GiftServiceException;
 import com.yikejian.gift.service.GiftService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,25 +44,25 @@ public class GiftControllerV1 {
     }
 
     @PostMapping("/gift")
-    public ResponseEntity addGift(final GiftDto giftDto) {
+    public ResponseEntity addGift(final Gift gift) {
         // todo send log
-        return Optional.ofNullable(giftService.saveGift(giftDto))
+        return Optional.ofNullable(giftService.saveGift(gift))
                 .map(a -> new ResponseEntity<>(a, HttpStatus.OK))
                 .orElseThrow(() -> new GiftServiceException("Not found gift."));
     }
 
     @PutMapping("/gift")
-    public ResponseEntity updateGift(final GiftDto giftDto) {
+    public ResponseEntity updateGift(final Gift gift) {
         // todo send log
-        return Optional.ofNullable(giftService.saveGift(giftDto))
+        return Optional.ofNullable(giftService.saveGift(gift))
                 .map(a -> new ResponseEntity<>(a, HttpStatus.OK))
                 .orElseThrow(() -> new GiftServiceException("Not found gift."));
     }
 
     @GetMapping("/gifts")
-    public ResponseEntity getGifts(final RequestGiftDto requestGiftDto) {
+    public ResponseEntity getGifts(final RequestGift requestGift) {
         // todo send log
-        return Optional.ofNullable(giftService.getGifts(requestGiftDto))
+        return Optional.ofNullable(giftService.getGifts(requestGift))
                 .map(a -> new ResponseEntity<>(a, HttpStatus.OK))
                 .orElseThrow(() -> new GiftServiceException("Not found any gift."));
     }

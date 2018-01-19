@@ -1,7 +1,7 @@
 package com.yikejian.order.api.v1;
 
-import com.yikejian.order.api.v1.dto.OrderDto;
-import com.yikejian.order.api.v1.dto.RequestOrderDto;
+import com.yikejian.order.api.v1.dto.RequestOrder;
+import com.yikejian.order.domain.order.Order;
 import com.yikejian.order.exception.OrderServiceException;
 import com.yikejian.order.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,25 +44,25 @@ public class OrderControllerV1 {
     }
 
     @PostMapping("/order")
-    public ResponseEntity addOrder(final OrderDto orderDto) {
+    public ResponseEntity addOrder(final Order order) {
         // todo send log
-        return Optional.ofNullable(orderService.saveOrder(orderDto))
+        return Optional.ofNullable(orderService.saveOrder(order))
                 .map(a -> new ResponseEntity<>(a, HttpStatus.OK))
                 .orElseThrow(() -> new OrderServiceException("Not found order."));
     }
 
     @PutMapping("/order")
-    public ResponseEntity updateOrder(final OrderDto orderDto) {
+    public ResponseEntity updateOrder(final Order order) {
         // todo send log
-        return Optional.ofNullable(orderService.saveOrder(orderDto))
+        return Optional.ofNullable(orderService.saveOrder(order))
                 .map(a -> new ResponseEntity<>(a, HttpStatus.OK))
                 .orElseThrow(() -> new OrderServiceException("Not found order."));
     }
 
     @GetMapping("/orders")
-    public ResponseEntity getOrders(final RequestOrderDto requestOrderDto) {
+    public ResponseEntity getOrders(final RequestOrder requestOrder) {
         // todo send log
-        return Optional.ofNullable(orderService.getOrders(requestOrderDto))
+        return Optional.ofNullable(orderService.getOrders(requestOrder))
                 .map(a -> new ResponseEntity<>(a, HttpStatus.OK))
                 .orElseThrow(() -> new OrderServiceException("Not found any order."));
     }

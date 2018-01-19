@@ -1,6 +1,5 @@
-package com.yikejian.user.api;
+package com.yikejian.gift.api;
 
-import com.yikejian.user.exception.UserServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;

@@ -1,11 +1,9 @@
 package com.yikejian.gift.service;
 
-import com.google.common.collect.Lists;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.yikejian.gift.api.v1.dto.Pagination;
-import com.yikejian.gift.api.v1.dto.GiftDto;
-import com.yikejian.gift.api.v1.dto.RequestGiftDto;
-import com.yikejian.gift.api.v1.dto.ResponseGiftDto;
+import com.yikejian.gift.api.v1.dto.RequestGift;
+import com.yikejian.gift.api.v1.dto.ResponseGift;
 import com.yikejian.gift.domain.gift.Gift;
 import com.yikejian.gift.repository.GiftRepository;
 import org.apache.commons.lang.StringUtils;
@@ -19,7 +17,6 @@ import org.springframework.stereotype.Service;
 import javax.persistence.criteria.Predicate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * <code>GiftService</code>.
@@ -40,93 +37,69 @@ public class GiftService {
     }
 
     @HystrixCommand
-    public Gift saveGift(GiftDto giftDto) {
-        Gift gift;
-        if (giftDto.getGiftId() != null) {
-            gift = giftRepository.findByGiftId(giftDto.getGiftId());
-        } else {
-            gift = new Gift();
-        }
-        gift.fromGiftDto(giftDto);
+    public Gift saveGift(Gift gift) {
         return giftRepository.save(gift);
     }
 
     @HystrixCommand
-    public List<Gift> saveGifts(List<GiftDto> giftDtoList) {
-        List<Gift> giftList = Lists.newArrayList();
-        for (GiftDto giftDto : giftDtoList) {
-            Gift gift;
-            if (giftDto.getGiftId() != null) {
-                gift = giftRepository.findByGiftId(giftDto.getGiftId());
-            } else {
-                gift = new Gift();
-            }
-            gift.fromGiftDto(giftDto);
-            giftList.add(gift);
-        }
+    public List<Gift> saveGifts(List<Gift> giftList) {
         return (List<Gift>) giftRepository.save(giftList);
     }
 
     @HystrixCommand
-    public GiftDto getGiftById(Long giftId) {
-        Gift gift = giftRepository.findByGiftId(giftId);
-        return gift.toGiftDto();
+    public Gift getGiftById(Long giftId) {
+        return giftRepository.findByGiftId(giftId);
     }
 
     @HystrixCommand
-    public ResponseGiftDto getAll() {
-        List<Gift> giftList = (List<Gift>) giftRepository.findAll();
-        List<GiftDto> giftDtoList = Lists.newArrayList(
-                giftList.stream().map(Gift::toGiftDto).collect(Collectors.toList())
-        );
-        return new ResponseGiftDto(giftDtoList);
+    public ResponseGift getAll() {
+        return new ResponseGift((List<Gift>) giftRepository.findAll());
     }
 
     @HystrixCommand
-    public ResponseGiftDto getGifts(RequestGiftDto requestGiftDto) {
+    public ResponseGift getGifts(RequestGift requestGift) {
         Pagination pagination;
-        if (requestGiftDto != null && requestGiftDto.getPagination() != null) {
-            pagination = requestGiftDto.getPagination();
+        if (requestGift != null && requestGift.getPagination() != null) {
+            pagination = requestGift.getPagination();
         } else {
             pagination = new Pagination();
         }
 
         Sort sort = null;
-        if (requestGiftDto != null && requestGiftDto.getSort() != null) {
-            sort = new Sort(requestGiftDto.getSort().getDirection(), requestGiftDto.getSort().getField());
+        if (requestGift != null && requestGift.getSort() != null) {
+            sort = new Sort(requestGift.getSort().getDirection(), requestGift.getSort().getField());
         }
 
         PageRequest pageRequest = new PageRequest(
                 pagination.getCurrentPage(),
                 pagination.getPageSize(),
                 sort);
-        Page<Gift> page = giftRepository.findAll(giftSpec(requestGiftDto.getGift()), pageRequest);
+        Page<Gift> page = giftRepository.findAll(giftSpec(requestGift.getGift()), pageRequest);
 
         pagination.setTotalPages(page.getTotalPages());
         pagination.setTotalSize(page.getTotalElements());
-        List<GiftDto> giftDtoList = Lists.newArrayList(page.getContent().stream().
-                map(Gift::toGiftDto).collect(Collectors.toList()));
-        return new ResponseGiftDto(giftDtoList, pagination);
+
+        return new ResponseGift(page.getContent(), pagination);
     }
 
-    private Specification<Gift> giftSpec(final GiftDto giftDto) {
+    private Specification<Gift> giftSpec(final Gift gift) {
         return (root, query, cb) -> {
             List<Predicate> predicateList = new ArrayList<>();
-            if (giftDto != null) {
-                if (StringUtils.isNotBlank(giftDto.getGiftName())) {
-                    predicateList.add(cb.like(root.get("giftName").as(String.class), "%" + giftDto.getGiftName() + "%"));
+            if (gift != null) {
+                if (StringUtils.isNotBlank(gift.getGiftName())) {
+                    predicateList.add(cb.like(root.get("giftName").as(String.class), "%" + gift.getGiftName() + "%"));
                 }
-                if (giftDto.getStartTime() != null) {
-                    predicateList.add(cb.equal(root.get("startTime").as(Integer.class), giftDto.getStartTime()));
+                if (gift.getStartTime() != null) {
+                    predicateList.add(cb.equal(root.get("startTime").as(Integer.class), gift.getStartTime()));
                 }
-                if (giftDto.getDeleted() != null) {
-                    predicateList.add(cb.equal(root.get("endTime").as(Integer.class), giftDto.getEndTime()));
+                if (gift.getDeleted() != null) {
+                    predicateList.add(cb.equal(root.get("endTime").as(Integer.class), gift.getEndTime()));
                 }
-                if (giftDto.getEffective() != null) {
-                    predicateList.add(cb.equal(root.get("effective").as(Integer.class), giftDto.getEffective()));
+                if (gift.getEffective() != null) {
+                    predicateList.add(cb.equal(root.get("effective").as(Integer.class), gift.getEffective()));
                 }
-                if (giftDto.getDeleted() != null) {
-                    predicateList.add(cb.equal(root.get("deleted").as(Integer.class), giftDto.getDeleted()));
+                if (gift.getDeleted() != null) {
+                    predicateList.add(cb.equal(root.get("deleted").as(Integer.class), gift.getDeleted()));
                 }
             }
             Predicate[] predicates = new Predicate[predicateList.size()];

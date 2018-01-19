@@ -1,17 +1,8 @@
 package com.yikejian.order.domain.order;
 
-import com.yikejian.order.api.v1.dto.OrderDto;
 import com.yikejian.order.domain.BaseEntity;
-import com.yikejian.order.domain.item.OrderItem;
-import org.apache.commons.lang.StringUtils;
 
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import java.util.Date;
+import javax.persistence.*;
 import java.util.Set;
 
 /**
@@ -22,6 +13,7 @@ import java.util.Set;
  * @version: 1.0-SNAPSHOT
  * date: 2018/1/16 9:55
  */
+@Entity
 public class Order extends BaseEntity {
 
     @Id
@@ -32,9 +24,19 @@ public class Order extends BaseEntity {
      */
     private Long customerId;
     /**
+     * 客户名称
+     */
+    @Transient
+    private String customerName;
+    /**
      * 店铺ID
      */
     private Long storeId;
+    /**
+     * 店铺名称
+     */
+    @Transient
+    private String storeName;
     /**
      * 订单金额
      */
@@ -52,13 +54,6 @@ public class Order extends BaseEntity {
     @JoinColumn(name = "extra_id", referencedColumnName = "extra_id")
     private OrderExtra orderExtra;
 
-    public void fromOrderDto(OrderDto orderDto) {
-    }
-
-    public OrderDto toOrderDto() {
-        return null;
-    }
-
     public Long getOrderId() {
         return orderId;
     }
@@ -75,8 +70,24 @@ public class Order extends BaseEntity {
         this.customerId = customerId;
     }
 
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
+    }
+
     public Long getStoreId() {
         return storeId;
+    }
+
+    public String getStoreName() {
+        return storeName;
+    }
+
+    public void setStoreName(String storeName) {
+        this.storeName = storeName;
     }
 
     public void setStoreId(Long storeId) {

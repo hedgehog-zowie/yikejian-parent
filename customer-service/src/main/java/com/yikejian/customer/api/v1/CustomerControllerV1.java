@@ -1,7 +1,7 @@
 package com.yikejian.customer.api.v1;
 
-import com.yikejian.customer.api.v1.dto.CustomerDto;
-import com.yikejian.customer.api.v1.dto.RequestCustomerDto;
+import com.yikejian.customer.api.v1.dto.RequestCustomer;
+import com.yikejian.customer.domain.customer.Customer;
 import com.yikejian.customer.exception.CustomerServiceException;
 import com.yikejian.customer.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,25 +38,25 @@ public class CustomerControllerV1 {
     }
 
     @PostMapping("/customer")
-    public ResponseEntity addCustomer(final CustomerDto customerDto) {
+    public ResponseEntity addCustomer(final Customer customer) {
         // todo send log
-        return Optional.ofNullable(customerService.saveCustomer(customerDto))
+        return Optional.ofNullable(customerService.saveCustomer(customer))
                 .map(a -> new ResponseEntity<>(a, HttpStatus.OK))
                 .orElseThrow(() -> new CustomerServiceException("Not found customer."));
     }
 
     @PutMapping("/customer")
-    public ResponseEntity updateCustomer(final CustomerDto customerDto) {
+    public ResponseEntity updateCustomer(final Customer customer) {
         // todo send log
-        return Optional.ofNullable(customerService.saveCustomer(customerDto))
+        return Optional.ofNullable(customerService.saveCustomer(customer))
                 .map(a -> new ResponseEntity<>(a, HttpStatus.OK))
                 .orElseThrow(() -> new CustomerServiceException("Not found customer."));
     }
 
     @GetMapping("/customers")
-    public ResponseEntity getCustomers(final RequestCustomerDto requestCustomerDto) {
+    public ResponseEntity getCustomers(final RequestCustomer requestCustomer) {
         // todo send log
-        return Optional.ofNullable(customerService.getCustomers(requestCustomerDto))
+        return Optional.ofNullable(customerService.getCustomers(requestCustomer))
                 .map(a -> new ResponseEntity<>(a, HttpStatus.OK))
                 .orElseThrow(() -> new CustomerServiceException("Not found any customer."));
     }

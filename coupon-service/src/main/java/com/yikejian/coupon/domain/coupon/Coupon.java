@@ -1,16 +1,13 @@
 package com.yikejian.coupon.domain.coupon;
 
-import com.yikejian.coupon.api.v1.dto.CouponDto;
 import com.yikejian.coupon.domain.BaseEntity;
 import com.yikejian.coupon.domain.item.CouponItem;
-import org.apache.commons.lang.StringUtils;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import java.util.Date;
 import java.util.Set;
 
 /**
@@ -58,41 +55,6 @@ public class Coupon extends BaseEntity {
 
     @OneToMany(mappedBy = "coupon", fetch = FetchType.LAZY)
     private Set<CouponItem> itemSet;
-
-    public void fromCouponDto(CouponDto couponDto) {
-        if (StringUtils.isNotBlank(couponDto.getCouponName())) {
-            setCouponName(couponDto.getCouponName());
-        }
-        if (couponDto.getStartTime() != null) {
-            setDeleted(couponDto.getDeleted());
-        }
-        if (couponDto.getEndTime() != null) {
-            setDeleted(couponDto.getDeleted());
-        }
-        if (couponDto.getEffective() != null) {
-            setEffective(couponDto.getEffective());
-        }
-        if (couponDto.getDeleted() != null) {
-            setDeleted(couponDto.getDeleted());
-        }
-    }
-
-    public CouponDto toCouponDto() {
-        CouponDto couponDto = new CouponDto();
-        couponDto.setCouponId(getCouponId());
-        couponDto.setCouponName(getCouponName());
-        couponDto.setCouponType(getCouponType());
-        couponDto.setNumber(getNumber());
-        couponDto.setSurplus(getSurplus());
-        couponDto.setMoney(getMoney());
-        couponDto.setStartTime(getStartTime() != null ? new Date(getStartTime()) : null);
-        couponDto.setEndTime(getEndTime() != null ? new Date(getEndTime()): null);
-        couponDto.setEffective(getEffective());
-        couponDto.setDeleted(getDeleted());
-        couponDto.setLastModifiedBy(getLastModifiedBy());
-        couponDto.setLastModifiedAt(getLastModifiedAt() == null ? null : new Date(getLastModifiedAt()));
-        return couponDto;
-    }
 
     public Long getCouponId() {
         return couponId;

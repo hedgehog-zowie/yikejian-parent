@@ -10,5 +10,7 @@ security:
 yikejian:
   user:
     url: "http://user-service/uaa/v1/me"
-        
+  customer:
+    api:
+      url:
             

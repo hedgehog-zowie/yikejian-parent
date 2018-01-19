@@ -2,12 +2,7 @@ package com.yikejian.coupon.domain.item;
 
 import com.yikejian.coupon.domain.coupon.Coupon;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 /**
  * <code>CouponItem</code>.
@@ -37,6 +32,11 @@ public class CouponItem {
      * 客户
      */
     private Long customerId;
+    /**
+     * 客户名称
+     */
+    @Transient
+    private String customerName;
     /**
      * 状态
      */
@@ -72,6 +72,14 @@ public class CouponItem {
 
     public void setCustomerId(Long customerId) {
         this.customerId = customerId;
+    }
+
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
     }
 
     public CouponItemStatus getStatus() {

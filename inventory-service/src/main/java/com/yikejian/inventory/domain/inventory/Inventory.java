@@ -15,7 +15,7 @@ import javax.persistence.Id;
  * date: 2018/1/16 9:55
  */
 @Entity
-public class Inventory extends BaseEntity{
+public class Inventory extends BaseEntity {
 
     @Id
     @GeneratedValue
@@ -36,6 +36,20 @@ public class Inventory extends BaseEntity{
      * 日期
      */
     private String day;
+
+    public Inventory incorporate(InventoryEvent inventoryEvent) {
+        switch (inventoryEvent.getInventoryEventType()) {
+            case DECREASE_STOCK:
+                stock--;
+                break;
+            case INCREASE_STOCK:
+                stock++;
+                break;
+            default:
+                break;
+        }
+        return this;
+    }
 
     public Long getInventoryId() {
         return inventoryId;

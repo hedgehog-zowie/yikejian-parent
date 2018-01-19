@@ -1,6 +1,5 @@
 package com.yikejian.gift.domain.gift;
 
-import com.yikejian.gift.api.v1.dto.GiftDto;
 import com.yikejian.gift.domain.BaseEntity;
 import org.apache.commons.lang.StringUtils;
 
@@ -41,34 +40,6 @@ public class Gift extends BaseEntity {
      * 结束时间戳
      */
     private Long endTime;
-
-    public void fromGiftDto(GiftDto giftDto) {
-        if (StringUtils.isNotBlank(giftDto.getGiftName())) {
-            setGiftName(giftDto.getGiftName());
-        }
-        if (giftDto.getStartTime() != null) {
-            setDeleted(giftDto.getDeleted());
-        }
-        if (giftDto.getEndTime() != null) {
-            setDeleted(giftDto.getDeleted());
-        }
-        if (giftDto.getEffective() != null) {
-            setEffective(giftDto.getEffective());
-        }
-        if (giftDto.getDeleted() != null) {
-            setDeleted(giftDto.getDeleted());
-        }
-    }
-
-    public GiftDto toGiftDto() {
-        GiftDto giftDto = new GiftDto();
-        giftDto.setGiftId(getGiftId());
-        giftDto.setGiftName(getGiftName());
-        giftDto.setEffective(getEffective());
-        giftDto.setLastModifiedBy(getLastModifiedBy());
-        giftDto.setLastModifiedAt(getLastModifiedAt() == null ? null : new Date(getLastModifiedAt()));
-        return giftDto;
-    }
 
     public Long getGiftId() {
         return giftId;

@@ -9,6 +9,9 @@ security:
         key-uri: "http://localhost:8001/uaa/oauth/token_key"
 yikejian:
   user:
-    url: "http://user-service/uaa/v1/me"
-        
+    api:
+      url: "http://user-service/uaa/v1/me"
+  customer:
+    api:
+      url:
             

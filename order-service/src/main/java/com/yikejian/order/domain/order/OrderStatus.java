@@ -8,4 +8,7 @@ package com.yikejian.order.domain.order;
  * @date 2018/1/17 1:04
  */
 public enum OrderStatus {
+
+
+
 }

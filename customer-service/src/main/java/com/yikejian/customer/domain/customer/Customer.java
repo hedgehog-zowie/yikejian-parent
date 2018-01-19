@@ -1,12 +1,9 @@
 package com.yikejian.customer.domain.customer;
 
-import com.yikejian.customer.api.v1.dto.CustomerDto;
 import com.yikejian.customer.domain.BaseEntity;
 import com.yikejian.customer.domain.title.Title;
-import org.apache.commons.lang.StringUtils;
 
 import javax.persistence.*;
-import java.util.Date;
 
 /**
  * <code>Customer</code>.
@@ -56,34 +53,6 @@ public class Customer extends BaseEntity {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "title_id")
     private Title title;
-
-    public void fromCustomerDto(CustomerDto customerDto) {
-        if (StringUtils.isNotBlank(customerDto.getCustomerName())) {
-            setCustomerName(customerDto.getCustomerName());
-        }
-        if (customerDto.getStartTime() != null) {
-            setDeleted(customerDto.getDeleted());
-        }
-        if (customerDto.getEndTime() != null) {
-            setDeleted(customerDto.getDeleted());
-        }
-        if (customerDto.getEffective() != null) {
-            setEffective(customerDto.getEffective());
-        }
-        if (customerDto.getDeleted() != null) {
-            setDeleted(customerDto.getDeleted());
-        }
-    }
-
-    public CustomerDto toCustomerDto() {
-        CustomerDto customerDto = new CustomerDto();
-        customerDto.setCustomerId(getCustomerId());
-        customerDto.setCustomerName(getCustomerName());
-        customerDto.setEffective(getEffective());
-        customerDto.setLastModifiedBy(getLastModifiedBy());
-        customerDto.setLastModifiedAt(getLastModifiedAt() == null ? null : new Date(getLastModifiedAt()));
-        return customerDto;
-    }
 
     public Long getCustomerId() {
         return customerId;

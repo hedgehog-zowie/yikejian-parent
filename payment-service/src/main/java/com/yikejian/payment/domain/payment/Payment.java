@@ -1,12 +1,9 @@
 package com.yikejian.payment.domain.payment;
 
-import com.yikejian.payment.api.v1.dto.PaymentDto;
 import com.yikejian.payment.domain.BaseEntity;
-import org.apache.commons.lang.StringUtils;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import java.util.Date;
 
 /**
  * <code>Payment</code>.
@@ -30,10 +27,6 @@ public class Payment extends BaseEntity {
      */
     private Long orderId;
     /**
-     * 礼品卡ID
-     */
-    private Long giftId;
-    /**
      * 合计（金额）
      */
     private Double amount;
@@ -41,15 +34,10 @@ public class Payment extends BaseEntity {
      * 支付方式
      */
     private PaymentType paymentType;
-
-    public void fromPaymentDto(PaymentDto paymentDto) {
-    }
-
-    public PaymentDto toPaymentDto() {
-        PaymentDto paymentDto = new PaymentDto();
-        paymentDto.setPaymentId(getPaymentId());
-        return paymentDto;
-    }
+    /**
+     * 支付状态
+     */
+    private PaymentStatus paymentStatus;
 
     public Long getPaymentId() {
         return paymentId;
@@ -75,14 +63,6 @@ public class Payment extends BaseEntity {
         this.orderId = orderId;
     }
 
-    public Long getGiftId() {
-        return giftId;
-    }
-
-    public void setGiftId(Long giftId) {
-        this.giftId = giftId;
-    }
-
     public Double getAmount() {
         return amount;
     }
@@ -97,5 +77,13 @@ public class Payment extends BaseEntity {
 
     public void setPaymentType(PaymentType paymentType) {
         this.paymentType = paymentType;
+    }
+
+    public PaymentStatus getPaymentStatus() {
+        return paymentStatus;
+    }
+
+    public void setPaymentStatus(PaymentStatus paymentStatus) {
+        this.paymentStatus = paymentStatus;
     }
 }

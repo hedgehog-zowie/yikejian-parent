@@ -1,6 +1,6 @@
 package com.yikejian.payment.config;
 
-import com.yikejian.payment.api.v1.dto.UserDto;
+import com.yikejian.payment.domain.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
@@ -20,7 +20,7 @@ public class UserAuditor implements AuditorAware<String> {
 
     private OAuth2RestTemplate oAuth2RestTemplate;
 
-    @Value("${yikejian.user.url}")
+    @Value("${yikejian.user.api.url}")
     private String userUrl;
 
     @Autowired
@@ -30,7 +30,7 @@ public class UserAuditor implements AuditorAware<String> {
 
     @Override
     public String getCurrentAuditor() {
-        UserDto user = oAuth2RestTemplate.getForObject(userUrl, UserDto.class);
+        User user = oAuth2RestTemplate.getForObject(userUrl, User.class);
         if (user != null) {
             return user.getUserName();
         } else {

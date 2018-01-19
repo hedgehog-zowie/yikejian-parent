@@ -2,11 +2,14 @@ package com.yikejian.inventory.service;
 
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.yikejian.inventory.domain.inventory.Inventory;
+import com.yikejian.inventory.domain.inventory.InventoryEvent;
+import com.yikejian.inventory.repository.InventoryEventRepository;
 import com.yikejian.inventory.repository.InventoryRepository;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 
 import javax.persistence.criteria.Predicate;
 import java.util.ArrayList;
@@ -24,10 +27,21 @@ import java.util.List;
 public class InventoryService {
 
     private InventoryRepository inventoryRepository;
+    private InventoryEventRepository inventoryEventRepository;
 
     @Autowired
-    public InventoryService(InventoryRepository inventoryRepository) {
+    public InventoryService(InventoryRepository inventoryRepository,
+                            InventoryEventRepository inventoryEventRepository) {
         this.inventoryRepository = inventoryRepository;
+        this.inventoryEventRepository = inventoryEventRepository;
+    }
+
+    @HystrixCommand
+    public Inventory getInventoryById(Long inventoryId) {
+        Inventory inventory = inventoryRepository.findByInventoryId(inventoryId);
+        Flux<InventoryEvent> inventoryEvents =
+                Flux.fromStream(inventoryEventRepository.findByInventoryId(inventory.getInventoryId()));
+        return inventoryEvents.reduceWith(() -> inventory, Inventory::incorporate).get();
     }
 
     @HystrixCommand
@@ -41,8 +55,14 @@ public class InventoryService {
     }
 
     @HystrixCommand
-    public List<Inventory> getInventories(Inventory inventory) {
-        return inventoryRepository.findAll(inventorySpec(inventory));
+    public List<Inventory> getInventories(Inventory params) {
+        List<Inventory> inventoryList = inventoryRepository.findAll(inventorySpec(params));
+        for (Inventory inventory : inventoryList) {
+            Flux<InventoryEvent> inventoryEvents =
+                    Flux.fromStream(inventoryEventRepository.findByInventoryId(inventory.getInventoryId()));
+            inventoryEvents.reduceWith(() -> inventory, Inventory::incorporate);
+        }
+        return saveInventories(inventoryList);
     }
 
     private Specification<Inventory> inventorySpec(final Inventory inventory) {

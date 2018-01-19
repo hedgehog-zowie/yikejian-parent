@@ -1,10 +1,10 @@
 package com.yikejian.customer.domain.title;
 
 import com.yikejian.customer.domain.BaseEntity;
+import com.yikejian.customer.domain.customer.Customer;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.Set;
 
 /**
  * @author jackalope
@@ -27,6 +27,8 @@ public class Title extends BaseEntity {
      * 消费金额门槛
      */
     private Double condition;
+    @OneToMany(mappedBy = "title", fetch = FetchType.LAZY)
+    private Set<Customer> customerSet;
 
     public Long getTitleId() {
         return titleId;
@@ -50,5 +52,13 @@ public class Title extends BaseEntity {
 
     public void setCondition(Double condition) {
         this.condition = condition;
+    }
+
+    public Set<Customer> getCustomerSet() {
+        return customerSet;
+    }
+
+    public void setCustomerSet(Set<Customer> customerSet) {
+        this.customerSet = customerSet;
     }
 }

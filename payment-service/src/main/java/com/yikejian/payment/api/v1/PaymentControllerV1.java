@@ -1,7 +1,7 @@
 package com.yikejian.payment.api.v1;
 
-import com.yikejian.payment.api.v1.dto.PaymentDto;
-import com.yikejian.payment.api.v1.dto.RequestPaymentDto;
+import com.yikejian.payment.api.v1.dto.RequestPayment;
+import com.yikejian.payment.domain.payment.Payment;
 import com.yikejian.payment.exception.PaymentServiceException;
 import com.yikejian.payment.service.PaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,25 +44,25 @@ public class PaymentControllerV1 {
     }
 
     @PostMapping("/payment")
-    public ResponseEntity addPayment(final PaymentDto paymentDto) {
+    public ResponseEntity addPayment(final Payment payment) {
         // todo send log
-        return Optional.ofNullable(paymentService.savePayment(paymentDto))
+        return Optional.ofNullable(paymentService.savePayment(payment))
                 .map(a -> new ResponseEntity<>(a, HttpStatus.OK))
                 .orElseThrow(() -> new PaymentServiceException("Not found payment."));
     }
 
     @PutMapping("/payment")
-    public ResponseEntity updatePayment(final PaymentDto paymentDto) {
+    public ResponseEntity updatePayment(final Payment payment) {
         // todo send log
-        return Optional.ofNullable(paymentService.savePayment(paymentDto))
+        return Optional.ofNullable(paymentService.savePayment(payment))
                 .map(a -> new ResponseEntity<>(a, HttpStatus.OK))
                 .orElseThrow(() -> new PaymentServiceException("Not found payment."));
     }
 
     @GetMapping("/payments")
-    public ResponseEntity getPayments(final RequestPaymentDto requestPaymentDto) {
+    public ResponseEntity getPayments(final RequestPayment requestPayment) {
         // todo send log
-        return Optional.ofNullable(paymentService.getPayments(requestPaymentDto))
+        return Optional.ofNullable(paymentService.getPayments(requestPayment))
                 .map(a -> new ResponseEntity<>(a, HttpStatus.OK))
                 .orElseThrow(() -> new PaymentServiceException("Not found any payment."));
     }

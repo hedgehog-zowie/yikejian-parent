@@ -1,7 +1,7 @@
 package com.yikejian.coupon.api.v1;
 
-import com.yikejian.coupon.api.v1.dto.CouponDto;
-import com.yikejian.coupon.api.v1.dto.RequestCouponDto;
+import com.yikejian.coupon.api.v1.dto.RequestCoupon;
+import com.yikejian.coupon.domain.coupon.Coupon;
 import com.yikejian.coupon.exception.CouponServiceException;
 import com.yikejian.coupon.service.CouponService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,25 +44,25 @@ public class CouponControllerV1 {
     }
 
     @PostMapping("/coupon")
-    public ResponseEntity addCoupon(final CouponDto couponDto) {
+    public ResponseEntity addCoupon(final Coupon coupon) {
         // todo send log
-        return Optional.ofNullable(couponService.saveCoupon(couponDto))
+        return Optional.ofNullable(couponService.saveCoupon(coupon))
                 .map(a -> new ResponseEntity<>(a, HttpStatus.OK))
                 .orElseThrow(() -> new CouponServiceException("Not found coupon."));
     }
 
     @PutMapping("/coupon")
-    public ResponseEntity updateCoupon(final CouponDto couponDto) {
+    public ResponseEntity updateCoupon(final Coupon coupon) {
         // todo send log
-        return Optional.ofNullable(couponService.saveCoupon(couponDto))
+        return Optional.ofNullable(couponService.saveCoupon(coupon))
                 .map(a -> new ResponseEntity<>(a, HttpStatus.OK))
                 .orElseThrow(() -> new CouponServiceException("Not found coupon."));
     }
 
     @GetMapping("/coupons")
-    public ResponseEntity getCoupons(final RequestCouponDto requestCouponDto) {
+    public ResponseEntity getCoupons(final RequestCoupon requestCoupon) {
         // todo send log
-        return Optional.ofNullable(couponService.getCoupons(requestCouponDto))
+        return Optional.ofNullable(couponService.getCoupons(requestCoupon))
                 .map(a -> new ResponseEntity<>(a, HttpStatus.OK))
                 .orElseThrow(() -> new CouponServiceException("Not found any coupon."));
     }

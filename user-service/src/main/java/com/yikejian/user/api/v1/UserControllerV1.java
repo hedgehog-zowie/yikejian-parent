@@ -67,7 +67,7 @@ public class UserControllerV1 {
                 .orElseThrow(() -> new UserServiceException("Not found user."));
     }
 
-    @GetMapping("/roles")
+    @GetMapping("/users")
     public ResponseEntity getUsers(final @RequestParam(value = "params") String params) {
         RequestUser requestUser;
         try {
