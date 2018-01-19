@@ -37,6 +37,8 @@
         <spring-cloud.version>Camden.SR7</spring-cloud.version>
         <docker.image.prefix>yikejian</docker.image.prefix>
         <docker.plugin.version>0.3.258</docker.plugin.version>
+        <aliyun.sdk.sms.version>1.0.0</aliyun.sdk.sms.version>
+        <aliyun.sdk.core.version>3.3.1</aliyun.sdk.core.version>
     </properties>
 
     <dependencyManagement>
@@ -54,6 +56,16 @@
                 <version>${spring-boot.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.aliyun</groupId>
+                <artifactId>aliyun-java-sdk-dysmsapi</artifactId>
+                <version>${aliyun.sdk.sms.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.aliyun</groupId>
+                <artifactId>aliyun-java-sdk-core</artifactId>
+                <version>${aliyun.sdk.core.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
