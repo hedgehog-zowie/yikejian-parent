@@ -14,27 +14,27 @@ import java.util.List;
  */
 public class ResponseUser {
 
-    private List<User> userList;
+    private List<User> list;
     private Pagination pagination;
 
     public ResponseUser() {
     }
 
-    public ResponseUser(List<User> userList) {
-        this.userList = userList;
+    public ResponseUser(List<User> list) {
+        this.list = list;
     }
 
-    public ResponseUser(List<User> userList, Pagination pagination) {
-        this.userList = userList;
+    public ResponseUser(List<User> list, Pagination pagination) {
+        this.list = list;
         this.pagination = pagination;
     }
 
-    public List<User> getUserList() {
-        return userList;
+    public List<User> getList() {
+        return list;
     }
 
-    public void setUserList(List<User> userList) {
-        this.userList = userList;
+    public void setList(List<User> list) {
+        this.list = list;
     }
 
     public Pagination getPagination() {

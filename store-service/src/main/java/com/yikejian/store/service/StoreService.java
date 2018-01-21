@@ -1,5 +1,6 @@
 package com.yikejian.store.service;
 
+import com.google.common.collect.Lists;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.yikejian.store.api.v1.dto.Pagination;
 import com.yikejian.store.api.v1.dto.RequestStore;
@@ -52,18 +53,25 @@ public class StoreService {
 
     @HystrixCommand
     public Store saveStore(Store store) {
-        Long storeId = store.getStoreId();
-        if (storeId == null) {
-            return storeRepository.save(store);
-        }
-        Store oldStore = storeRepository.findByStoreId(storeId);
-        oldStore.mergeOtherStore(store);
-        return storeRepository.save(oldStore);
+        return storeRepository.save(transStore(store));
     }
 
     @HystrixCommand
     public List<Store> saveStores(List<Store> storeList) {
-        return (List<Store>) storeRepository.save(storeList);
+        List<Store> newStoreList = Lists.newArrayList();
+        for (Store store : storeList) {
+            newStoreList.add(transStore(store));
+        }
+        return (List<Store>) storeRepository.save(newStoreList);
+    }
+
+    private Store transStore(Store store) {
+        Store newStore = store;
+        if (store.getStoreId() != null) {
+            Store oldStore = storeRepository.findByStoreId(store.getStoreId());
+            newStore = oldStore.mergeOtherStore(store);
+        }
+        return newStore;
     }
 
     @HystrixCommand

@@ -1,10 +1,12 @@
 package com.yikejian.user.api.v1;
 
+import com.yikejian.user.api.v1.dto.Pagination;
 import com.yikejian.user.api.v1.dto.RequestRole;
 import com.yikejian.user.domain.role.Role;
 import com.yikejian.user.exception.UserServiceException;
 import com.yikejian.user.service.RoleService;
 import com.yikejian.user.util.JsonUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -67,13 +69,18 @@ public class RoleControllerV1 {
     }
 
     @GetMapping("/roles")
-    public ResponseEntity getRoles(final @RequestParam(value = "params") String params) {
+    public ResponseEntity getRoles(final @RequestParam(value = "params", required = false) String params) {
         RequestRole requestRole;
-        try {
-            requestRole = JsonUtils.fromJson(URLDecoder.decode(params, "UTF-8"), RequestRole.class);
-        } catch (UnsupportedEncodingException e) {
-            throw new UserServiceException(e.getLocalizedMessage());
+        if (StringUtils.isBlank(params)) {
+            requestRole = new RequestRole(new Role(), new Pagination(), null);
+        } else {
+            try {
+                requestRole = JsonUtils.fromJson(URLDecoder.decode(params, "UTF-8"), RequestRole.class);
+            } catch (UnsupportedEncodingException e) {
+                throw new UserServiceException(e.getLocalizedMessage());
+            }
         }
+        requestRole.getRole().setDeleted(0);
         // todo send log
         return Optional.ofNullable(roleService.getRoles(requestRole))
                 .map(a -> new ResponseEntity<>(a, HttpStatus.OK))

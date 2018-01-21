@@ -71,45 +71,46 @@ public class Store extends BaseEntity {
     @OneToMany(mappedBy = "store", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<Device> deviceSet;
 
-    public void mergeOtherStore(Store store) {
-        if (StringUtils.isNotBlank(store.getStoreName())) {
-            setStoreName(store.getStoreName());
+    public Store mergeOtherStore(Store other) {
+        if (StringUtils.isNotBlank(other.getStoreName())) {
+            setStoreName(other.getStoreName());
         }
-        if (StringUtils.isNotBlank(store.getAddress())) {
-            setAddress(store.getAddress());
+        if (StringUtils.isNotBlank(other.getAddress())) {
+            setAddress(other.getAddress());
         }
-        if (StringUtils.isNotBlank(store.getPhoneNumber())) {
-            setPhoneNumber(store.getPhoneNumber());
+        if (StringUtils.isNotBlank(other.getPhoneNumber())) {
+            setPhoneNumber(other.getPhoneNumber());
         }
-        if (store.getStartTime() != null) {
-            setStartTime(store.getDeleted());
+        if (other.getStartTime() != null) {
+            setStartTime(other.getDeleted());
         }
-        if (store.getEndTime() != null) {
-            setEndTime(store.getDeleted());
+        if (other.getEndTime() != null) {
+            setEndTime(other.getDeleted());
         }
-        if (StringUtils.isNotBlank(store.getTraffic())) {
-            setTraffic(store.getTraffic());
+        if (StringUtils.isNotBlank(other.getTraffic())) {
+            setTraffic(other.getTraffic());
         }
-        if (store.getLongitude() != null) {
-            setLongitude(store.getLongitude());
+        if (other.getLongitude() != null) {
+            setLongitude(other.getLongitude());
         }
-        if (store.getLatitude() != null) {
-            setLatitude(store.getLatitude());
+        if (other.getLatitude() != null) {
+            setLatitude(other.getLatitude());
         }
-        if (store.getEffective() != null) {
-            setEffective(store.getEffective());
+        if (other.getEffective() != null) {
+            setEffective(other.getEffective());
         }
-        if (store.getDeleted() != null) {
-            setDeleted(store.getDeleted());
+        if (other.getDeleted() != null) {
+            setDeleted(other.getDeleted());
         }
         // check product set
-        if (store.getStoreProductSet() != null && store.getStoreProductSet().size() > 0) {
-            storeProductSet.addAll(store.getStoreProductSet());
+        if (other.getStoreProductSet() != null && other.getStoreProductSet().size() > 0) {
+            storeProductSet.addAll(other.getStoreProductSet());
         }
         // check device set
-        if (store.getDeviceSet() != null && store.getDeviceSet().size() > 0) {
-            deviceSet.addAll(store.getDeviceSet());
+        if (other.getDeviceSet() != null && other.getDeviceSet().size() > 0) {
+            deviceSet.addAll(other.getDeviceSet());
         }
+        return this;
     }
 
     public Long getStoreId() {

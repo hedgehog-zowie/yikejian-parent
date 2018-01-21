@@ -1,14 +1,11 @@
 package com.yikejian.user.domain.user;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.yikejian.user.domain.BaseEntity;
 import com.yikejian.user.domain.role.Role;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 import java.util.Objects;
 
 /**
@@ -28,7 +25,8 @@ public class User extends BaseEntity {
     private String userName;
     @JsonIgnore
     private String password;
-    @ManyToOne
+//    @JsonBackReference
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "role_id")
     private Role role;
 
@@ -36,6 +34,13 @@ public class User extends BaseEntity {
     }
 
     public User(String userName, String password, Role role) {
+        this.userName = userName;
+        this.password = password;
+        this.role = role;
+    }
+
+    public User(Long userId, String userName, String password, Role role) {
+        this.userId = userId;
         this.userName = userName;
         this.password = password;
         this.role = role;

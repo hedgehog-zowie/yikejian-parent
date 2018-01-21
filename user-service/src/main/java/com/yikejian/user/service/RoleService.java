@@ -1,5 +1,6 @@
 package com.yikejian.user.service;
 
+import com.google.common.collect.Lists;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.yikejian.user.api.v1.dto.Pagination;
 import com.yikejian.user.api.v1.dto.RequestRole;
@@ -37,12 +38,25 @@ public class RoleService {
 
     @HystrixCommand
     public Role saveRole(Role role) {
-        return roleRepository.save(role);
+        return roleRepository.save(transRole(role));
     }
 
     @HystrixCommand
     public List<Role> saveRoles(List<Role> roleList) {
+        List<Role> newRoleList = Lists.newArrayList();
+        for (Role store : roleList) {
+            newRoleList.add(transRole(store));
+        }
         return (List<Role>) roleRepository.save(roleList);
+    }
+
+    private Role transRole(Role role) {
+        Role newRole = role;
+        if (role.getRoleId() != null) {
+            Role oldRole = roleRepository.findByRoleId(role.getRoleId());
+            newRole = oldRole.mergeOtherRole(role);
+        }
+        return newRole;
     }
 
     @HystrixCommand
@@ -64,19 +78,26 @@ public class RoleService {
             pagination = new Pagination();
         }
 
-        Sort sort = null;
-        if (requestRole != null && requestRole.getSort() != null) {
-            sort = new Sort(requestRole.getSort().getDirection(), requestRole.getSort().getField());
+        String filed = "lastModifiedAt";
+        Sort.Direction direction = Sort.Direction.DESC;
+        if (requestRole != null && requestRole.getSorter() != null) {
+            if (requestRole.getSorter().getField() != null) {
+                filed = requestRole.getSorter().getField();
+            }
+            if ("ascend".equals(requestRole.getSorter().getOrder())) {
+                direction = Sort.Direction.ASC;
+            }
         }
+        Sort sort = new Sort(direction, filed);
 
         PageRequest pageRequest = new PageRequest(
-                pagination.getCurrentPage(),
+                pagination.getCurrent() - 1,
                 pagination.getPageSize(),
                 sort);
         Page<Role> page = roleRepository.findAll(roleSpec(requestRole.getRole()), pageRequest);
 
         pagination.setTotalPages(page.getTotalPages());
-        pagination.setTotalSize(page.getTotalElements());
+        pagination.setTotal(page.getTotalElements());
         List<Role> roleList = page.getContent();
         return new ResponseRole(roleList, pagination);
     }

@@ -9,6 +9,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * @author jackalope
@@ -23,19 +24,19 @@ public class BaseEntity implements Serializable {
     @CreatedBy
     private String createdBy;
     @CreatedDate
-    private Long createdAt;
+    private Date createdAt;
     @LastModifiedBy
     private String lastModifiedBy;
     @LastModifiedDate
-    private Long lastModifiedAt;
+    private Date lastModifiedAt;
     /**
      * 有效标识
      */
-    private Integer effective = 1;
+    private Integer effective;
     /**
      * 删除标识
      */
-    private Integer deleted = 0;
+    private Integer deleted;
 
     public String getCreatedBy() {
         return createdBy;
@@ -45,11 +46,11 @@ public class BaseEntity implements Serializable {
         this.createdBy = createdBy;
     }
 
-    public Long getCreatedAt() {
+    public Date getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(Long createdAt) {
+    public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
     }
 
@@ -61,11 +62,11 @@ public class BaseEntity implements Serializable {
         this.lastModifiedBy = lastModifiedBy;
     }
 
-    public Long getLastModifiedAt() {
+    public Date getLastModifiedAt() {
         return lastModifiedAt;
     }
 
-    public void setLastModifiedAt(Long lastModifiedAt) {
+    public void setLastModifiedAt(Date lastModifiedAt) {
         this.lastModifiedAt = lastModifiedAt;
     }
 

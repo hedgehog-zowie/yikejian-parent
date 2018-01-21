@@ -74,17 +74,17 @@ public class UserService {
 
         Sort sort = null;
         if (requestUser != null && requestUser.getSort() != null) {
-            sort = new Sort(requestUser.getSort().getDirection(), requestUser.getSort().getField());
+            sort = new Sort(requestUser.getSort().getOrder(), requestUser.getSort().getField());
         }
 
         PageRequest pageRequest = new PageRequest(
-                pagination.getCurrentPage(),
+                pagination.getCurrent(),
                 pagination.getPageSize(),
                 sort);
         Page<User> page = userRepository.findAll(userSpec(requestUser.getUser()), pageRequest);
 
         pagination.setTotalPages(page.getTotalPages());
-        pagination.setTotalSize(page.getTotalElements());
+        pagination.setTotal(page.getTotalElements());
 
         return new ResponseUser(page.getContent(), pagination);
     }

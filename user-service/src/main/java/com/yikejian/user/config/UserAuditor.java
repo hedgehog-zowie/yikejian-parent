@@ -20,6 +20,8 @@ public class UserAuditor implements AuditorAware<String> {
 
     private UserService userService;
 
+    private final String DEFAULT = "sys";
+
     @Autowired
     public UserAuditor(UserService userService) {
         this.userService = userService;
@@ -29,19 +31,19 @@ public class UserAuditor implements AuditorAware<String> {
     public String getCurrentAuditor() {
         SecurityContext securityContext = SecurityContextHolder.getContext();
         if (securityContext == null) {
-            return null;
+            return DEFAULT;
         }
         if (securityContext.getAuthentication() == null) {
-            return null;
+            return DEFAULT;
         }
         if (securityContext.getAuthentication().getPrincipal() == null) {
-            return null;
+            return DEFAULT;
         }
         Object principal = securityContext.getAuthentication().getPrincipal();
         if (principal.getClass().isAssignableFrom(String.class)) {
             return (String) principal;
         } else {
-            return null;
+            return DEFAULT;
         }
     }
 }

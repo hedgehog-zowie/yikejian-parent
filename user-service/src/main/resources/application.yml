@@ -41,7 +41,7 @@ logging:
   level:
     ROOT: INFO
 #    org.hibernate: DEBUG
-#    org.springframework.security: DEBUG
+    org.springframework.security: DEBUG
 
 ---
 spring:
@@ -56,15 +56,15 @@ spring:
 spring:
   profiles: test
   datasource:
-    url: jdbc:mysql://192.168.99.100:3306/dev
+    url: jdbc:mysql://192.168.99.1:3306/user
     username: root
-    password: dbpass
+    password: 123456
     initialize: true
 ---
 spring:
   profiles: production
   datasource:
-    url: jdbc:mysql://${rds}:3306/dev
+    url: jdbc:mysql://${rds}:3306/user
     username: ${username}
     password: ${password}
     initialize: true

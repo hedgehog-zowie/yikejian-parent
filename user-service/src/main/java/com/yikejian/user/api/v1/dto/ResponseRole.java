@@ -14,27 +14,27 @@ import java.util.List;
  */
 public class ResponseRole {
 
-    private List<Role> roleList;
+    private List<Role> list;
     private Pagination pagination;
 
     public ResponseRole() {
     }
 
-    public ResponseRole(List<Role> roleList) {
-        this.roleList = roleList;
+    public ResponseRole(List<Role> list) {
+        this.list = list;
     }
 
-    public ResponseRole(List<Role> roleList, Pagination pagination) {
-        this.roleList = roleList;
+    public ResponseRole(List<Role> list, Pagination pagination) {
+        this.list = list;
         this.pagination = pagination;
     }
 
-    public List<Role> getRoleList() {
-        return roleList;
+    public List<Role> getList() {
+        return list;
     }
 
-    public void setRoleList(List<Role> roleList) {
-        this.roleList = roleList;
+    public void setList(List<Role> list) {
+        this.list = list;
     }
 
     public Pagination getPagination() {

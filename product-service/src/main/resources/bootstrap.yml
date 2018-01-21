@@ -3,6 +3,6 @@ server:
   contextPath: /productId
 spring:
   application:
-    name: productId-service
+    name: product-service
   profiles:
     active: development
