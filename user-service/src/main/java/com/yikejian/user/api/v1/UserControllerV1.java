@@ -1,10 +1,12 @@
 package com.yikejian.user.api.v1;
 
+import com.yikejian.user.api.v1.dto.Pagination;
 import com.yikejian.user.api.v1.dto.RequestUser;
 import com.yikejian.user.domain.user.User;
 import com.yikejian.user.exception.UserServiceException;
 import com.yikejian.user.service.UserService;
 import com.yikejian.user.util.JsonUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,7 +38,8 @@ public class UserControllerV1 {
     }
 
     @PostMapping("/user")
-    public ResponseEntity addUser(final User user) {
+    public ResponseEntity addUser(@RequestBody final User user) {
+        user.setId(null);
         // todo send log
         return Optional.ofNullable(userService.saveUser(user))
                 .map(a -> new ResponseEntity<>(a, HttpStatus.OK))
@@ -44,7 +47,7 @@ public class UserControllerV1 {
     }
 
     @PutMapping("/user")
-    public ResponseEntity updateUser(final User user) {
+    public ResponseEntity updateUser(@RequestBody final User user) {
         // todo send log
         return Optional.ofNullable(userService.saveUser(user))
                 .map(a -> new ResponseEntity<>(a, HttpStatus.OK))
@@ -52,7 +55,7 @@ public class UserControllerV1 {
     }
 
     @PutMapping("/users")
-    public ResponseEntity updateUsers(final List<User> userList) {
+    public ResponseEntity updateUsers(@RequestBody final List<User> userList) {
         // todo send log
         return Optional.ofNullable(userService.saveUsers(userList))
                 .map(a -> new ResponseEntity<>(a, HttpStatus.OK))
@@ -60,7 +63,7 @@ public class UserControllerV1 {
     }
 
     @RequestMapping(value = "/user/{user_id}", method = RequestMethod.GET)
-    public ResponseEntity getUsers(final @PathVariable(value = "user_id") Long userId) {
+    public ResponseEntity getUser(final @PathVariable(value = "user_id") Long userId) {
         // todo send log
         return Optional.ofNullable(userService.getUserById(userId))
                 .map(a -> new ResponseEntity<>(a, HttpStatus.OK))
@@ -68,17 +71,26 @@ public class UserControllerV1 {
     }
 
     @GetMapping("/users")
-    public ResponseEntity getUsers(final @RequestParam(value = "params") String params) {
-        RequestUser requestUser;
-        try {
-            requestUser = JsonUtils.fromJson(URLDecoder.decode(params, "UTF-8"), RequestUser.class);
-        } catch (UnsupportedEncodingException e) {
-            throw new UserServiceException(e.getLocalizedMessage());
+    public ResponseEntity getUsers(final @RequestParam(value = "params", required = false) String params) {
+        RequestUser requestUser = new RequestUser();
+        if (StringUtils.isNotBlank(params)) {
+            try {
+                requestUser = JsonUtils.fromJson(URLDecoder.decode(params, "UTF-8"), RequestUser.class);
+            } catch (UnsupportedEncodingException e) {
+                throw new UserServiceException(e.getLocalizedMessage());
+            }
         }
+        if(requestUser.getUser() == null){
+            requestUser.setUser(new User());
+        }
+        if(requestUser.getPagination() == null){
+            requestUser.setPagination(new Pagination());
+        }
+        requestUser.getUser().setDeleted(0);
         // todo send log
         return Optional.ofNullable(userService.getUsers(requestUser))
                 .map(a -> new ResponseEntity<>(a, HttpStatus.OK))
-                .orElseThrow(() -> new UserServiceException("Not found any role."));
+                .orElseThrow(() -> new UserServiceException("Not found any user."));
     }
 
     @GetMapping("/me")

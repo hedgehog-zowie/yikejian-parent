@@ -10,7 +10,7 @@ package com.yikejian.user.api.v1.dto;
 public class Pagination {
 
     private static final Integer DEFAULT_CURRENT = 1;
-    private static final Integer DEFAULT_PAGESIZE = 10;
+    private static final Integer DEFAULT_PAGESIZE = 100;
 
     private Integer current;
     private Integer pageSize;

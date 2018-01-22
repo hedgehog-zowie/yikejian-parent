@@ -59,7 +59,7 @@ public class UserRepositoryTest {
 
     @After
     public void after() {
-        User user = userRepository.findByUserId(8L);
+        User user = userRepository.findById(8L);
         userRepository.delete(user);
         Role role = roleRepository.findByRoleId(8L);
         roleRepository.delete(role);
@@ -74,7 +74,7 @@ public class UserRepositoryTest {
     @Test
     public void findById() {
         assertEquals(roleRepository.findByRoleId(6L).getRoleName(), "admin1");
-        assertEquals(userRepository.findByUserId(6L).getUserName(), "user1");
+        assertEquals(userRepository.findById(6L).getName(), "user1");
     }
 
     @Test
@@ -84,7 +84,7 @@ public class UserRepositoryTest {
         roleRepository.save(role);
         assertEquals(roleRepository.findByRoleId(6L).getRoleName(), "asdf");
 
-        User user = userRepository.findByUserId(8L);
+        User user = userRepository.findById(8L);
         assertEquals(user.getRole().getRoleName(), "admin3");
         user.setRole(role);
         assertEquals(userRepository.save(user).getRole().getRoleName(), "asdf");

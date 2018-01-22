@@ -19,9 +19,11 @@ import java.util.List;
 @Repository
 public interface UserRepository extends PagingAndSortingRepository<User, Long>, JpaSpecificationExecutor<User> {
 
-    User findByUserId(Long userId);
+    User findById(Long userId);
 
-    User findByUserName(String userName);
+    User findByName(String name);
+
+    User findByNameAndEffectiveAndDeleted(String name, Integer effective, Integer deleted);
 
     List<User> findByRole(Role role);
 

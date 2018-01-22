@@ -1,5 +1,6 @@
 package com.yikejian.user.service;
 
+import com.google.common.collect.Lists;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.yikejian.user.api.v1.dto.Pagination;
 import com.yikejian.user.api.v1.dto.RequestUser;
@@ -20,6 +21,7 @@ import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author jackalope
@@ -40,22 +42,34 @@ public class UserService {
 
     @HystrixCommand
     public User getUserByUsername(String username) {
-        return userRepository.findByUserName(username);
+        return userRepository.findByName(username);
     }
 
     @HystrixCommand
     public User saveUser(User user) {
-        return userRepository.save(user);
+        return userRepository.save(transform(user));
     }
 
     @HystrixCommand
     public List<User> saveUsers(List<User> userList) {
-        return (List<User>) userRepository.save(userList);
+        return (List<User>) userRepository.save(
+                Lists.newArrayList(userList.stream().
+                        map(this::transform).collect(Collectors.toList()))
+        );
+    }
+
+    private User transform(User user) {
+        User newUser = user;
+        if (user.getId() != null) {
+            User oldUser = userRepository.findById(user.getId());
+            newUser = oldUser.mergeOther(user);
+        }
+        return newUser;
     }
 
     @HystrixCommand
     public User getUserById(Long userId) {
-        return userRepository.findByUserId(userId);
+        return userRepository.findById(userId);
     }
 
     @HystrixCommand
@@ -72,13 +86,20 @@ public class UserService {
             pagination = new Pagination();
         }
 
-        Sort sort = null;
-        if (requestUser != null && requestUser.getSort() != null) {
-            sort = new Sort(requestUser.getSort().getOrder(), requestUser.getSort().getField());
+        String filed = "lastModifiedAt";
+        Sort.Direction direction = Sort.Direction.DESC;
+        if (requestUser != null && requestUser.getSorter() != null) {
+            if (requestUser.getSorter().getField() != null) {
+                filed = requestUser.getSorter().getField();
+            }
+            if ("ascend".equals(requestUser.getSorter().getOrder())) {
+                direction = Sort.Direction.ASC;
+            }
         }
+        Sort sort = new Sort(direction, filed);
 
         PageRequest pageRequest = new PageRequest(
-                pagination.getCurrent(),
+                pagination.getCurrent() - 1,
                 pagination.getPageSize(),
                 sort);
         Page<User> page = userRepository.findAll(userSpec(requestUser.getUser()), pageRequest);
@@ -99,11 +120,11 @@ public class UserService {
                 if (user.getEffective() != null) {
                     predicateList.add(cb.equal(root.get("effective").as(Integer.class), user.getEffective()));
                 }
-                if (StringUtils.isNotBlank(user.getUserName())) {
-                    predicateList.add(cb.like(root.get("userName").as(String.class), "%" + user.getUserName() + "%"));
+                if (StringUtils.isNotBlank(user.getName())) {
+                    predicateList.add(cb.like(root.get("name").as(String.class), "%" + user.getName() + "%"));
                 }
                 if (user.getRole() != null && user.getRole().getRoleId() != null) {
-                    Join<User, Role> roleJoin = root.join(root.getModel().getSingularAttribute("role", Role.class), JoinType.LEFT);
+                    Join<User, User> roleJoin = root.join(root.getModel().getSingularAttribute("role", User.class), JoinType.LEFT);
                     predicateList.add(cb.equal(roleJoin.get("roleId").as(Long.class), user.getRole().getRoleId()));
                 }
             }

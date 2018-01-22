@@ -53,7 +53,7 @@ public class UserServiceTest {
     @Test
     public void test() {
         User user = userService.getUserById(1L);
-        assertEquals(user.getUserName(), "admin");
+        assertEquals(user.getName(), "admin");
 
         // add
         User user1 = new User("user1", "", new Role(1L));
@@ -65,7 +65,7 @@ public class UserServiceTest {
         assertEquals(8, userService.getAll().getList().size());
 
         // update
-        user3.setUserId(8L);
+        user3.setId(8L);
         user3.setRole(new Role(4L));
         userService.saveUser(user3);
         assertEquals(4, userService.getUserById(8L).getRole().getRoleId().intValue());
@@ -80,11 +80,11 @@ public class UserServiceTest {
         assertEquals(11, userService.getAll().getList().size());
 
         // batch update
-        user4.setUserId(9L);
+        user4.setId(9L);
         user4.setRole(new Role(1L));
-        user5.setUserId(10L);
+        user5.setId(10L);
         user5.setRole(new Role(1L));
-        user6.setUserId(11L);
+        user6.setId(11L);
         user6.setRole(new Role(1L));
         userService.saveUsers(Arrays.asList(user4, user5, user6));
         assertEquals(1, userService.getUserById(9L).getRole().getRoleId().intValue());
@@ -102,7 +102,7 @@ public class UserServiceTest {
         assertEquals(10, responseUser.getList().size());
 
         User userDto = new User();
-        userDto.setUserName("admin");
+        userDto.setName("admin");
         requestUser.setUser(userDto);
         responseUser = userService.getUsers(requestUser);
         assertEquals(1, responseUser.getPagination().getTotalPages().intValue());
@@ -111,7 +111,7 @@ public class UserServiceTest {
         assertEquals(10, responseUser.getPagination().getPageSize().intValue());
         assertEquals(1, responseUser.getList().size());
 
-        userDto.setUserName("user");
+        userDto.setName("user");
         requestUser.setUser(userDto);
         responseUser = userService.getUsers(requestUser);
         assertEquals(1, responseUser.getPagination().getTotalPages().intValue());
@@ -149,7 +149,7 @@ public class UserServiceTest {
         assertEquals(3, responseUser.getPagination().getPageSize().intValue());
         assertEquals(3, responseUser.getList().size());
 
-        userDto.setUserName("user");
+        userDto.setName("user");
         userDto.setRole(new Role(1L));
         requestUser.setPagination(new Pagination(1, 3));
         responseUser = userService.getUsers(requestUser);

@@ -26,7 +26,7 @@ public class MyUserDetails implements UserDetails {
     private Collection<? extends GrantedAuthority> authorities;
 
     public MyUserDetails(User user) {
-        this.username = user.getUserName();
+        this.username = user.getName();
         this.password = user.getPassword();
         this.authorities = translate(user.getRole());
     }

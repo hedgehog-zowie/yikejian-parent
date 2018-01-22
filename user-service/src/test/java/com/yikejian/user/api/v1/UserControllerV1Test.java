@@ -1,6 +1,5 @@
 package com.yikejian.user.api.v1;
 
-import com.yikejian.user.domain.role.Role;
 import com.yikejian.user.domain.user.User;
 import org.junit.*;
 import org.springframework.web.client.RestTemplate;
@@ -43,14 +42,14 @@ public class UserControllerV1Test {
     public void testMe() {
         User user = restTemplate.getForObject(String.format(ME_URL_TEMPLATE, ACCESS_TOKEN),
                 User.class);
-        assertEquals("admin", user.getUserName());
+        assertEquals("admin", user.getName());
     }
 
     @Test
     public void testGetUser() {
         String url = String.format(GET_USER_URL_TEMPLATE, 1, ACCESS_TOKEN);
         User user = restTemplate.getForObject(url, User.class);
-        assertEquals("admin", user.getUserName());
+        assertEquals("admin", user.getName());
         assertEquals("ADMIN", user.getRole().getRoleName());
         assertEquals("ROLE_READ,ROLE_WRITE,USER_READ,USER_WRITE,LOG_READ,CUSTOMER_READ,CUSTOMER_WRITE,ORDER_READ,ORDER_WRITE,STORE_READ,STORE_WRITE,PRODUCT_READ,PRODUCT_WRITE,DEVICE_READ,DEVICE_WRITE,BOOK_READ,BOOK_WRITE",
                 user.getRole().getAuthorities());

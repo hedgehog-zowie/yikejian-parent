@@ -1,9 +1,9 @@
 package com.yikejian.user.domain.user;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.yikejian.user.domain.BaseEntity;
 import com.yikejian.user.domain.role.Role;
+import org.apache.commons.lang.StringUtils;
 
 import javax.persistence.*;
 import java.util.Objects;
@@ -21,11 +21,11 @@ public class User extends BaseEntity {
 
     @Id
     @GeneratedValue
-    private Long userId;
-    private String userName;
-    @JsonIgnore
+    private Long id;
+    private String name;
+//    @JsonIgnore
     private String password;
-//    @JsonBackReference
+    //    @JsonBackReference
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "role_id")
     private Role role;
@@ -33,15 +33,15 @@ public class User extends BaseEntity {
     public User() {
     }
 
-    public User(String userName, String password, Role role) {
-        this.userName = userName;
+    public User(String name, String password, Role role) {
+        this.name = name;
         this.password = password;
         this.role = role;
     }
 
-    public User(Long userId, String userName, String password, Role role) {
-        this.userId = userId;
-        this.userName = userName;
+    public User(Long id, String name, String password, Role role) {
+        this.id = id;
+        this.name = name;
         this.password = password;
         this.role = role;
     }
@@ -51,28 +51,47 @@ public class User extends BaseEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return Objects.equals(userId, user.userId);
+        return Objects.equals(id, user.id);
+    }
+
+    public User mergeOther(User other) {
+        if (StringUtils.isNotBlank(other.getName())) {
+            setName(other.getName());
+        }
+        if (StringUtils.isNotBlank(other.getPassword())) {
+            setPassword(other.getPassword());
+        }
+        if (other.getRole() != null) {
+            setRole(other.getRole());
+        }
+        if (other.getEffective() != null) {
+            setEffective(other.getEffective());
+        }
+        if (other.getDeleted() != null) {
+            setDeleted(other.getDeleted());
+        }
+        return this;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(userId);
+        return Objects.hash(id);
     }
 
-    public Long getUserId() {
-        return userId;
+    public Long getId() {
+        return id;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getName() {
+        return name;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getPassword() {
