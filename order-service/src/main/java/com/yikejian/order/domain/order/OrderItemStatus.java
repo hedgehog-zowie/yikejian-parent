@@ -7,13 +7,10 @@ package com.yikejian.order.domain.order;
  * @Description: TODO
  * @date 2018/1/17 1:04
  */
-public enum OrderStatus {
+public enum OrderItemStatus {
 
-    CREATED,
-    CONFIRMED,
-    CANCELED,
-    PAID,
-    REFUNDED,
-    FINISHED,
+    NOT_SERVE,
+    SERVING,
+    SERVED,
 
 }

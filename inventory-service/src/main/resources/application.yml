@@ -8,7 +8,11 @@ security:
         # Note: The authorization server needs to be running...
         key-uri: "http://localhost:8001/uaa/oauth/token_key"
 yikejian:
-  user:
-    url: "http://user-service/uaa/v1/me"
-        
+  api:
+    user:
+      url: "http://user-service/uaa/v1/me"
+    product:
+      url: "http://product-service/product/v1/product"
+    store:
+      url: "http://store-service/store/v1/store"
             

@@ -5,6 +5,8 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**
  * <code>InventoryRepository</code>.
  * ${DESCRIPTION}
@@ -17,5 +19,9 @@ import org.springframework.stereotype.Repository;
 public interface InventoryRepository extends PagingAndSortingRepository<Inventory, Long>, JpaSpecificationExecutor<Inventory> {
 
     Inventory findByInventoryId(Long inventoryId);
+
+    List<Inventory> findByStoreIdAndProductIdAndDay(Long storeId, Long productId, String day);
+
+    Long countByStoreIdAndProductIdAndDay(Long storeId, Long productId, String day);
 
 }

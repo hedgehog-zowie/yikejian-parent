@@ -1,6 +1,7 @@
 package com.yikejian.inventory.domain.inventory;
 
 import com.yikejian.inventory.domain.BaseEntity;
+import org.apache.commons.lang.StringUtils;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -36,6 +37,61 @@ public class Inventory extends BaseEntity {
      * 日期
      */
     private String day;
+    /**
+     * 时间片(格式：yyyyMMddHHmm)
+     */
+    private String pieceTime;
+
+    public Inventory(Long storeId, Long productId, Integer stock, String day, String pieceTime) {
+        this.productId = productId;
+        this.stock = stock;
+        this.day = day;
+        this.pieceTime = pieceTime;
+        this.storeId = storeId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Inventory inventory = (Inventory) o;
+
+        if (!inventoryId.equals(inventory.inventoryId)) return false;
+        if (!storeId.equals(inventory.storeId)) return false;
+        if (!productId.equals(inventory.productId)) return false;
+        if (!stock.equals(inventory.stock)) return false;
+        if (!day.equals(inventory.day)) return false;
+        return pieceTime.equals(inventory.pieceTime);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = inventoryId.hashCode();
+        result = 31 * result + storeId.hashCode();
+        result = 31 * result + productId.hashCode();
+        result = 31 * result + stock.hashCode();
+        result = 31 * result + day.hashCode();
+        result = 31 * result + pieceTime.hashCode();
+        return result;
+    }
+
+    public Inventory mergeOtherInventory(Inventory other){
+        if (other.getStoreId() != null) {
+            setStoreId(other.getStoreId());
+        }
+        if (other.getProductId() != null) {
+            setProductId(other.getProductId());
+        }
+        if (other.getStoreId() != null) {
+            setStoreId(other.getStoreId());
+        }
+        if (StringUtils.isNotBlank(other.getDay())) {
+            setDay(other.getDay());
+        }
+        return this;
+    }
 
     public Inventory incorporate(InventoryEvent inventoryEvent) {
         switch (inventoryEvent.getInventoryEventType()) {
@@ -89,5 +145,13 @@ public class Inventory extends BaseEntity {
 
     public void setDay(String day) {
         this.day = day;
+    }
+
+    public String getPieceTime() {
+        return pieceTime;
+    }
+
+    public void setPieceTime(String pieceTime) {
+        this.pieceTime = pieceTime;
     }
 }

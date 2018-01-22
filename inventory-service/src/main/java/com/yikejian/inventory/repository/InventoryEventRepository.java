@@ -17,7 +17,7 @@ import java.util.stream.Stream;
  * date: 2018/1/16 9:56
  */
 @Repository
-public interface InventoryEventRepository extends PagingAndSortingRepository<Inventory, Long>, JpaSpecificationExecutor<Inventory> {
+public interface InventoryEventRepository extends PagingAndSortingRepository<InventoryEvent, Long>, JpaSpecificationExecutor<InventoryEvent> {
 
     Stream<InventoryEvent> findByInventoryId(Long inventoryId);
 

@@ -36,6 +36,14 @@ public class OrderItem extends BaseEntity {
      * 实际体验产品的人
      */
     private String experiencer;
+    /**
+     * 预约的时间
+     */
+    private String dateTime;
+    /**
+     * 服务状态
+     */
+    private OrderItemStatus orderItemStatus;
 
     public Long getItemId() {
         return itemId;
@@ -75,5 +83,21 @@ public class OrderItem extends BaseEntity {
 
     public void setExperiencer(String experiencer) {
         this.experiencer = experiencer;
+    }
+
+    public String getDateTime() {
+        return dateTime;
+    }
+
+    public void setDateTime(String dateTime) {
+        this.dateTime = dateTime;
+    }
+
+    public OrderItemStatus getOrderItemStatus() {
+        return orderItemStatus;
+    }
+
+    public void setOrderItemStatus(OrderItemStatus orderItemStatus) {
+        this.orderItemStatus = orderItemStatus;
     }
 }

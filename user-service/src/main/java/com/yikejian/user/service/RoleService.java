@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import javax.persistence.criteria.Predicate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author jackalope
@@ -43,11 +44,10 @@ public class RoleService {
 
     @HystrixCommand
     public List<Role> saveRoles(List<Role> roleList) {
-        List<Role> newRoleList = Lists.newArrayList();
-        for (Role store : roleList) {
-            newRoleList.add(transRole(store));
-        }
-        return (List<Role>) roleRepository.save(roleList);
+        return (List<Role>) roleRepository.save(
+                Lists.newArrayList(roleList.stream().
+                map(this::transRole).collect(Collectors.toList()))
+        );
     }
 
     private Role transRole(Role role) {

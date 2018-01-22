@@ -1,7 +1,5 @@
 package com.yikejian.order.domain.store;
 
-import java.util.Set;
-
 /**
  * <code>Store</code>.
  * ${DESCRIPTION}

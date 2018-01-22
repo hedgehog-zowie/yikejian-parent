@@ -27,6 +27,7 @@ import java.util.Optional;
  * date: 2018/1/16 9:57
  */
 @RestController
+@RequestMapping(path = "/v1")
 public class ProductControllerV1 {
 
     private ProductService productService;

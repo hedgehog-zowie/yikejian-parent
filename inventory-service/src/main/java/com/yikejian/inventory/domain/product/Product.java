@@ -19,13 +19,22 @@ public class Product {
      */
     private Integer duration;
     /**
-     * 开始时间(小时，如10表示10点整)
+     * 开始营业时间(精确到分，如1020表示10点20分)
      */
-    private Integer startTime;
+    private String startTime;
     /**
-     * 结束时间(小时，如23表示23点整)
+     * 结束营业时间(精确到分，如1020表示10点20分)
      */
-    private Integer endTime;
+    private String endTime;
+    /**
+     * 删除标识
+     */
+    private Integer deleted;
+    /**
+     * 有效标识
+     */
+    private Integer effective;
+
 
     public Long getProductId() {
         return productId;
@@ -43,20 +52,35 @@ public class Product {
         this.duration = duration;
     }
 
-    public Integer getStartTime() {
+    public String getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(Integer startTime) {
+    public void setStartTime(String startTime) {
         this.startTime = startTime;
     }
 
-    public Integer getEndTime() {
+    public String getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(Integer endTime) {
+    public void setEndTime(String endTime) {
         this.endTime = endTime;
     }
 
+    public Integer getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(Integer deleted) {
+        this.deleted = deleted;
+    }
+
+    public Integer getEffective() {
+        return effective;
+    }
+
+    public void setEffective(Integer effective) {
+        this.effective = effective;
+    }
 }

@@ -2,8 +2,13 @@ package com.yikejian.store.domain.store;
 
 import com.yikejian.store.domain.BaseEntity;
 
-import javax.persistence.*;
-import java.util.Objects;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
 
 /**
  * <code>StoreProduct</code>.
@@ -39,14 +44,18 @@ public class StoreProduct extends BaseEntity {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+
         StoreProduct that = (StoreProduct) o;
-        return Objects.equals(productId, that.productId);
+
+        if (!productId.equals(that.productId)) return false;
+        return store.equals(that.store);
     }
 
     @Override
     public int hashCode() {
-
-        return Objects.hash(productId);
+        int result = productId.hashCode();
+        result = 31 * result + store.hashCode();
+        return result;
     }
 
     public Long getId() {

@@ -3,7 +3,12 @@ package com.yikejian.store.domain.store;
 import com.yikejian.store.domain.BaseEntity;
 import org.apache.commons.lang.StringUtils;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import java.util.Set;
 
 /**
@@ -33,13 +38,13 @@ public class Store extends BaseEntity {
      */
     private String phoneNumber;
     /**
-     * 开始营业时间(小时，如10表示10点整)
+     * 开始营业时间(精确到分，如1020表示10点20分)
      */
-    private Integer startTime;
+    private String startTime;
     /**
-     * 结束营业时间(小时，如23表示23点整)
+     * 结束营业时间(精确到分，如1020表示10点20分)
      */
-    private Integer endTime;
+    private String endTime;
     /**
      * 预约规则：单个时间片的长度，单位分钟
      */
@@ -81,11 +86,11 @@ public class Store extends BaseEntity {
         if (StringUtils.isNotBlank(other.getPhoneNumber())) {
             setPhoneNumber(other.getPhoneNumber());
         }
-        if (other.getStartTime() != null) {
-            setStartTime(other.getDeleted());
+        if (StringUtils.isNotBlank(other.getStartTime())) {
+            setStartTime(other.getStartTime());
         }
-        if (other.getEndTime() != null) {
-            setEndTime(other.getDeleted());
+        if (StringUtils.isNotBlank(other.getEndTime())) {
+            setEndTime(other.getEndTime());
         }
         if (StringUtils.isNotBlank(other.getTraffic())) {
             setTraffic(other.getTraffic());
@@ -111,6 +116,21 @@ public class Store extends BaseEntity {
             deviceSet.addAll(other.getDeviceSet());
         }
         return this;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Store store = (Store) o;
+
+        return storeId.equals(store.storeId);
+    }
+
+    @Override
+    public int hashCode() {
+        return storeId.hashCode();
     }
 
     public Long getStoreId() {
@@ -145,19 +165,19 @@ public class Store extends BaseEntity {
         this.phoneNumber = phoneNumber;
     }
 
-    public Integer getStartTime() {
+    public String getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(Integer startTime) {
+    public void setStartTime(String startTime) {
         this.startTime = startTime;
     }
 
-    public Integer getEndTime() {
+    public String getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(Integer endTime) {
+    public void setEndTime(String endTime) {
         this.endTime = endTime;
     }
 

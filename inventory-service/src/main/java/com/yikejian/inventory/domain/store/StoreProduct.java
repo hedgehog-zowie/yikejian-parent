@@ -16,6 +16,14 @@ public class StoreProduct {
      * 产品ID
      */
     private Long productId;
+    /**
+     * 删除标识
+     */
+    private Integer deleted;
+    /**
+     * 有效标识
+     */
+    private Integer effective;
 
     @Override
     public boolean equals(Object o) {
@@ -37,5 +45,21 @@ public class StoreProduct {
 
     public void setProductId(Long productId) {
         this.productId = productId;
+    }
+
+    public Integer getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(Integer deleted) {
+        this.deleted = deleted;
+    }
+
+    public Integer getEffective() {
+        return effective;
+    }
+
+    public void setEffective(Integer effective) {
+        this.effective = effective;
     }
 }

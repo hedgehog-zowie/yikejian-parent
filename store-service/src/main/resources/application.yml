@@ -13,4 +13,5 @@ yikejian:
       url: "http://user-service/uaa/v1/me"
     product:
       url: "http://product-service/product/"
-            
+    inventory:
+      url: "http://inventory-service/inventory/"
