@@ -14,24 +14,24 @@ import java.util.List;
  */
 public class ResponseTitle {
 
-    private List<Title> titleList;
+    private List<Title> list;
     private Pagination pagination;
 
-    public ResponseTitle(List<Title> titleList) {
-        this.titleList = titleList;
+    public ResponseTitle(List<Title> list) {
+        this.list = list;
     }
 
-    public ResponseTitle(List<Title> titleList, Pagination pagination) {
-        this.titleList = titleList;
+    public ResponseTitle(List<Title> list, Pagination pagination) {
+        this.list = list;
         this.pagination = pagination;
     }
 
-    public List<Title> getTitleList() {
-        return titleList;
+    public List<Title> getList() {
+        return list;
     }
 
-    public void setTitleList(List<Title> titleList) {
-        this.titleList = titleList;
+    public void setList(List<Title> list) {
+        this.list = list;
     }
 
     public Pagination getPagination() {

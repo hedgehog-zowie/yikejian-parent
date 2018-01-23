@@ -16,7 +16,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.criteria.Join;
-import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
 import java.util.ArrayList;
 import java.util.List;
@@ -68,19 +67,26 @@ public class CustomerService {
             pagination = new Pagination();
         }
 
-        Sort sort = null;
-        if (requestCustomer != null && requestCustomer.getSort() != null) {
-            sort = new Sort(requestCustomer.getSort().getDirection(), requestCustomer.getSort().getField());
+        String filed = "lastModifiedAt";
+        Sort.Direction direction = Sort.Direction.DESC;
+        if (requestCustomer != null && requestCustomer.getSorter() != null) {
+            if (requestCustomer.getSorter().getField() != null) {
+                filed = requestCustomer.getSorter().getField();
+            }
+            if ("ascend".equals(requestCustomer.getSorter().getOrder())) {
+                direction = Sort.Direction.ASC;
+            }
         }
+        Sort sort = new Sort(direction, filed);
 
         PageRequest pageRequest = new PageRequest(
-                pagination.getCurrentPage(),
+                pagination.getCurrent() - 1,
                 pagination.getPageSize(),
                 sort);
         Page<Customer> page = customerRepository.findAll(customerSpec(requestCustomer.getCustomer()), pageRequest);
 
         pagination.setTotalPages(page.getTotalPages());
-        pagination.setTotalSize(page.getTotalElements());
+        pagination.setTotal(page.getTotalElements());
 
         return new ResponseCustomer(page.getContent(), pagination);
     }
@@ -99,8 +105,8 @@ public class CustomerService {
                     predicateList.add(cb.equal(root.get("effective").as(Integer.class), customer.getEffective()));
                 }
                 if (customer.getTitle() != null && customer.getTitle().getTitleId() != null) {
-                    Join<Customer, Title> titleJoin = root.join(root.getModel().getSingularAttribute("title", Title.class), JoinType.LEFT);
-                    predicateList.add(cb.equal(titleJoin.get("titleId").as(Long.class), customer.getTitle().getTitleId()));
+                    Join<Customer, Title> join = root.join("title");
+                    predicateList.add(cb.equal(join.<Long>get("titleId"), customer.getTitle().getTitleId()));
                 }
             }
             Predicate[] predicates = new Predicate[predicateList.size()];

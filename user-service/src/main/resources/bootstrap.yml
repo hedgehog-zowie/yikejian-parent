@@ -1,6 +1,6 @@
 server:
   port: 8001
-  contextPath: /uaa
+  contextPath: /user-service
 spring:
   application:
     name: user-service

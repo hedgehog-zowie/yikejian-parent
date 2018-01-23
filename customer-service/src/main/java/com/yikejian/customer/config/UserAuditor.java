@@ -20,6 +20,8 @@ public class UserAuditor implements AuditorAware<String> {
 
     private OAuth2RestTemplate oAuth2RestTemplate;
 
+    private final String DEFAULT = "sys";
+
     @Value("${yikejian.user.api.url}")
     private String userApi;
 
@@ -30,9 +32,25 @@ public class UserAuditor implements AuditorAware<String> {
 
     @Override
     public String getCurrentAuditor() {
+//        SecurityContext securityContext = SecurityContextHolder.getContext();
+//        if (securityContext == null) {
+//            return DEFAULT;
+//        }
+//        if (securityContext.getAuthentication() == null) {
+//            return DEFAULT;
+//        }
+//        if (securityContext.getAuthentication().getPrincipal() == null) {
+//            return DEFAULT;
+//        }
+//        Object principal = securityContext.getAuthentication().getPrincipal();
+//        if (principal.getClass().isAssignableFrom(String.class)) {
+//            return (String) principal;
+//        } else {
+//            return DEFAULT;
+//        }
         User user = oAuth2RestTemplate.getForObject(userApi, User.class);
         if (user != null) {
-            return user.getUserName();
+            return user.getName();
         } else {
             return null;
         }

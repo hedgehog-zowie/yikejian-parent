@@ -13,7 +13,7 @@ public class RequestCustomer {
 
     private Customer customer;
     private Pagination pagination;
-    private Sort sort;
+    private Sort sorter;
 
     public Customer getCustomer() {
         return customer;
@@ -31,11 +31,11 @@ public class RequestCustomer {
         this.pagination = pagination;
     }
 
-    public Sort getSort() {
-        return sort;
+    public Sort getSorter() {
+        return sorter;
     }
 
-    public void setSort(Sort sort) {
-        this.sort = sort;
+    public void setSorter(Sort sorter) {
+        this.sorter = sorter;
     }
 }

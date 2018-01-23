@@ -2,6 +2,7 @@ package com.yikejian.customer.domain.title;
 
 import com.yikejian.customer.domain.BaseEntity;
 import com.yikejian.customer.domain.customer.Customer;
+import org.apache.commons.lang.StringUtils;
 
 import javax.persistence.*;
 import java.util.Set;
@@ -26,9 +27,25 @@ public class Title extends BaseEntity {
     /**
      * 消费金额门槛
      */
-    private Double condition;
+    private Double threshold;
     @OneToMany(mappedBy = "title", fetch = FetchType.LAZY)
     private Set<Customer> customerSet;
+
+    public Title mergeOther(Title other) {
+        if (StringUtils.isNotBlank(other.getTitleName())) {
+            setTitleName(other.getTitleName());
+        }
+        if (other.getThreshold() != null) {
+            setThreshold(other.getThreshold());
+        }
+        if (other.getEffective() != null) {
+            setEffective(other.getEffective());
+        }
+        if (other.getDeleted() != null) {
+            setDeleted(other.getDeleted());
+        }
+        return this;
+    }
 
     public Long getTitleId() {
         return titleId;
@@ -46,12 +63,12 @@ public class Title extends BaseEntity {
         this.titleName = titleName;
     }
 
-    public Double getCondition() {
-        return condition;
+    public Double getThreshold() {
+        return threshold;
     }
 
-    public void setCondition(Double condition) {
-        this.condition = condition;
+    public void setThreshold(Double threshold) {
+        this.threshold = threshold;
     }
 
     public Set<Customer> getCustomerSet() {

@@ -1,6 +1,7 @@
 package com.yikejian.customer.domain.customer;
 
 import com.yikejian.customer.domain.BaseEntity;
+import com.yikejian.customer.domain.account.Account;
 import com.yikejian.customer.domain.title.Title;
 
 import javax.persistence.*;
@@ -20,33 +21,27 @@ public class Customer extends BaseEntity {
     @GeneratedValue
     private Long customerId;
     /**
-     * open id
-     */
-    private String openId;
-    /**
-     * 客户姓名
+     * 客户名
      */
     private String customerName;
+    /**
+     * 微信open customerId
+     */
+    private String openId;
     /**
      * 移动电话号码
      */
     private String mobileNumber;
     /**
-     * 密码（MD5）
-     */
-    private String password;
-    /**
      * 生日
      */
     private String birthday;
     /**
-     * 账户余额
+     * 账户
      */
-    private Double account;
-    /**
-     * 积分
-     */
-    private Integer point;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "account_id")
+    private Account account;
     /**
      * 头衔
      */
@@ -86,14 +81,6 @@ public class Customer extends BaseEntity {
         this.mobileNumber = mobileNumber;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     public String getBirthday() {
         return birthday;
     }
@@ -102,20 +89,12 @@ public class Customer extends BaseEntity {
         this.birthday = birthday;
     }
 
-    public Double getAccount() {
+    public Account getAccount() {
         return account;
     }
 
-    public void setAccount(Double account) {
+    public void setAccount(Account account) {
         this.account = account;
-    }
-
-    public Integer getPoint() {
-        return point;
-    }
-
-    public void setPoint(Integer point) {
-        this.point = point;
     }
 
     public Title getTitle() {
@@ -125,4 +104,5 @@ public class Customer extends BaseEntity {
     public void setTitle(Title title) {
         this.title = title;
     }
+
 }

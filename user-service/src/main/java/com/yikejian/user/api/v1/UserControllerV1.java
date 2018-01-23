@@ -97,7 +97,7 @@ public class UserControllerV1 {
     public ResponseEntity me(Principal principal) {
         User user = null;
         if (principal != null) {
-            user = userService.getUserByUsername(principal.getName());
+               user = userService.getUserByUsername(principal.getName());
         }
 
         return Optional.ofNullable(user)

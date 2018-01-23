@@ -14,24 +14,24 @@ import java.util.List;
  */
 public class ResponseCustomer {
 
-    private List<Customer> customerList;
+    private List<Customer> list;
     private Pagination pagination;
 
-    public ResponseCustomer(List<Customer> customerList) {
-        this.customerList = customerList;
+    public ResponseCustomer(List<Customer> list) {
+        this.list = list;
     }
 
-    public ResponseCustomer(List<Customer> customerList, Pagination pagination) {
-        this.customerList = customerList;
+    public ResponseCustomer(List<Customer> list, Pagination pagination) {
+        this.list = list;
         this.pagination = pagination;
     }
 
-    public List<Customer> getCustomerList() {
-        return customerList;
+    public List<Customer> getList() {
+        return list;
     }
 
-    public void setCustomerList(List<Customer> customerList) {
-        this.customerList = customerList;
+    public void setList(List<Customer> list) {
+        this.list = list;
     }
 
     public Pagination getPagination() {

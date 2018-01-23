@@ -10,31 +10,31 @@ package com.yikejian.customer.domain.user;
  */
 public class User {
 
-    private Long userId;
-    private String userName;
+    private Long id;
+    private String name;
 
     public User() {
     }
 
-    public User(Long userId, String userName) {
-        this.userId = userId;
-        this.userName = userName;
+    public User(Long id, String name) {
+        this.id = id;
+        this.name = name;
     }
 
-    public Long getUserId() {
-        return userId;
+    public Long getId() {
+        return id;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getName() {
+        return name;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setName(String name) {
+        this.name = name;
     }
 
 }

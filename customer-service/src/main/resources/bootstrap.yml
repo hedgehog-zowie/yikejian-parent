@@ -1,6 +1,6 @@
 server:
   port: 8002
-  contextPath: /customer
+  contextPath: /customer-service
 spring:
   application:
     name: customer-service

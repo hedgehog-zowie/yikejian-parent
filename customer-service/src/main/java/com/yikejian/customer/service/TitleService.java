@@ -1,5 +1,6 @@
 package com.yikejian.customer.service;
 
+import com.google.common.collect.Lists;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.yikejian.customer.api.v1.dto.Pagination;
 import com.yikejian.customer.api.v1.dto.RequestTitle;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 import javax.persistence.criteria.Predicate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author jackalope
@@ -37,12 +39,24 @@ public class TitleService {
 
     @HystrixCommand
     public Title saveTitle(Title title) {
-        return titleRepository.save(title);
+        return titleRepository.save(transform(title));
     }
 
     @HystrixCommand
     public List<Title> saveTitles(List<Title> titleList) {
-        return (List<Title>) titleRepository.save(titleList);
+        return (List<Title>) titleRepository.save(
+                Lists.newArrayList(titleList.stream().
+                        map(this::transform).collect(Collectors.toList()))
+        );
+    }
+
+    private Title transform(Title title) {
+        Title newTitle = title;
+        if (title.getTitleId() != null) {
+            Title oldTitle = titleRepository.findByTitleId(title.getTitleId());
+            newTitle = oldTitle.mergeOther(title);
+        }
+        return newTitle;
     }
 
     @HystrixCommand
@@ -64,19 +78,26 @@ public class TitleService {
             pagination = new Pagination();
         }
 
-        Sort sort = null;
-        if (requestTitle != null && requestTitle.getSort() != null) {
-            sort = new Sort(requestTitle.getSort().getDirection(), requestTitle.getSort().getField());
+        String filed = "lastModifiedAt";
+        Sort.Direction direction = Sort.Direction.DESC;
+        if (requestTitle != null && requestTitle.getSorter() != null) {
+            if (requestTitle.getSorter().getField() != null) {
+                filed = requestTitle.getSorter().getField();
+            }
+            if ("ascend".equals(requestTitle.getSorter().getOrder())) {
+                direction = Sort.Direction.ASC;
+            }
         }
+        Sort sort = new Sort(direction, filed);
 
         PageRequest pageRequest = new PageRequest(
-                pagination.getCurrentPage(),
+                pagination.getCurrent() - 1,
                 pagination.getPageSize(),
                 sort);
         Page<Title> page = titleRepository.findAll(titleSpec(requestTitle.getTitle()), pageRequest);
 
         pagination.setTotalPages(page.getTotalPages());
-        pagination.setTotalSize(page.getTotalElements());
+        pagination.setTotal(page.getTotalElements());
         List<Title> titleList = page.getContent();
         return new ResponseTitle(titleList, pagination);
     }

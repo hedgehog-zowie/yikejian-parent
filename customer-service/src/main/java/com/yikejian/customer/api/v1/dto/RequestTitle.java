@@ -1,6 +1,5 @@
 package com.yikejian.customer.api.v1.dto;
 
-import com.yikejian.customer.domain.customer.Customer;
 import com.yikejian.customer.domain.title.Title;
 
 /**
@@ -14,7 +13,13 @@ public class RequestTitle {
 
     private Title title;
     private Pagination pagination;
-    private Sort sort;
+    private Sort sorter;
+
+    public RequestTitle(Title title, Pagination pagination, Sort sorter) {
+        this.title = title;
+        this.pagination = pagination;
+        this.sorter = sorter;
+    }
 
     public Title getTitle() {
         return title;
@@ -32,11 +37,11 @@ public class RequestTitle {
         this.pagination = pagination;
     }
 
-    public Sort getSort() {
-        return sort;
+    public Sort getSorter() {
+        return sorter;
     }
 
-    public void setSort(Sort sort) {
-        this.sort = sort;
+    public void setSorter(Sort sorter) {
+        this.sorter = sorter;
     }
 }
