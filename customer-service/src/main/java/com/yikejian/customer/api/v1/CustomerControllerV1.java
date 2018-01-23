@@ -149,4 +149,10 @@ public class CustomerControllerV1 {
         return "hello trusted : " + principal.getName();
     }
 
+    @GetMapping("token")
+    public String getToken(){
+        System.out.println("use code get openid and session_key from weixin, generate the token of myself.");
+        return "use code get openid and session_key from weixin, generate the token of myself.";
+    }
+
 }

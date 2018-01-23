@@ -1,19 +1,10 @@
 package com.yikejian.store.service;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
-import com.yikejian.store.domain.store.Device;
-import com.yikejian.store.domain.store.DeviceProduct;
-import com.yikejian.store.exception.StoreServiceException;
 import com.yikejian.store.repository.DeviceProductRepository;
 import com.yikejian.store.repository.DeviceRepository;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.stereotype.Service;
-
-import java.util.Date;
-import java.util.stream.Collectors;
 
 /**
  * <code>DeviceService</code>.

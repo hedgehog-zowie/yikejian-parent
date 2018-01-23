@@ -42,6 +42,9 @@ public class Inventory extends BaseEntity {
      */
     private String pieceTime;
 
+    public Inventory() {
+    }
+
     public Inventory(Long storeId, Long productId, Integer stock, String day, String pieceTime) {
         this.productId = productId;
         this.stock = stock;
@@ -57,7 +60,6 @@ public class Inventory extends BaseEntity {
 
         Inventory inventory = (Inventory) o;
 
-        if (!inventoryId.equals(inventory.inventoryId)) return false;
         if (!storeId.equals(inventory.storeId)) return false;
         if (!productId.equals(inventory.productId)) return false;
         if (!stock.equals(inventory.stock)) return false;
@@ -68,8 +70,7 @@ public class Inventory extends BaseEntity {
 
     @Override
     public int hashCode() {
-        int result = inventoryId.hashCode();
-        result = 31 * result + storeId.hashCode();
+        int result = storeId.hashCode();
         result = 31 * result + productId.hashCode();
         result = 31 * result + stock.hashCode();
         result = 31 * result + day.hashCode();

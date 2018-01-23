@@ -2,6 +2,8 @@ package com.yikejian.order.domain.order;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 
 /**
  * @author jackalope
@@ -23,6 +25,12 @@ public class OrderExtra {
      * 备注
      */
     private String remark;
+    /**
+     * 订单
+     */
+    @OneToOne(targetEntity = Order.class)
+    @JoinColumn(name = "order_id", referencedColumnName = "order_id")
+    private Order order;
 
     public Long getExtraId() {
         return extraId;
@@ -46,5 +54,13 @@ public class OrderExtra {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public Order getOrder() {
+        return order;
+    }
+
+    public void setOrder(Order order) {
+        this.order = order;
     }
 }

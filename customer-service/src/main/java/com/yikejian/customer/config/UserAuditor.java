@@ -20,7 +20,7 @@ public class UserAuditor implements AuditorAware<String> {
 
     private OAuth2RestTemplate oAuth2RestTemplate;
 
-    @Value("${yikejian.user.url}")
+    @Value("${yikejian.user.api.url}")
     private String userApi;
 
     @Autowired

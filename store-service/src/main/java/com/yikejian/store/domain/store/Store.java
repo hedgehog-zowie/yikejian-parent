@@ -1,5 +1,6 @@
 package com.yikejian.store.domain.store;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.yikejian.store.domain.BaseEntity;
 import org.apache.commons.lang.StringUtils;
 
@@ -68,11 +69,13 @@ public class Store extends BaseEntity {
     /**
      * 产品
      */
+    @JsonIgnore
     @OneToMany(mappedBy = "store", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<StoreProduct> storeProductSet;
     /**
      * 设备
      */
+    @JsonIgnore
     @OneToMany(mappedBy = "store", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<Device> deviceSet;
 

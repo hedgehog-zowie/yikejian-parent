@@ -45,6 +45,9 @@ public class Order extends BaseEntity {
      * 实付金额
      */
     private Double actualAmount;
+    /**
+     * 项目
+     */
     @OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
     private Set<OrderItem> itemSet;
     /**
