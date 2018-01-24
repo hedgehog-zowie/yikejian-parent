@@ -69,13 +69,13 @@ public class Store extends BaseEntity {
     /**
      * 产品
      */
-    @JsonIgnore
+//    @JsonIgnore
     @OneToMany(mappedBy = "store", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<StoreProduct> storeProductSet;
     /**
      * 设备
      */
-    @JsonIgnore
+//    @JsonIgnore
     @OneToMany(mappedBy = "store", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<Device> deviceSet;
 

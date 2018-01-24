@@ -5,6 +5,7 @@ import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.yikejian.inventory.domain.inventory.Inventory;
 import com.yikejian.inventory.domain.inventory.InventoryEvent;
 import com.yikejian.inventory.domain.product.Product;
+import com.yikejian.inventory.domain.store.Device;
 import com.yikejian.inventory.domain.store.Store;
 import com.yikejian.inventory.domain.store.StoreProduct;
 import com.yikejian.inventory.exception.InventoryServiceException;
@@ -23,6 +24,7 @@ import javax.persistence.criteria.Predicate;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * <code>InventoryService</code>.
@@ -143,25 +145,16 @@ public class InventoryService {
         }
         Long storeId = store.getStoreId();
         Integer unitDuration = store.getUnitDuration();
+        List<Inventory> storeInventoryList = inventoryRepository.findByStoreIdAndDay(storeId, day);
+        Set<Device> deviceSet = store.getDeviceSet();
         for (StoreProduct storeProduct : store.getStoreProductSet()) {
             Long productId = storeProduct.getProductId();
-            // TODO: 2018/1/24 update to findByStoreId
-            List<Inventory> inventoryList = inventoryRepository.findByStoreIdAndProductIdAndDay(storeId, productId, day);
-            Product product = oAuth2RestTemplate.getForObject(productUrl + "/" + productId, Product.class);
-            // 检查产品是否删除
-            if (product == null || product.getDeleted() == 1) {
-                for (Inventory inventory : inventoryList) {
-                    inventory.setDeleted(1);
-                }
-                inventoryRepository.save(inventoryList);
+            List<Inventory> productInventoryList = inventoryRepository.findByStoreIdAndProductIdAndDay(storeId, productId, day);
+            for(Inventory productInventory: productInventoryList){
+                productInventory.setEffective(storeProduct.getEffective());
+                productInventory.setDeleted(storeProduct.getDeleted());
             }
-            // 检查产品是否有效
-            else if (product.getEffective() == 0) {
-                for (Inventory inventory : inventoryList) {
-                    inventory.setDeleted(1);
-                }
-                inventoryRepository.save(inventoryList);
-            }
+
         }
 
         return true;

@@ -5,6 +5,7 @@ import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.yikejian.store.api.v1.dto.Pagination;
 import com.yikejian.store.api.v1.dto.RequestStore;
 import com.yikejian.store.api.v1.dto.ResponseStore;
+import com.yikejian.store.domain.product.Product;
 import com.yikejian.store.domain.store.Store;
 import com.yikejian.store.domain.store.StoreProduct;
 import com.yikejian.store.repository.StoreProductRepository;

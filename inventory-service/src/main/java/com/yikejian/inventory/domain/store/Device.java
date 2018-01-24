@@ -1,5 +1,8 @@
 package com.yikejian.inventory.domain.store;
 
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import java.util.Set;
 
 /**
@@ -16,6 +19,12 @@ public class Device {
      * 设备支持的产品
      */
     private Set<DeviceProduct> deviceProductSet;
+    /**
+     * 设备
+     */
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "store_id")
+    private Store store;
 
     public Device() {
     }

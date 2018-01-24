@@ -1,5 +1,9 @@
 package com.yikejian.inventory.domain.store;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
 import java.util.Set;
 
 /**
@@ -36,6 +40,8 @@ public class Store {
     /**
      * 设备
      */
+    @JsonIgnore
+    @OneToMany(mappedBy = "store", fetch = FetchType.LAZY)
     private Set<Device> deviceSet;
 
     public Long getStoreId() {
