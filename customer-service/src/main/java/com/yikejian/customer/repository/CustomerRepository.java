@@ -18,4 +18,6 @@ public interface CustomerRepository extends PagingAndSortingRepository<Customer,
 
     Customer findByCustomerId(Long customerId);
 
+    Customer findByEffectiveAndDeleted(Integer effective, Integer deleted);
+
 }

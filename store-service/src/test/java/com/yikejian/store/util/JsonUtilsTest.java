@@ -1,7 +1,6 @@
 package com.yikejian.store.util;
 
 import com.google.common.collect.Sets;
-import com.yikejian.store.domain.product.Product;
 import com.yikejian.store.domain.store.Store;
 import com.yikejian.store.domain.store.StoreProduct;
 import org.junit.After;

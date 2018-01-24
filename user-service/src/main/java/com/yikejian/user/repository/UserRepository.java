@@ -23,6 +23,8 @@ public interface UserRepository extends PagingAndSortingRepository<User, Long>, 
 
     User findByName(String name);
 
+    User findByEffectiveAndDeleted(Integer effective, Integer deleted);
+
     User findByNameAndEffectiveAndDeleted(String name, Integer effective, Integer deleted);
 
     List<User> findByRole(Role role);

@@ -18,4 +18,6 @@ public interface StoreRepository extends PagingAndSortingRepository<Store, Long>
 
     Store findByStoreId(Long storeId);
 
+    Store findByEffectiveAndDeleted(Integer effective, Integer deleted);
+
 }

@@ -18,4 +18,6 @@ public interface OrderRepository extends PagingAndSortingRepository<Order, Long>
 
     Order findByOrderId(Long orderId);
 
+    Order findByEffectiveAndDeleted(Integer effective, Integer deleted);
+
 }

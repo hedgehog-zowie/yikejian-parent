@@ -145,6 +145,42 @@ public class InventoryService {
         Integer unitDuration = store.getUnitDuration();
         for (StoreProduct storeProduct : store.getStoreProductSet()) {
             Long productId = storeProduct.getProductId();
+            // TODO: 2018/1/24 update to findByStoreId
+            List<Inventory> inventoryList = inventoryRepository.findByStoreIdAndProductIdAndDay(storeId, productId, day);
+            Product product = oAuth2RestTemplate.getForObject(productUrl + "/" + productId, Product.class);
+            // 检查产品是否删除
+            if (product == null || product.getDeleted() == 1) {
+                for (Inventory inventory : inventoryList) {
+                    inventory.setDeleted(1);
+                }
+                inventoryRepository.save(inventoryList);
+            }
+            // 检查产品是否有效
+            else if (product.getEffective() == 0) {
+                for (Inventory inventory : inventoryList) {
+                    inventory.setDeleted(1);
+                }
+                inventoryRepository.save(inventoryList);
+            }
+        }
+
+        return true;
+    }
+
+    public Boolean initInventoryOfStoreOld(Store store, String day) {
+        if (store == null) {
+            String msg = "init inventory error. store is null.";
+            throw new InventoryServiceException(msg);
+        }
+        try {
+            DateUtils.dayStrToDate(day);
+        } catch (RuntimeException e) {
+            throw new InventoryServiceException(e.getLocalizedMessage());
+        }
+        Long storeId = store.getStoreId();
+        Integer unitDuration = store.getUnitDuration();
+        for (StoreProduct storeProduct : store.getStoreProductSet()) {
+            Long productId = storeProduct.getProductId();
 //            List<Inventory> inventoryList = inventoryRepository.findByStoreIdAndProductIdAndDay(storeId, productId, day);
             Long exists = inventoryRepository.countByStoreIdAndProductIdAndDay(storeId, productId, day);
             if (exists == 0) {

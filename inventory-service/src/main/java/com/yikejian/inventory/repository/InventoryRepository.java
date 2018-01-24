@@ -24,4 +24,6 @@ public interface InventoryRepository extends PagingAndSortingRepository<Inventor
 
     Long countByStoreIdAndProductIdAndDay(Long storeId, Long productId, String day);
 
+    Inventory findByStoreIdAndProductIdAndDayAndPieceTime(Long storeId, Long productId, String day, String pieceTime);
+
 }

@@ -19,4 +19,6 @@ public interface CouponItemRepository extends PagingAndSortingRepository<CouponI
 
     CouponItem findByCouponItemId(Long couponItemId);
 
+    CouponItem findByEffectiveAndDeleted(Integer effective, Integer deleted);
+
 }

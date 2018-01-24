@@ -18,4 +18,6 @@ public interface ProductRepository extends PagingAndSortingRepository<Product, L
 
     Product findByProductId(Long productId);
 
+    Product findByEffectiveAndDeleted(Integer effective, Integer deleted);
+
 }

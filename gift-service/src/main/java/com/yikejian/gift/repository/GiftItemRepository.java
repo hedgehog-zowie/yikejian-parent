@@ -18,4 +18,6 @@ public interface GiftItemRepository extends PagingAndSortingRepository<GiftItem,
 
     GiftItem findByGiftItemId(Long giftItemId);
 
+    GiftItem findByEffectiveAndDeleted(Integer effective, Integer deleted);
+
 }

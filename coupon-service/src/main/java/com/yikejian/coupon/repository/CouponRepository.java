@@ -1,6 +1,7 @@
 package com.yikejian.coupon.repository;
 
 import com.yikejian.coupon.domain.coupon.Coupon;
+import com.yikejian.coupon.domain.item.CouponItem;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
@@ -17,5 +18,7 @@ import org.springframework.stereotype.Repository;
 public interface CouponRepository extends PagingAndSortingRepository<Coupon, Long>, JpaSpecificationExecutor<Coupon> {
 
     Coupon findByCouponId(Long couponId);
+
+    Coupon findByEffectiveAndDeleted(Integer effective, Integer deleted);
 
 }

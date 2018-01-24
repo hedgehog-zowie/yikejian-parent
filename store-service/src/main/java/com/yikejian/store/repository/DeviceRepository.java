@@ -16,4 +16,6 @@ public interface DeviceRepository extends PagingAndSortingRepository<Device, Lon
 
     Device findByDeviceId(Long storeId);
 
+    Device findByEffectiveAndDeleted(Integer effective, Integer deleted);
+
 }
