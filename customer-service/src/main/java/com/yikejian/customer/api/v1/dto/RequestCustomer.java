@@ -15,6 +15,12 @@ public class RequestCustomer {
     private Pagination pagination;
     private Sort sorter;
 
+    public RequestCustomer(Customer customer, Pagination pagination, Sort sorter) {
+        this.customer = customer;
+        this.pagination = pagination;
+        this.sorter = sorter;
+    }
+
     public Customer getCustomer() {
         return customer;
     }

@@ -3,6 +3,7 @@ package com.yikejian.customer.domain.customer;
 import com.yikejian.customer.domain.BaseEntity;
 import com.yikejian.customer.domain.account.Account;
 import com.yikejian.customer.domain.title.Title;
+import org.apache.commons.lang.StringUtils;
 
 import javax.persistence.*;
 
@@ -48,6 +49,28 @@ public class Customer extends BaseEntity {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "title_id")
     private Title title;
+
+    public Customer mergeOther(Customer other){
+        if (StringUtils.isNotBlank(other.getCustomerName())) {
+            setCustomerName(other.getCustomerName());
+        }
+        if(StringUtils.isNotBlank(other.getOpenId())){
+            setOpenId(other.getOpenId());
+        }
+        if(StringUtils.isNotBlank(other.getMobileNumber())){
+            setMobileNumber(other.getMobileNumber());
+        }
+        if(StringUtils.isNotBlank(other.getBirthday())){
+            setBirthday(other.getBirthday());
+        }
+        if (other.getEffective() != null) {
+            setEffective(other.getEffective());
+        }
+        if (other.getDeleted() != null) {
+            setDeleted(other.getDeleted());
+        }
+        return this;
+    }
 
     public Long getCustomerId() {
         return customerId;

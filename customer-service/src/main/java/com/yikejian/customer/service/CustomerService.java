@@ -1,5 +1,6 @@
 package com.yikejian.customer.service;
 
+import com.google.common.collect.Lists;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.yikejian.customer.api.v1.dto.Pagination;
 import com.yikejian.customer.api.v1.dto.RequestCustomer;
@@ -19,6 +20,7 @@ import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Predicate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * <code>CustomerService</code>.
@@ -40,12 +42,24 @@ public class CustomerService {
 
     @HystrixCommand
     public Customer saveCustomer(Customer customer) {
-        return customerRepository.save(customer);
+        return customerRepository.save(transform(customer));
     }
 
     @HystrixCommand
     public List<Customer> saveCustomers(List<Customer> customerList) {
-        return (List<Customer>) customerRepository.save(customerList);
+        return (List<Customer>) customerRepository.save(
+                Lists.newArrayList(customerList.stream().
+                        map(this::transform).collect(Collectors.toList()))
+        );
+    }
+
+    private Customer transform(Customer customer) {
+        Customer newCustomer = customer;
+        if (customer.getCustomerId() != null) {
+            Customer oldCustomer = customerRepository.findByCustomerId(customer.getCustomerId());
+            newCustomer = oldCustomer.mergeOther(customer);
+        }
+        return newCustomer;
     }
 
     @HystrixCommand

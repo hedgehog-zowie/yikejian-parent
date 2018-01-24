@@ -2,12 +2,11 @@ package com.yikejian.product.service;
 
 import com.google.common.collect.Lists;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
-import com.yikejian.product.api.v1.dto.Pagination;
-import com.yikejian.product.api.v1.dto.RequestProductDto;
+import com.yikejian.product.api.v1.dto.RequestProduct;
 import com.yikejian.product.api.v1.dto.ResponseProduct;
 import com.yikejian.product.domain.product.Product;
-import com.yikejian.product.exception.ProductServiceException;
 import com.yikejian.product.repository.ProductRepository;
+import com.yikejian.user.api.v1.dto.Pagination;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -18,7 +17,6 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.criteria.Predicate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -42,12 +40,24 @@ public class ProductService {
 
     @HystrixCommand
     public Product saveProduct(Product product) {
-        return productRepository.save(product);
+        return productRepository.save(transform(product));
     }
 
     @HystrixCommand
     public List<Product> saveProducts(List<Product> productList) {
-        return (List<Product>) productRepository.save(productList);
+        return (List<Product>) productRepository.save(
+                Lists.newArrayList(productList.stream().
+                        map(this::transform).collect(Collectors.toList()))
+        );
+    }
+
+    private Product transform(Product product) {
+        Product newProduct = product;
+        if (product.getProductId() != null) {
+            Product oldProduct = productRepository.findByProductId(product.getProductId());
+            newProduct = oldProduct.mergeOther(product);
+        }
+        return newProduct;
     }
 
     @HystrixCommand
@@ -61,27 +71,34 @@ public class ProductService {
     }
 
     @HystrixCommand
-    public ResponseProduct getProducts(RequestProductDto requestProductDto) {
+    public ResponseProduct getProducts(RequestProduct requestProduct) {
         Pagination pagination;
-        if (requestProductDto != null && requestProductDto.getPagination() != null) {
-            pagination = requestProductDto.getPagination();
+        if (requestProduct != null && requestProduct.getPagination() != null) {
+            pagination = requestProduct.getPagination();
         } else {
             pagination = new Pagination();
         }
 
-        Sort sort = null;
-        if (requestProductDto != null && requestProductDto.getSort() != null) {
-            sort = new Sort(requestProductDto.getSort().getDirection(), requestProductDto.getSort().getField());
+        String filed = "lastModifiedAt";
+        Sort.Direction direction = Sort.Direction.DESC;
+        if (requestProduct != null && requestProduct.getSorter() != null) {
+            if (requestProduct.getSorter().getField() != null) {
+                filed = requestProduct.getSorter().getField();
+            }
+            if ("ascend".equals(requestProduct.getSorter().getOrder())) {
+                direction = Sort.Direction.ASC;
+            }
         }
+        Sort sort = new Sort(direction, filed);
 
         PageRequest pageRequest = new PageRequest(
-                pagination.getCurrentPage(),
+                pagination.getCurrent() - 1,
                 pagination.getPageSize(),
                 sort);
-        Page<Product> page = productRepository.findAll(productSpec(requestProductDto.getProduct()), pageRequest);
+        Page<Product> page = productRepository.findAll(productSpec(requestProduct.getProduct()), pageRequest);
 
         pagination.setTotalPages(page.getTotalPages());
-        pagination.setTotalSize(page.getTotalElements());
+        pagination.setTotal(page.getTotalElements());
 
         return new ResponseProduct(page.getContent(), pagination);
     }
@@ -94,10 +111,10 @@ public class ProductService {
                     predicateList.add(cb.like(root.get("productName").as(String.class), "%" + product.getProductName() + "%"));
                 }
                 if (product.getStartTime() != null) {
-                    predicateList.add(cb.equal(root.get("startTime").as(Integer.class), product.getStartTime()));
+                    predicateList.add(cb.equal(root.get("startTime").as(String.class), product.getStartTime()));
                 }
-                if (product.getDeleted() != null) {
-                    predicateList.add(cb.equal(root.get("endTime").as(Integer.class), product.getEndTime()));
+                if (product.getEndTime() != null) {
+                    predicateList.add(cb.equal(root.get("endTime").as(String.class), product.getEndTime()));
                 }
                 if (product.getEffective() != null) {
                     predicateList.add(cb.equal(root.get("effective").as(Integer.class), product.getEffective()));

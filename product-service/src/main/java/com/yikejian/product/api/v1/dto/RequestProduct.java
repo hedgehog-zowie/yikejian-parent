@@ -1,6 +1,8 @@
-package com.yikejian.user.api.v1.dto;
+package com.yikejian.product.api.v1.dto;
 
-import com.yikejian.user.domain.role.Role;
+import com.yikejian.product.domain.product.Product;
+import com.yikejian.user.api.v1.dto.Pagination;
+import com.yikejian.user.api.v1.dto.Sort;
 
 /**
  * @author jackalope
@@ -9,27 +11,24 @@ import com.yikejian.user.domain.role.Role;
  * @Description: TODO
  * @date 2018/1/14 21:51
  */
-public class RequestRole {
+public class RequestProduct {
 
-    private Role role;
+    private Product product;
     private Pagination pagination;
     private Sort sorter;
 
-    public RequestRole() {
-    }
-
-    public RequestRole(Role role, Pagination pagination, Sort sorter) {
-        this.role = role;
+    public RequestProduct(Product product, Pagination pagination, Sort sorter) {
+        this.product = product;
         this.pagination = pagination;
         this.sorter = sorter;
     }
 
-    public Role getRole() {
-        return role;
+    public Product getProduct() {
+        return product;
     }
 
-    public void setRole(Role role) {
-        this.role = role;
+    public void setProduct(Product product) {
+        this.product = product;
     }
 
     public Pagination getPagination() {

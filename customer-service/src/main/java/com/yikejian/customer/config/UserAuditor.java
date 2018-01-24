@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.AuditorAware;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 
 /**
@@ -32,27 +34,27 @@ public class UserAuditor implements AuditorAware<String> {
 
     @Override
     public String getCurrentAuditor() {
-//        SecurityContext securityContext = SecurityContextHolder.getContext();
-//        if (securityContext == null) {
-//            return DEFAULT;
-//        }
-//        if (securityContext.getAuthentication() == null) {
-//            return DEFAULT;
-//        }
-//        if (securityContext.getAuthentication().getPrincipal() == null) {
-//            return DEFAULT;
-//        }
-//        Object principal = securityContext.getAuthentication().getPrincipal();
-//        if (principal.getClass().isAssignableFrom(String.class)) {
-//            return (String) principal;
+//        User user = oAuth2RestTemplate.getForObject(userApi, User.class);
+//        if (user != null) {
+//            return user.getName();
 //        } else {
-//            return DEFAULT;
+//            return null;
 //        }
-        User user = oAuth2RestTemplate.getForObject(userApi, User.class);
-        if (user != null) {
-            return user.getName();
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        if (securityContext == null) {
+            return DEFAULT;
+        }
+        if (securityContext.getAuthentication() == null) {
+            return DEFAULT;
+        }
+        if (securityContext.getAuthentication().getPrincipal() == null) {
+            return DEFAULT;
+        }
+        Object principal = securityContext.getAuthentication().getPrincipal();
+        if (principal.getClass().isAssignableFrom(String.class)) {
+            return (String) principal;
         } else {
-            return null;
+            return DEFAULT;
         }
     }
 }

@@ -1,6 +1,6 @@
 server:
   port: 8004
-  contextPath: /productId
+  contextPath: /product-service
 spring:
   application:
     name: product-service

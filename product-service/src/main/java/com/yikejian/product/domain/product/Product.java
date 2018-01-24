@@ -1,6 +1,7 @@
 package com.yikejian.product.domain.product;
 
 import com.yikejian.product.domain.BaseEntity;
+import org.apache.commons.lang.StringUtils;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -48,6 +49,37 @@ public class Product extends BaseEntity {
      * LOGO
      */
     private byte[] logo;
+
+    public Product mergeOther(Product other){
+        if (StringUtils.isNotBlank(other.getProductName())) {
+            setProductName(other.getProductName());
+        }
+        if(other.getPrice() != null){
+            setPrice(other.getPrice());
+        }
+        if(other.getDuration() != null){
+            setDuration(other.getDuration());
+        }
+        if (StringUtils.isNotBlank(other.getStartTime())) {
+            setStartTime(other.getStartTime());
+        }
+        if (StringUtils.isNotBlank(other.getEndTime())) {
+            setEndTime(other.getEndTime());
+        }
+        if(StringUtils.isNotBlank(other.getIntroduction())){
+            setIntroduction(other.getIntroduction());
+        }
+        if(other.getLogo() != null){
+            setLogo(other.getLogo());
+        }
+        if (other.getEffective() != null) {
+            setEffective(other.getEffective());
+        }
+        if (other.getDeleted() != null) {
+            setDeleted(other.getDeleted());
+        }
+        return this;
+    }
 
     public Long getProductId() {
         return productId;
