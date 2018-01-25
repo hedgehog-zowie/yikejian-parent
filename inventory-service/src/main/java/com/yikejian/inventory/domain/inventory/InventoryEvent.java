@@ -1,5 +1,9 @@
 package com.yikejian.inventory.domain.inventory;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+
 /**
  * @author jackalope
  * @Title: InventoryEvent
@@ -7,9 +11,12 @@ package com.yikejian.inventory.domain.inventory;
  * @Description: TODO
  * @date 2018/1/19 21:05
  */
+@Entity
 public class InventoryEvent {
 
-    private Long id;
+    @Id
+    @GeneratedValue
+    private Long inventoryEventId;
     /**
      * 库存ID
      */
@@ -19,12 +26,12 @@ public class InventoryEvent {
      */
     private InventoryEventType inventoryEventType;
 
-    public Long getId() {
-        return id;
+    public Long getInventoryEventId() {
+        return inventoryEventId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setInventoryEventId(Long inventoryEventId) {
+        this.inventoryEventId = inventoryEventId;
     }
 
     public Long getInventoryId() {

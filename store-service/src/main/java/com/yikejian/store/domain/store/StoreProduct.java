@@ -34,6 +34,14 @@ public class StoreProduct extends BaseEntity {
     @Transient
     private String productName;
     /**
+     * 开始营业时间(精确到分，如1020表示10点20分)
+     */
+    private String startTime;
+    /**
+     * 结束营业时间(精确到分，如1020表示10点20分)
+     */
+    private String endTime;
+    /**
      * 店铺
      */
     @ManyToOne(fetch = FetchType.EAGER)
@@ -80,6 +88,22 @@ public class StoreProduct extends BaseEntity {
 
     public void setProductName(String productName) {
         this.productName = productName;
+    }
+
+    public String getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
+    }
+
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
     }
 
     public Store getStore() {

@@ -1,8 +1,17 @@
 package com.yikejian.order.domain.order;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.yikejian.order.domain.BaseEntity;
+import org.apache.commons.lang.StringUtils;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Transient;
 import java.util.Set;
 
 /**
@@ -38,6 +47,14 @@ public class Order extends BaseEntity {
     @Transient
     private String storeName;
     /**
+     * 产品ID
+     */
+    private Long productId;
+    /**
+     * 产品名称
+     */
+    private String productName;
+    /**
      * 订单金额
      */
     private Double amount;
@@ -56,6 +73,41 @@ public class Order extends BaseEntity {
     @OneToOne(targetEntity = OrderExtra.class)
     @JoinColumn(name = "extra_id", referencedColumnName = "extra_id")
     private OrderExtra orderExtra;
+    /**
+     * 订单事件
+     */
+    @JsonIgnore
+    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
+    private Set<OrderEvent> eventSet;
+
+    public Order mergeOther(Order other) {
+        if (other.getCustomerId() != null) {
+            setCustomerId(other.getCustomerId());
+        }
+        if (StringUtils.isNotBlank(other.getCustomerName())) {
+            setCustomerName(other.getCustomerName());
+        }
+        if (other.getStoreId() != null) {
+            setStoreId(other.getStoreId());
+        }
+        if (other.getProductId() != null) {
+            setProductId(other.getProductId());
+        }
+        if (StringUtils.isNotBlank(other.getProductName())) {
+            setProductName(other.getProductName());
+        }
+        if (other.getAmount() != null) {
+            setAmount(other.getAmount());
+        }
+        if (other.getActualAmount() != null) {
+            setActualAmount(other.getActualAmount());
+        }
+        // TODO: 2018/1/25 add itemset
+        if (other.getOrderExtra() != null) {
+            setOrderExtra(other.getOrderExtra());
+        }
+        return this;
+    }
 
     public Long getOrderId() {
         return orderId;
@@ -85,6 +137,10 @@ public class Order extends BaseEntity {
         return storeId;
     }
 
+    public void setStoreId(Long storeId) {
+        this.storeId = storeId;
+    }
+
     public String getStoreName() {
         return storeName;
     }
@@ -93,8 +149,20 @@ public class Order extends BaseEntity {
         this.storeName = storeName;
     }
 
-    public void setStoreId(Long storeId) {
-        this.storeId = storeId;
+    public Long getProductId() {
+        return productId;
+    }
+
+    public void setProductId(Long productId) {
+        this.productId = productId;
+    }
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
     }
 
     public Double getAmount() {
@@ -127,5 +195,13 @@ public class Order extends BaseEntity {
 
     public void setOrderExtra(OrderExtra orderExtra) {
         this.orderExtra = orderExtra;
+    }
+
+    public Set<OrderEvent> getEventSet() {
+        return eventSet;
+    }
+
+    public void setEventSet(Set<OrderEvent> eventSet) {
+        this.eventSet = eventSet;
     }
 }

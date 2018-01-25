@@ -6,6 +6,7 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * <code>InventoryRepository</code>.
@@ -20,7 +21,7 @@ public interface InventoryRepository extends PagingAndSortingRepository<Inventor
 
     Inventory findByInventoryId(Long inventoryId);
 
-    List<Inventory> findByStoreIdAndProductIdAndDay(Long storeId, Long productId, String day);
+    Set<Inventory> findByStoreIdAndProductIdAndDay(Long storeId, Long productId, String day);
 
     List<Inventory> findByStoreIdAndDay(Long storeId, String day);
 

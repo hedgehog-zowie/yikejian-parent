@@ -1,6 +1,6 @@
-package com.yikejian.user.api.v1.dto;
+package com.yikejian.inventory.api.v1.dto;
 
-import com.yikejian.user.domain.role.Role;
+import com.yikejian.inventory.domain.inventory.Inventory;
 
 import java.util.List;
 
@@ -12,28 +12,28 @@ import java.util.List;
  * @version: 1.0-SNAPSHOT
  * date: 2018/1/15 11:28
  */
-public class ResponseRole {
+public class ResponseInventory {
 
-    private List<Role> list;
+    private List<Inventory> list;
     private Pagination pagination;
 
-    public ResponseRole() {
+    public ResponseInventory() {
     }
 
-    public ResponseRole(List<Role> list) {
+    public ResponseInventory(List<Inventory> list) {
         this.list = list;
     }
 
-    public ResponseRole(List<Role> list, Pagination pagination) {
+    public ResponseInventory(List<Inventory> list, Pagination pagination) {
         this.list = list;
         this.pagination = pagination;
     }
 
-    public List<Role> getList() {
+    public List<Inventory> getList() {
         return list;
     }
 
-    public void setList(List<Role> list) {
+    public void setList(List<Inventory> list) {
         this.list = list;
     }
 

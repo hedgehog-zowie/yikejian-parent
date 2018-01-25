@@ -62,34 +62,40 @@ public class Inventory extends BaseEntity {
 
         if (!storeId.equals(inventory.storeId)) return false;
         if (!productId.equals(inventory.productId)) return false;
-        if (!stock.equals(inventory.stock)) return false;
         if (!day.equals(inventory.day)) return false;
         return pieceTime.equals(inventory.pieceTime);
-
     }
 
     @Override
     public int hashCode() {
         int result = storeId.hashCode();
         result = 31 * result + productId.hashCode();
-        result = 31 * result + stock.hashCode();
         result = 31 * result + day.hashCode();
         result = 31 * result + pieceTime.hashCode();
         return result;
     }
 
-    public Inventory mergeOtherInventory(Inventory other){
+    public Inventory mergeOther(Inventory other){
         if (other.getStoreId() != null) {
             setStoreId(other.getStoreId());
         }
         if (other.getProductId() != null) {
             setProductId(other.getProductId());
         }
-        if (other.getStoreId() != null) {
-            setStoreId(other.getStoreId());
+        if (other.getStock() != null) {
+            setStock(other.getStock());
         }
         if (StringUtils.isNotBlank(other.getDay())) {
             setDay(other.getDay());
+        }
+        if (StringUtils.isNotBlank(other.getPieceTime())) {
+            setPieceTime(other.getPieceTime());
+        }
+        if (other.getEffective() != null) {
+            setEffective(other.getEffective());
+        }
+        if (other.getDeleted() != null) {
+            setDeleted(other.getDeleted());
         }
         return this;
     }

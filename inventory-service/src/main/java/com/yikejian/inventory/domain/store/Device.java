@@ -20,13 +20,32 @@ public class Device {
      */
     private Set<DeviceProduct> deviceProductSet;
     /**
-     * 设备
+     * 店铺
      */
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "store_id")
     private Store store;
 
     public Device() {
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Device device = (Device) o;
+
+        if (!deviceId.equals(device.deviceId)) return false;
+        return store.equals(device.store);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = deviceId.hashCode();
+        result = 31 * result + store.hashCode();
+        return result;
     }
 
     public Long getDeviceId() {
@@ -43,5 +62,13 @@ public class Device {
 
     public void setDeviceProductSet(Set<DeviceProduct> deviceProductSet) {
         this.deviceProductSet = deviceProductSet;
+    }
+
+    public Store getStore() {
+        return store;
+    }
+
+    public void setStore(Store store) {
+        this.store = store;
     }
 }

@@ -58,6 +58,15 @@ public class OrderService {
         return (List<Order>) orderRepository.save(orderList);
     }
 
+    private Order transform(Order order) {
+        Order newInventory = order;
+        if (order.getOrderId() != null) {
+            Order oldInventory = orderRepository.findByOrderId(order.getOrderId());
+            newInventory = oldInventory.mergeOther(order);
+        }
+        return newInventory;
+    }
+
     @HystrixCommand
     public Order getOrderById(Long orderId) {
         Order order = orderRepository.findByOrderId(orderId);

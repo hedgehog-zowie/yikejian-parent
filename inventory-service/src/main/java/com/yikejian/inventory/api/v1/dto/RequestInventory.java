@@ -1,35 +1,35 @@
-package com.yikejian.user.api.v1.dto;
+package com.yikejian.inventory.api.v1.dto;
 
-import com.yikejian.user.domain.role.Role;
+import com.yikejian.inventory.domain.inventory.Inventory;
 
 /**
  * @author jackalope
- * @Title: QueryRole
+ * @Title: QueryInventory
  * @Package com.yikejian.user.request
  * @Description: TODO
  * @date 2018/1/14 21:51
  */
-public class RequestRole {
+public class RequestInventory {
 
-    private Role role;
+    private Inventory inventory;
     private Pagination pagination;
     private Sort sorter;
 
-    public RequestRole() {
+    public RequestInventory() {
     }
 
-    public RequestRole(Role role, Pagination pagination, Sort sorter) {
-        this.role = role;
+    public RequestInventory(Inventory inventory, Pagination pagination, Sort sorter) {
+        this.inventory = inventory;
         this.pagination = pagination;
         this.sorter = sorter;
     }
 
-    public Role getRole() {
-        return role;
+    public Inventory getInventory() {
+        return inventory;
     }
 
-    public void setRole(Role role) {
-        this.role = role;
+    public void setInventory(Inventory inventory) {
+        this.inventory = inventory;
     }
 
     public Pagination getPagination() {
