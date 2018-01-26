@@ -5,7 +5,6 @@ import com.yikejian.product.domain.product.Product;
 import com.yikejian.product.exception.ProductServiceException;
 import com.yikejian.product.service.ProductService;
 import com.yikejian.product.util.JsonUtils;
-import com.yikejian.user.api.v1.dto.Pagination;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -71,18 +70,19 @@ public class ProductControllerV1 {
 
     @GetMapping("/products")
     public ResponseEntity getProducts(final @RequestParam(value = "params", required = false) String params) {
-        RequestProduct requestProduct;
+        // todo send log
         if (StringUtils.isBlank(params)) {
-            requestProduct = new RequestProduct(new Product(), new Pagination(), null);
-        } else {
-            try {
-                requestProduct = JsonUtils.fromJson(URLDecoder.decode(params, "UTF-8"), RequestProduct.class);
-            } catch (UnsupportedEncodingException e) {
-                throw new ProductServiceException(e.getLocalizedMessage());
-            }
+            return Optional.ofNullable(productService.getAllEffectiveStores())
+                    .map(a -> new ResponseEntity<>(a, HttpStatus.OK))
+                    .orElseThrow(() -> new ProductServiceException("Not found any store."));
+        }
+        RequestProduct requestProduct;
+        try {
+            requestProduct = JsonUtils.fromJson(URLDecoder.decode(params, "UTF-8"), RequestProduct.class);
+        } catch (UnsupportedEncodingException e) {
+            throw new ProductServiceException(e.getLocalizedMessage());
         }
         requestProduct.getProduct().setDeleted(0);
-        // todo send log
         return Optional.ofNullable(productService.getProducts(requestProduct))
                 .map(a -> new ResponseEntity<>(a, HttpStatus.OK))
                 .orElseThrow(() -> new ProductServiceException("Not found any product."));

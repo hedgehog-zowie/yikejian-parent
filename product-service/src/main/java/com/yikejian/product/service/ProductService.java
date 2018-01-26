@@ -71,6 +71,11 @@ public class ProductService {
     }
 
     @HystrixCommand
+    public List<Product> getAllEffectiveStores(){
+        return (List<Product>) productRepository.findByEffectiveAndDeleted(1, 0);
+    }
+
+    @HystrixCommand
     public ResponseProduct getProducts(RequestProduct requestProduct) {
         Pagination pagination;
         if (requestProduct != null && requestProduct.getPagination() != null) {

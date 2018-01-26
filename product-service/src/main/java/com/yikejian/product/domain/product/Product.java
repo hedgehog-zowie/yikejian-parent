@@ -50,14 +50,14 @@ public class Product extends BaseEntity {
      */
     private byte[] logo;
 
-    public Product mergeOther(Product other){
+    public Product mergeOther(Product other) {
         if (StringUtils.isNotBlank(other.getProductName())) {
             setProductName(other.getProductName());
         }
-        if(other.getPrice() != null){
+        if (other.getPrice() != null) {
             setPrice(other.getPrice());
         }
-        if(other.getDuration() != null){
+        if (other.getDuration() != null) {
             setDuration(other.getDuration());
         }
         if (StringUtils.isNotBlank(other.getStartTime())) {
@@ -66,10 +66,10 @@ public class Product extends BaseEntity {
         if (StringUtils.isNotBlank(other.getEndTime())) {
             setEndTime(other.getEndTime());
         }
-        if(StringUtils.isNotBlank(other.getIntroduction())){
+        if (StringUtils.isNotBlank(other.getIntroduction())) {
             setIntroduction(other.getIntroduction());
         }
-        if(other.getLogo() != null){
+        if (other.getLogo() != null) {
             setLogo(other.getLogo());
         }
         if (other.getEffective() != null) {

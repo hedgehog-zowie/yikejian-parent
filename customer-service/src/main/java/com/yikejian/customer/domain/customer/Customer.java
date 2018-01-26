@@ -40,7 +40,7 @@ public class Customer extends BaseEntity {
     /**
      * 账户
      */
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "account_id")
     private Account account;
     /**
@@ -62,6 +62,9 @@ public class Customer extends BaseEntity {
         }
         if(StringUtils.isNotBlank(other.getBirthday())){
             setBirthday(other.getBirthday());
+        }
+        if (other.getAccount() != null) {
+            setAccount(other.getAccount());
         }
         if (other.getEffective() != null) {
             setEffective(other.getEffective());

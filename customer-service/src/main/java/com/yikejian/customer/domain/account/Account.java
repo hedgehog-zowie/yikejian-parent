@@ -26,6 +26,10 @@ public class Account extends BaseEntity {
      */
     private Double balance;
     /**
+     * 总消费额
+     */
+    private Double amount;
+    /**
      * 积分
      */
     private Integer point;
@@ -50,6 +54,14 @@ public class Account extends BaseEntity {
 
     public void setBalance(Double balance) {
         this.balance = balance;
+    }
+
+    public Double getAmount() {
+        return amount;
+    }
+
+    public void setAmount(Double amount) {
+        this.amount = amount;
     }
 
     public Integer getPoint() {
