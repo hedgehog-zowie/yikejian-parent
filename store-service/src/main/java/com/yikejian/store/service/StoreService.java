@@ -77,13 +77,18 @@ public class StoreService {
     @HystrixCommand
     public Store getStoreById(Long storeId) {
         Store store = storeRepository.findByStoreId(storeId);
-        setProductName(store);
-        return storeRepository.findByStoreId(storeId);
+//        setProductName(store);
+        return store;
     }
 
     @HystrixCommand
     public ResponseStore getAllStore() {
         return new ResponseStore((List<Store>) storeRepository.findAll());
+    }
+
+    @HystrixCommand
+    public List<Store> getAllEffectiveStores(){
+        return (List<Store>) storeRepository.findByEffectiveAndDeleted(1, 0);
     }
 
     @HystrixCommand
@@ -95,23 +100,30 @@ public class StoreService {
             pagination = new Pagination();
         }
 
-        Sort sort = null;
-        if (requestStore != null && requestStore.getSort() != null) {
-            sort = new Sort(requestStore.getSort().getDirection(), requestStore.getSort().getField());
+        String filed = "lastModifiedAt";
+        Sort.Direction direction = Sort.Direction.DESC;
+        if (requestStore != null && requestStore.getSorter() != null) {
+            if (requestStore.getSorter().getField() != null) {
+                filed = requestStore.getSorter().getField();
+            }
+            if ("ascend".equals(requestStore.getSorter().getOrder())) {
+                direction = Sort.Direction.ASC;
+            }
         }
+        Sort sort = new Sort(direction, filed);
 
         PageRequest pageRequest = new PageRequest(
-                pagination.getCurrentPage(),
+                pagination.getCurrent() - 1,
                 pagination.getPageSize(),
                 sort);
         Page<Store> page = storeRepository.findAll(storeSpec(requestStore.getStore()), pageRequest);
 
         pagination.setTotalPages(page.getTotalPages());
-        pagination.setTotalSize(page.getTotalElements());
+        pagination.setTotal(page.getTotalElements());
 
-        for (Store store : page.getContent()) {
-            setProductName(store);
-        }
+//        for (Store store : page.getContent()) {
+//            setProductName(store);
+//        }
 
         return new ResponseStore(page.getContent(), pagination);
     }
@@ -135,8 +147,9 @@ public class StoreService {
         };
     }
 
+    @Deprecated
     private void setProductName(Store store) {
-        if (store.getStoreProductSet() == null) return;
+        if (store != null && store.getStoreProductSet() == null) return;
         for (StoreProduct storeProduct : store.getStoreProductSet()) {
             Long productId = storeProduct.getProductId();
             Product product = oAuth2RestTemplate.getForObject(productApiUrl + "/" + productId, Product.class);

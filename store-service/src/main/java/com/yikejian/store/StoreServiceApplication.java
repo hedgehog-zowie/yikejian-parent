@@ -1,9 +1,17 @@
 package com.yikejian.store;
 
+import com.yikejian.store.config.DatabaseInitializer;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Profile;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+import org.springframework.security.oauth2.client.OAuth2ClientContext;
+import org.springframework.security.oauth2.client.OAuth2RestTemplate;
+import org.springframework.security.oauth2.client.resource.OAuth2ProtectedResourceDetails;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
+import org.springframework.web.client.RestTemplate;
 
 /**
  * @author zweig
@@ -18,4 +26,26 @@ public class StoreServiceApplication {
     public static void main(String[] args) {
         SpringApplication.run(StoreServiceApplication.class, args);
     }
+
+    //    @LoadBalanced
+    @Bean
+    public OAuth2RestTemplate loadBalancedOauth2RestTemplate(
+            OAuth2ProtectedResourceDetails resource, OAuth2ClientContext context) {
+        return new OAuth2RestTemplate(resource, context);
+    }
+
+    //    @LoadBalanced
+    @Bean
+    public RestTemplate loadBalancedRestTemplate() {
+        return new RestTemplate();
+    }
+
+    @Bean
+    @Profile({"development"})
+    CommandLineRunner commandLineRunner(DatabaseInitializer databaseInitializer) {
+        return args -> {
+            databaseInitializer.initForDevelop();
+        };
+    }
+
 }

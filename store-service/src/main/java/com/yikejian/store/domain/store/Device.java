@@ -1,6 +1,9 @@
 package com.yikejian.store.domain.store;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.yikejian.store.domain.BaseEntity;
+import org.apache.commons.lang.StringUtils;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -45,13 +48,15 @@ public class Device extends BaseEntity {
     /**
      * 设备所在店铺
      */
+    @JsonManagedReference
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "store_id")
     private Store store;
     /**
      * 设备支持的产品
      */
-    @OneToMany(mappedBy = "device", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JsonBackReference
+    @OneToMany(mappedBy = "device", cascade = CascadeType.ALL)
     private Set<DeviceProduct> deviceProductSet;
 
     public Device() {
@@ -67,8 +72,29 @@ public class Device extends BaseEntity {
 
     @Override
     public int hashCode() {
-
         return Objects.hash(deviceId);
+    }
+
+    public Device mergeOther(Device other) {
+        if (StringUtils.isNotBlank(other.getDeviceCode())) {
+            setDeviceCode(other.getDeviceCode());
+        }
+        if (StringUtils.isNotBlank(other.getDeviceName())) {
+            setDeviceName(other.getDeviceName());
+        }
+        if (StringUtils.isNotBlank(other.getRoomName())) {
+            setRoomName(other.getRoomName());
+        }
+        if (StringUtils.isNotBlank(other.getInformation())) {
+            setInformation(other.getInformation());
+        }
+        if (other.getEffective() != null) {
+            setEffective(other.getEffective());
+        }
+        if (other.getDeleted() != null) {
+            setDeleted(other.getDeleted());
+        }
+        return this;
     }
 
     public Long getDeviceId() {

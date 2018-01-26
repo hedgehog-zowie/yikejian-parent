@@ -1,5 +1,6 @@
 package com.yikejian.store.domain.store;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.yikejian.store.domain.BaseEntity;
 
 import javax.persistence.Entity;
@@ -23,7 +24,7 @@ public class StoreProduct extends BaseEntity {
 
     @Id
     @GeneratedValue
-    private Long id;
+    private Long storeProductId;
     /**
      * 产品ID
      */
@@ -31,7 +32,6 @@ public class StoreProduct extends BaseEntity {
     /**
      * 产品名称
      */
-    @Transient
     private String productName;
     /**
      * 开始营业时间(精确到分，如1020表示10点20分)
@@ -44,6 +44,7 @@ public class StoreProduct extends BaseEntity {
     /**
      * 店铺
      */
+    @JsonManagedReference
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "store_id")
     private Store store;
@@ -66,12 +67,22 @@ public class StoreProduct extends BaseEntity {
         return result;
     }
 
-    public Long getId() {
-        return id;
+    public StoreProduct mergeOther(StoreProduct other) {
+        if (other.getEffective() != null) {
+            setEffective(other.getEffective());
+        }
+        if (other.getDeleted() != null) {
+            setDeleted(other.getDeleted());
+        }
+        return this;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public Long getStoreProductId() {
+        return storeProductId;
+    }
+
+    public void setStoreProductId(Long storeProductId) {
+        this.storeProductId = storeProductId;
     }
 
     public Long getProductId() {

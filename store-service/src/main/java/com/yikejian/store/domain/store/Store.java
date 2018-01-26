@@ -1,12 +1,11 @@
 package com.yikejian.store.domain.store;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.yikejian.store.domain.BaseEntity;
 import org.apache.commons.lang.StringUtils;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
@@ -69,15 +68,22 @@ public class Store extends BaseEntity {
     /**
      * 产品
      */
-//    @JsonIgnore
-    @OneToMany(mappedBy = "store", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JsonBackReference("storeProductSet")
+    @OneToMany(mappedBy = "store", cascade = CascadeType.ALL)
     private Set<StoreProduct> storeProductSet;
     /**
      * 设备
      */
-//    @JsonIgnore
-    @OneToMany(mappedBy = "store", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JsonBackReference("deviceSet")
+    @OneToMany(mappedBy = "store", cascade = CascadeType.ALL)
     private Set<Device> deviceSet;
+
+    public Store() {
+    }
+
+    public Store(Long storeId) {
+        this.storeId = storeId;
+    }
 
     public Store mergeOtherStore(Store other) {
         if (StringUtils.isNotBlank(other.getStoreName())) {
@@ -128,12 +134,13 @@ public class Store extends BaseEntity {
 
         Store store = (Store) o;
 
-        return storeId.equals(store.storeId);
+        return storeName.equals(store.storeName);
+
     }
 
     @Override
     public int hashCode() {
-        return storeId.hashCode();
+        return storeName.hashCode();
     }
 
     public Long getStoreId() {

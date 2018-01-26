@@ -14,24 +14,27 @@ import java.util.List;
  */
 public class ResponseStore {
 
-    private List<Store> storeList;
+    private List<Store> list;
     private Pagination pagination;
 
-    public ResponseStore(List<Store> storeList) {
-        this.storeList = storeList;
+    public ResponseStore() {
     }
 
-    public ResponseStore(List<Store> storeList, Pagination pagination) {
-        this.storeList = storeList;
+    public ResponseStore(List<Store> list) {
+        this.list = list;
+    }
+
+    public ResponseStore(List<Store> list, Pagination pagination) {
+        this.list = list;
         this.pagination = pagination;
     }
 
-    public List<Store> getStoreList() {
-        return storeList;
+    public List<Store> getList() {
+        return list;
     }
 
-    public void setStoreList(List<Store> storeList) {
-        this.storeList = storeList;
+    public void setList(List<Store> list) {
+        this.list = list;
     }
 
     public Pagination getPagination() {

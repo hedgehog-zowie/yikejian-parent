@@ -13,7 +13,13 @@ public class RequestStore {
 
     private Store store;
     private Pagination pagination;
-    private Sort sort;
+    private Sort sorter;
+
+    public RequestStore() {
+        setStore(new Store());
+        setPagination(new Pagination());
+        setSorter(new Sort());
+    }
 
     public Store getStore() {
         return store;
@@ -31,11 +37,11 @@ public class RequestStore {
         this.pagination = pagination;
     }
 
-    public Sort getSort() {
-        return sort;
+    public Sort getSorter() {
+        return sorter;
     }
 
-    public void setSort(Sort sort) {
-        this.sort = sort;
+    public void setSorter(Sort sorter) {
+        this.sorter = sorter;
     }
 }

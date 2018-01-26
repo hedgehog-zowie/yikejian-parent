@@ -1,5 +1,6 @@
 package com.yikejian.order.service;
 
+import com.google.common.collect.Lists;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.yikejian.order.api.v1.dto.Pagination;
 import com.yikejian.order.api.v1.dto.RequestOrder;
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Service;
 import javax.persistence.criteria.Predicate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * <code>OrderService</code>.
@@ -50,12 +52,15 @@ public class OrderService {
 
     @HystrixCommand
     public Order saveOrder(Order order) {
-        return orderRepository.save(order);
+        return orderRepository.save(transform(order));
     }
 
     @HystrixCommand
     public List<Order> saveOrders(List<Order> orderList) {
-        return (List<Order>) orderRepository.save(orderList);
+        return (List<Order>) orderRepository.save(
+                Lists.newArrayList(orderList.stream().
+                        map(this::transform).collect(Collectors.toList()))
+        );
     }
 
     private Order transform(Order order) {

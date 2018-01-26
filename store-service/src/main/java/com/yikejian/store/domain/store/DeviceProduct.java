@@ -1,5 +1,6 @@
 package com.yikejian.store.domain.store;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.yikejian.store.domain.BaseEntity;
 
 import javax.persistence.Entity;
@@ -23,14 +24,19 @@ public class DeviceProduct extends BaseEntity {
 
     @Id
     @GeneratedValue
-    private Long id;
+    private Long deviceProductId;
     /**
      * 产品ID
      */
     private Long productId;
     /**
+     * 产品名称
+     */
+    private String productName;
+    /**
      * 设备
      */
+    @JsonManagedReference
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "device_id")
     private Device device;
@@ -49,12 +55,12 @@ public class DeviceProduct extends BaseEntity {
         return Objects.hash(productId);
     }
 
-    public Long getId() {
-        return id;
+    public Long getDeviceProductId() {
+        return deviceProductId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setDeviceProductId(Long deviceProductId) {
+        this.deviceProductId = deviceProductId;
     }
 
     public Long getProductId() {
@@ -63,6 +69,14 @@ public class DeviceProduct extends BaseEntity {
 
     public void setProductId(Long productId) {
         this.productId = productId;
+    }
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
     }
 
     public Device getDevice() {

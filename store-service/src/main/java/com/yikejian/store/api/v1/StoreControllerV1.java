@@ -4,6 +4,8 @@ import com.yikejian.store.api.v1.dto.RequestStore;
 import com.yikejian.store.domain.store.Store;
 import com.yikejian.store.exception.StoreServiceException;
 import com.yikejian.store.service.StoreService;
+import com.yikejian.store.util.JsonUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,10 +13,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.Optional;
 
 /**
@@ -26,6 +32,7 @@ import java.util.Optional;
  * date: 2018/1/16 9:57
  */
 @RestController
+@RequestMapping("/v1")
 public class StoreControllerV1 {
 
     private StoreService storeService;
@@ -36,7 +43,8 @@ public class StoreControllerV1 {
     }
 
     @PostMapping("/store")
-    public ResponseEntity addStore(final Store store) {
+    public ResponseEntity addStore(final @RequestBody Store store) {
+        store.setStoreId(null);
         // todo send log
         return Optional.ofNullable(storeService.saveStore(store))
                 .map(a -> new ResponseEntity<>(a, HttpStatus.OK))
@@ -44,9 +52,9 @@ public class StoreControllerV1 {
     }
 
     @PutMapping("/store")
-    public ResponseEntity updateStore(final Store storeDto) {
+    public ResponseEntity updateStore(final @RequestBody Store store) {
         // todo send log
-        return Optional.ofNullable(storeService.saveStore(storeDto))
+        return Optional.ofNullable(storeService.saveStore(store))
                 .map(a -> new ResponseEntity<>(a, HttpStatus.OK))
                 .orElseThrow(() -> new StoreServiceException("Not found store."));
     }
@@ -60,8 +68,20 @@ public class StoreControllerV1 {
     }
 
     @GetMapping("/stores")
-    public ResponseEntity getStores(final RequestStore requestStore) {
+    public ResponseEntity getStores(final @RequestParam(value = "params", required = false) String params) {
         // todo send log
+        if (StringUtils.isBlank(params)) {
+            return Optional.ofNullable(storeService.getAllEffectiveStores())
+                    .map(a -> new ResponseEntity<>(a, HttpStatus.OK))
+                    .orElseThrow(() -> new StoreServiceException("Not found any store."));
+        }
+        RequestStore requestStore;
+        try {
+            requestStore = JsonUtils.fromJson(URLDecoder.decode(params, "UTF-8"), RequestStore.class);
+        } catch (UnsupportedEncodingException e) {
+            throw new StoreServiceException(e.getLocalizedMessage());
+        }
+        requestStore.getStore().setDeleted(0);
         return Optional.ofNullable(storeService.getStores(requestStore))
                 .map(a -> new ResponseEntity<>(a, HttpStatus.OK))
                 .orElseThrow(() -> new StoreServiceException("Not found any store."));

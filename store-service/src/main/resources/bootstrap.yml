@@ -1,6 +1,6 @@
 server:
   port: 8003
-  contextPath: /store
+  contextPath: /store-service
 spring:
   application:
     name: store-service
