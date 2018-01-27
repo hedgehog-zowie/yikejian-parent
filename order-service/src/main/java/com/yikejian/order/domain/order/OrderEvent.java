@@ -1,6 +1,8 @@
 package com.yikejian.order.domain.order;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 
 /**
  * @author jackalope
@@ -12,8 +14,39 @@ import javax.persistence.Entity;
 @Entity
 public class OrderEvent {
 
+    @Id
+    @GeneratedValue
     private String orderEventId;
-    private OrderEventType type;
+    /**
+     * 事件类型
+     */
+    private OrderEventType orderEventType;
+    /**
+     * 订单号
+     */
     private String orderId;
 
+    public String getOrderEventId() {
+        return orderEventId;
+    }
+
+    public void setOrderEventId(String orderEventId) {
+        this.orderEventId = orderEventId;
+    }
+
+    public OrderEventType getOrderEventType() {
+        return orderEventType;
+    }
+
+    public void setOrderEventType(OrderEventType orderEventType) {
+        this.orderEventType = orderEventType;
+    }
+
+    public String getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
+    }
 }

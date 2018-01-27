@@ -42,7 +42,7 @@ public class StoreControllerV1Test {
     private static final String GET_STORE_URL_TEMPLATE = "http://localhost:8003/store-service/v1/store/%s?access_token=%s";
     private static final String GET_STORES_URL_TEMPLATE = "http://localhost:8003/store-service/v1/stores?access_token=%s";
     private static final String GET_STORES_URL_TEMPLATE2 = "http://localhost:8003/store-service/v1/stores?access_token=%s&params=%s";
-    private static final String ACCESS_TOKEN = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MTY5ODE3MDcsInVzZXJfbmFtZSI6ImFkbWluIiwiYXV0aG9yaXRpZXMiOlsiUFJPRFVDVF9XUklURSIsIkRFVklDRV9SRUFEIiwiQk9PS19XUklURSIsIlVTRVJfV1JJVEUiLCJPUkRFUl9SRUFEIiwiQk9PS19SRUFEIiwiU1RPUkVfUkVBRCIsIkNVU1RPTUVSX1JFQUQiLCJPUkRFUl9XUklURSIsIlJPTEVfV1JJVEUiLCJDVVNUT01FUl9XUklURSIsIlNUT1JFX1dSSVRFIiwiREVWSUNFX1dSSVRFIiwiVVNFUl9SRUFEIiwiUk9MRV9SRUFEIiwiTE9HX1JFQUQiLCJQUk9EVUNUX1JFQUQiXSwianRpIjoiNDdiNDUzNTMtYThiMS00MjQwLWIyNTYtNzgzZjkyYjQ2ZWM0IiwiY2xpZW50X2lkIjoidHJ1c3RlZCIsInNjb3BlIjpbInJlYWQiLCJ3cml0ZSJdfQ.Cs7Z99H6jYPqyOnx7iZYqL1DEW90Z2TtjU0c1RvojW2PPBdQXrkP8GOKV_nhY4qOidse-LF-ZGiCMNzdnW5d_7V1yB7ceGn4rRyuRzVcYQshb-gbEZG7SjBvtQvjGKR1QmAk82YizX2p3vt5rpkdzXPx0mP5uvJJGpnsr9LQXwk6oZioA7sUx7RjYLE7CxO_934gt_BiG7gsorXGxhBQXO4U3-pRnxiGLVHhdF052AzzO-HFx_BTy17KhO6cxBa6TXuvGA5Ju2HoHz5M1X704Pu8fOsGXpJLw3_bcE5FV6A3mtOez3Z0e3J-n8Yh96PcW6Rb8fRe2wuGb1gkFYM6wg";
+    private static final String ACCESS_TOKEN = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MTcwNzU0NDUsInVzZXJfbmFtZSI6ImFkbWluIiwiYXV0aG9yaXRpZXMiOlsiUFJPRFVDVF9XUklURSIsIkRFVklDRV9SRUFEIiwiQk9PS19XUklURSIsIlVTRVJfV1JJVEUiLCJPUkRFUl9SRUFEIiwiQk9PS19SRUFEIiwiU1RPUkVfUkVBRCIsIkNVU1RPTUVSX1JFQUQiLCJPUkRFUl9XUklURSIsIlJPTEVfV1JJVEUiLCJDVVNUT01FUl9XUklURSIsIlNUT1JFX1dSSVRFIiwiREVWSUNFX1dSSVRFIiwiVVNFUl9SRUFEIiwiUk9MRV9SRUFEIiwiTE9HX1JFQUQiLCJQUk9EVUNUX1JFQUQiXSwianRpIjoiMzg1MjkyMWUtMzUyZi00ZDc2LWI5ZjAtM2NmNTgzZGM5YmI5IiwiY2xpZW50X2lkIjoidHJ1c3RlZCIsInNjb3BlIjpbInJlYWQiLCJ3cml0ZSJdfQ.d8dLNvoU4kQfVyMFV47YCOP9B9RMECeFvE8Q8bYXW6FTgcOEG9CYJVvWB_VhrKcS9krMhuk_abQywF189MOuBddzK4GAdjJHYS60UdSpMHisCIUehgAJ5w12cepAnirfVVOAh_6jN2xghyE4vvM1xC9ytkSCCKE5rXEZA-D81FU4XN_wSFt0CNDLkbAg1mJLV7ZkFeGnjpyvT8kYPgYuaJi1yYvAcDLutcK6_u3SHADKKR76uUSFkH7b1dxoTpxUxM79noDibXyBFIHCXaIcvKKsjvg1QJw2_fGviW1bF90XsMh9vUKLiR0HxJ4g7vR-gcelOzEmcWcXJYX8mqE98Q";
 
     @BeforeClass
     public static void beforeClass() {
@@ -66,7 +66,9 @@ public class StoreControllerV1Test {
         String postUrl = String.format(POST_STORE_URL_TEMPLATE, ACCESS_TOKEN);
         Store store = restTemplate.postForObject(postUrl, newStore("店铺xxx"), Store.class);
         assertEquals("店铺xxx", store.getStoreName());
-        LOGGER.info(JsonUtils.toJson(store));
+        assertEquals(2, store.getStoreProductSet().size());
+        assertEquals(3, store.getDeviceSet().size());
+//        LOGGER.info(JsonUtils.toJson(store));
     }
 
     @Test
@@ -79,15 +81,17 @@ public class StoreControllerV1Test {
         Store gotStore = restTemplate.getForObject(getUrl, Store.class);
         assertEquals(2, gotStore.getStoreId().longValue());
         assertEquals("店铺xxx_put", gotStore.getStoreName());
-        LOGGER.info(JsonUtils.toJson(gotStore));
+//        LOGGER.info(JsonUtils.toJson(gotStore));
     }
 
     @Test
     public void testGet() {
-        String getUrl = String.format(GET_STORE_URL_TEMPLATE, 1, ACCESS_TOKEN);
+        String getUrl = String.format(GET_STORE_URL_TEMPLATE, 3, ACCESS_TOKEN);
         Store gotStore = restTemplate.getForObject(getUrl, Store.class);
-        assertEquals(1, gotStore.getStoreId().longValue());
-        LOGGER.info(JsonUtils.toJson(gotStore));
+        assertEquals(3, gotStore.getStoreId().longValue());
+        assertEquals(2, gotStore.getStoreProductSet().size());
+        assertEquals(3, gotStore.getDeviceSet().size());
+//        LOGGER.info(JsonUtils.toJson(gotStore));
     }
 
     @Test
@@ -105,7 +109,6 @@ public class StoreControllerV1Test {
         assertEquals(100, responseStore.getPagination().getPageSize().intValue());
         assertEquals(2, responseStore.getList().size());
         LOGGER.info(JsonUtils.toJson(responseStore));
-
     }
 
     private Store newStore(String name) {
@@ -128,50 +131,70 @@ public class StoreControllerV1Test {
         storeProduct1.setStartTime("1100");
         storeProduct1.setEndTime("1800");
         storeProduct1.setStore(store);
+        storeProduct1.setEffective(1);
+        storeProduct1.setDeleted(0);
         StoreProduct storeProduct2 = new StoreProduct();
         storeProduct2.setProductId(2L);
         storeProduct2.setStartTime("1200");
         storeProduct2.setEndTime("1900");
         storeProduct2.setStore(store);
+        storeProduct2.setEffective(1);
+        storeProduct2.setDeleted(0);
         Set<StoreProduct> storeProductSet = Sets.newHashSet();
         storeProductSet.add(storeProduct1);
         storeProductSet.add(storeProduct2);
         store.setStoreProductSet(storeProductSet);
 
         Device device1 = new Device();
-        device1.setDeviceId(1L);
         device1.setStore(store);
+        device1.setDeviceCode("device1");
+        device1.setEffective(1);
+        device1.setDeleted(0);
         DeviceProduct deviceProduct11 = new DeviceProduct();
         deviceProduct11.setProductId(1L);
         deviceProduct11.setDevice(device1);
+        deviceProduct11.setEffective(1);
+        deviceProduct11.setDeleted(0);
         DeviceProduct deviceProduct12 = new DeviceProduct();
         deviceProduct12.setProductId(2L);
         deviceProduct12.setDevice(device1);
+        deviceProduct12.setEffective(1);
+        deviceProduct12.setDeleted(0);
         Set<DeviceProduct> deviceProductSet1 = Sets.newHashSet();
         deviceProductSet1.add(deviceProduct11);
         deviceProductSet1.add(deviceProduct12);
         device1.setDeviceProductSet(deviceProductSet1);
 
         Device device2 = new Device();
-        device2.setDeviceId(2L);
         device2.setStore(store);
+        device2.setEffective(1);
+        device2.setDeleted(0);
+        device2.setDeviceCode("device2");
         DeviceProduct deviceProduct21 = new DeviceProduct();
         deviceProduct21.setProductId(1L);
         deviceProduct21.setDevice(device2);
+        deviceProduct21.setEffective(1);
+        deviceProduct21.setDeleted(0);
         DeviceProduct deviceProduct22 = new DeviceProduct();
         deviceProduct22.setProductId(2L);
         deviceProduct22.setDevice(device2);
+        deviceProduct22.setEffective(1);
+        deviceProduct22.setDeleted(0);
         Set<DeviceProduct> deviceProductSet2 = Sets.newHashSet();
         deviceProductSet2.add(deviceProduct21);
         deviceProductSet2.add(deviceProduct22);
         device2.setDeviceProductSet(deviceProductSet2);
 
         Device device3 = new Device();
-        device3.setDeviceId(3L);
         device3.setStore(store);
+        device3.setEffective(1);
+        device3.setDeleted(0);
+        device3.setDeviceCode("device3");
         DeviceProduct deviceProduct31 = new DeviceProduct();
         deviceProduct31.setProductId(1L);
         deviceProduct31.setDevice(device3);
+        deviceProduct31.setEffective(1);
+        deviceProduct31.setDeleted(0);
         Set<DeviceProduct> deviceProductSet3 = Sets.newHashSet();
         deviceProductSet3.add(deviceProduct31);
         device3.setDeviceProductSet(deviceProductSet3);

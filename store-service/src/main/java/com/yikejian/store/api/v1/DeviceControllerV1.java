@@ -40,9 +40,9 @@ public class DeviceControllerV1 {
     public ResponseEntity addDevice(
             final @PathVariable(value = "store_id") Long storeId,
             final @RequestBody Device device) {
+        // todo send log
         device.setDeviceId(null);
         device.setStore(new Store(storeId));
-        // todo send log
         return Optional.ofNullable(deviceService.saveDevice(device))
                 .map(a -> new ResponseEntity<>(a, HttpStatus.OK))
                 .orElseThrow(() -> new StoreServiceException("Not save device."));
@@ -51,8 +51,8 @@ public class DeviceControllerV1 {
     @PutMapping("/store/{store_id}/device")
     public ResponseEntity updateStore(final @PathVariable(value = "store_id") Long storeId,
                                       final @RequestBody Device device) {
-        device.setStore(new Store(storeId));
         // todo send log
+        device.setStore(new Store(storeId));
         return Optional.ofNullable(deviceService.saveDevice(device))
                 .map(a -> new ResponseEntity<>(a, HttpStatus.OK))
                 .orElseThrow(() -> new StoreServiceException("Not save device."));

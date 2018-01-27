@@ -71,7 +71,7 @@ public class JsonUtilsTest {
         orderItemSet.add(orderItem1);
         orderItemSet.add(orderItem2);
         orderItemSet.add(orderItem3);
-        order.setItemSet(orderItemSet);
+        order.setOrderItemSet(orderItemSet);
 
         OrderExtra extra = new OrderExtra();
         extra.setDrink("饮料");

@@ -48,14 +48,16 @@ public class Device extends BaseEntity {
     /**
      * 设备所在店铺
      */
-    @JsonManagedReference
+//    @JsonManagedReference
+    @JsonBackReference
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "store_id")
     private Store store;
     /**
      * 设备支持的产品
      */
-    @JsonBackReference
+//    @JsonBackReference
+    @JsonManagedReference
     @OneToMany(mappedBy = "device", cascade = CascadeType.ALL)
     private Set<DeviceProduct> deviceProductSet;
 
@@ -66,13 +68,13 @@ public class Device extends BaseEntity {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Device device = (Device) o;
-        return Objects.equals(deviceId, device.deviceId);
+        Device that = (Device) o;
+        return Objects.equals(deviceCode, that.deviceCode);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(deviceId);
+        return Objects.hash(deviceCode);
     }
 
     public Device mergeOther(Device other) {

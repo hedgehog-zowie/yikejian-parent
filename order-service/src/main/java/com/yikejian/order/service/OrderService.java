@@ -35,9 +35,9 @@ import java.util.stream.Collectors;
 @Service
 public class OrderService {
 
-    @Value("${yikejian.store.api.url}")
+    @Value("${yikejian.api.store.url}")
     private String storeApi;
-    @Value("${yikejian.product.api.url}")
+    @Value("${yikejian.api.product.url}")
     private String productApi;
 
     private OrderRepository orderRepository;
@@ -63,27 +63,24 @@ public class OrderService {
         );
     }
 
-    private Order transform(Order order) {
-        Order newInventory = order;
-        if (order.getOrderId() != null) {
-            Order oldInventory = orderRepository.findByOrderId(order.getOrderId());
-            newInventory = oldInventory.mergeOther(order);
-        }
-        return newInventory;
-    }
-
     @HystrixCommand
     public Order getOrderById(Long orderId) {
         Order order = orderRepository.findByOrderId(orderId);
         Long storeId = order.getStoreId();
         Store store = oAuth2RestTemplate.getForObject(storeApi + "/" + storeId, Store.class);
         order.setStoreName(store.getStoreName());
-        for (OrderItem orderItem : order.getItemSet()) {
+        for (OrderItem orderItem : order.getOrderItemSet()) {
             Long productId = orderItem.getProductId();
             Product product = oAuth2RestTemplate.getForObject(productApi + "/" + productId, Product.class);
             orderItem.setProductName(product.getProductName());
         }
         return order;
+    }
+
+    @HystrixCommand
+    public List<Order> getAllEffectiveStores() {
+        List<Order> storeList = orderRepository.findByEffectiveAndDeleted(1, 0);
+        return storeList;
     }
 
     @HystrixCommand
@@ -100,30 +97,37 @@ public class OrderService {
             pagination = new Pagination();
         }
 
-        Sort sort = null;
-        if (requestOrder != null && requestOrder.getSort() != null) {
-            sort = new Sort(requestOrder.getSort().getDirection(), requestOrder.getSort().getField());
+        String filed = "lastModifiedAt";
+        Sort.Direction direction = Sort.Direction.DESC;
+        if (requestOrder != null && requestOrder.getSorter() != null) {
+            if (requestOrder.getSorter().getField() != null) {
+                filed = requestOrder.getSorter().getField();
+            }
+            if ("ascend".equals(requestOrder.getSorter().getOrder())) {
+                direction = Sort.Direction.ASC;
+            }
         }
+        Sort sort = new Sort(direction, filed);
 
         PageRequest pageRequest = new PageRequest(
-                pagination.getCurrentPage(),
+                pagination.getCurrent() - 1,
                 pagination.getPageSize(),
                 sort);
         Page<Order> page = orderRepository.findAll(orderSpec(requestOrder.getOrder()), pageRequest);
 
         pagination.setTotalPages(page.getTotalPages());
-        pagination.setTotalSize(page.getTotalElements());
+        pagination.setTotal(page.getTotalElements());
 
-        for (Order order : page.getContent()) {
-            Long storeId = order.getStoreId();
-            Store store = oAuth2RestTemplate.getForObject(storeApi + "/" + storeId, Store.class);
-            order.setStoreName(store.getStoreName());
-            for (OrderItem orderItem : order.getItemSet()) {
-                Long productId = orderItem.getProductId();
-                Product product = oAuth2RestTemplate.getForObject(productApi + "/" + productId, Product.class);
-                orderItem.setProductName(product.getProductName());
-            }
-        }
+//        for (Order order : page.getContent()) {
+//            Long storeId = order.getStoreId();
+//            Store store = oAuth2RestTemplate.getForObject(storeApi + "/" + storeId, Store.class);
+//            order.setStoreName(store.getStoreName());
+//            for (OrderItem orderItem : order.getOrderItemSet()) {
+//                Long productId = orderItem.getProductId();
+//                Product product = oAuth2RestTemplate.getForObject(productApi + "/" + productId, Product.class);
+//                orderItem.setProductName(product.getProductName());
+//            }
+//        }
         return new ResponseOrder(page.getContent(), pagination);
     }
 
@@ -141,6 +145,15 @@ public class OrderService {
             Predicate[] predicates = new Predicate[predicateList.size()];
             return cb.and(predicateList.toArray(predicates));
         };
+    }
+
+    private Order transform(Order order) {
+        Order newInventory = order;
+        if (order.getOrderId() != null) {
+            Order oldInventory = orderRepository.findByOrderId(order.getOrderId());
+            newInventory = oldInventory.mergeOther(order);
+        }
+        return newInventory;
     }
 
 }

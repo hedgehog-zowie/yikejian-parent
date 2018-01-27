@@ -1,5 +1,10 @@
 package com.yikejian.order.domain.order;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.yikejian.order.domain.BaseEntity;
+
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -12,7 +17,8 @@ import javax.persistence.OneToOne;
  * @Description: TODO
  * @date 2018/1/17 1:28
  */
-public class OrderExtra {
+@Entity
+public class OrderExtra extends BaseEntity {
 
     @Id
     @GeneratedValue
@@ -28,9 +34,9 @@ public class OrderExtra {
     /**
      * 订单
      */
-    @OneToOne(targetEntity = Order.class)
-    @JoinColumn(name = "order_id", referencedColumnName = "order_id")
-    private Order order;
+//    @JsonBackReference
+//    @OneToOne(mappedBy = "orderExtra", fetch=FetchType.EAGER)
+//    private Order order;
 
     public Long getExtraId() {
         return extraId;
@@ -56,11 +62,11 @@ public class OrderExtra {
         this.remark = remark;
     }
 
-    public Order getOrder() {
-        return order;
-    }
-
-    public void setOrder(Order order) {
-        this.order = order;
-    }
+//    public Order getOrder() {
+//        return order;
+//    }
+//
+//    public void setOrder(Order order) {
+//        this.order = order;
+//    }
 }

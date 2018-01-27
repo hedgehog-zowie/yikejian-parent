@@ -44,8 +44,8 @@ public class StoreControllerV1 {
 
     @PostMapping("/store")
     public ResponseEntity addStore(final @RequestBody Store store) {
-        store.setStoreId(null);
         // todo send log
+        store.setStoreId(null);
         return Optional.ofNullable(storeService.saveStore(store))
                 .map(a -> new ResponseEntity<>(a, HttpStatus.OK))
                 .orElseThrow(() -> new StoreServiceException("Not found store."));

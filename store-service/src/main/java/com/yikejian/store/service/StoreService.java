@@ -6,6 +6,8 @@ import com.yikejian.store.api.v1.dto.Pagination;
 import com.yikejian.store.api.v1.dto.RequestStore;
 import com.yikejian.store.api.v1.dto.ResponseStore;
 import com.yikejian.store.domain.product.Product;
+import com.yikejian.store.domain.store.Device;
+import com.yikejian.store.domain.store.DeviceProduct;
 import com.yikejian.store.domain.store.Store;
 import com.yikejian.store.domain.store.StoreProduct;
 import com.yikejian.store.repository.StoreProductRepository;
@@ -23,6 +25,7 @@ import org.springframework.stereotype.Service;
 import javax.persistence.criteria.Predicate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * <code>StoreService</code>.
@@ -65,18 +68,10 @@ public class StoreService {
         return (List<Store>) storeRepository.save(newStoreList);
     }
 
-    private Store transStore(Store store) {
-        Store newStore = store;
-        if (store.getStoreId() != null) {
-            Store oldStore = storeRepository.findByStoreId(store.getStoreId());
-            newStore = oldStore.mergeOtherStore(store);
-        }
-        return newStore;
-    }
-
     @HystrixCommand
     public Store getStoreById(Long storeId) {
         Store store = storeRepository.findByStoreId(storeId);
+        checkStore(store);
 //        setProductName(store);
         return store;
     }
@@ -87,8 +82,12 @@ public class StoreService {
     }
 
     @HystrixCommand
-    public List<Store> getAllEffectiveStores(){
-        return (List<Store>) storeRepository.findByEffectiveAndDeleted(1, 0);
+    public List<Store> getAllEffectiveStores() {
+        List<Store> storeList = storeRepository.findByEffectiveAndDeleted(1, 0);
+        for (Store store : storeList) {
+            checkStore(store);
+        }
+        return storeList;
     }
 
     @HystrixCommand
@@ -145,6 +144,39 @@ public class StoreService {
             Predicate[] predicates = new Predicate[predicateList.size()];
             return cb.and(predicateList.toArray(predicates));
         };
+    }
+
+    private Store transStore(Store store) {
+        Store newStore = store;
+        if (store.getStoreId() != null) {
+            Store oldStore = storeRepository.findByStoreId(store.getStoreId());
+            newStore = oldStore.mergeOtherStore(store);
+        }
+        return newStore;
+    }
+
+    private void checkStore(Store store) {
+        if (store == null) {
+            return;
+        }
+        Set<StoreProduct> storeProductSet = store.getStoreProductSet();
+        for (StoreProduct storeProduct : storeProductSet) {
+            if (storeProduct.getEffective() != 1 || storeProduct.getDeleted() != 0) {
+                storeProductSet.remove(storeProduct);
+            }
+        }
+        Set<Device> deviceSet = store.getDeviceSet();
+        for (Device device : deviceSet) {
+            if (device.getEffective() != 1 || device.getDeleted() != 0) {
+                deviceSet.remove(device);
+            }
+            Set<DeviceProduct> deviceProductSet = device.getDeviceProductSet();
+            for (DeviceProduct deviceProduct : deviceProductSet) {
+                if (deviceProduct.getEffective() != 1 || deviceProduct.getDeleted() != 0) {
+                    deviceProductSet.remove(deviceProduct);
+                }
+            }
+        }
     }
 
     @Deprecated

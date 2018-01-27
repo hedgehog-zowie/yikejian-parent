@@ -1,6 +1,6 @@
 package com.yikejian.store.domain.store;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.yikejian.store.domain.BaseEntity;
 
 import javax.persistence.Entity;
@@ -36,7 +36,8 @@ public class DeviceProduct extends BaseEntity {
     /**
      * 设备
      */
-    @JsonManagedReference
+//    @JsonManagedReference
+    @JsonBackReference
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "device_id")
     private Device device;
@@ -51,7 +52,6 @@ public class DeviceProduct extends BaseEntity {
 
     @Override
     public int hashCode() {
-
         return Objects.hash(productId);
     }
 

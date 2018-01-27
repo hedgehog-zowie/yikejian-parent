@@ -1,9 +1,10 @@
 package com.yikejian.order.domain.order;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.yikejian.order.domain.BaseEntity;
 import org.apache.commons.lang.StringUtils;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -11,7 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.Transient;
+import javax.persistence.PrimaryKeyJoinColumn;
 import java.util.Set;
 
 /**
@@ -35,7 +36,6 @@ public class Order extends BaseEntity {
     /**
      * 客户名称
      */
-    @Transient
     private String customerName;
     /**
      * 店铺ID
@@ -44,7 +44,6 @@ public class Order extends BaseEntity {
     /**
      * 店铺名称
      */
-    @Transient
     private String storeName;
     /**
      * 产品ID
@@ -65,20 +64,23 @@ public class Order extends BaseEntity {
     /**
      * 项目
      */
-    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
-    private Set<OrderItem> itemSet;
+    @JsonManagedReference
+    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<OrderItem> orderItemSet;
     /**
      * 附加信息
      */
-    @OneToOne(targetEntity = OrderExtra.class)
-    @JoinColumn(name = "extra_id", referencedColumnName = "extra_id")
+//    @JsonManagedReference
+    @OneToOne
+    @JoinColumn(name = "extra_id")
+//    @PrimaryKeyJoinColumn
     private OrderExtra orderExtra;
     /**
      * 订单事件
      */
-    @JsonIgnore
-    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
-    private Set<OrderEvent> eventSet;
+//    @JsonIgnore
+//    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
+//    private Set<OrderEvent> eventSet;
 
     public Order mergeOther(Order other) {
         if (other.getCustomerId() != null) {
@@ -181,12 +183,12 @@ public class Order extends BaseEntity {
         this.actualAmount = actualAmount;
     }
 
-    public Set<OrderItem> getItemSet() {
-        return itemSet;
+    public Set<OrderItem> getOrderItemSet() {
+        return orderItemSet;
     }
 
-    public void setItemSet(Set<OrderItem> itemSet) {
-        this.itemSet = itemSet;
+    public void setOrderItemSet(Set<OrderItem> orderItemSet) {
+        this.orderItemSet = orderItemSet;
     }
 
     public OrderExtra getOrderExtra() {
@@ -197,11 +199,11 @@ public class Order extends BaseEntity {
         this.orderExtra = orderExtra;
     }
 
-    public Set<OrderEvent> getEventSet() {
-        return eventSet;
-    }
-
-    public void setEventSet(Set<OrderEvent> eventSet) {
-        this.eventSet = eventSet;
-    }
+//    public Set<OrderEvent> getEventSet() {
+//        return eventSet;
+//    }
+//
+//    public void setEventSet(Set<OrderEvent> eventSet) {
+//        this.eventSet = eventSet;
+//    }
 }

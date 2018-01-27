@@ -1,6 +1,7 @@
 package com.yikejian.store.domain.store;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.yikejian.store.domain.BaseEntity;
 import org.apache.commons.lang.StringUtils;
 
@@ -68,13 +69,15 @@ public class Store extends BaseEntity {
     /**
      * 产品
      */
-    @JsonBackReference("storeProductSet")
+//    @JsonBackReference("storeProductSet")
+    @JsonManagedReference
     @OneToMany(mappedBy = "store", cascade = CascadeType.ALL)
     private Set<StoreProduct> storeProductSet;
     /**
      * 设备
      */
-    @JsonBackReference("deviceSet")
+//    @JsonBackReference("deviceSet")
+    @JsonManagedReference
     @OneToMany(mappedBy = "store", cascade = CascadeType.ALL)
     private Set<Device> deviceSet;
 

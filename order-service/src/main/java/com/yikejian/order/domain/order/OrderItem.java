@@ -1,7 +1,7 @@
 package com.yikejian.order.domain.order;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.yikejian.order.domain.BaseEntity;
-import com.yikejian.order.domain.order.Order;
 
 import javax.persistence.*;
 
@@ -12,11 +12,12 @@ import javax.persistence.*;
  * @Description: TODO
  * @date 2018/1/17 1:14
  */
+@Entity
 public class OrderItem extends BaseEntity {
 
     @Id
     @GeneratedValue
-    private Long itemId;
+    private Long orderItemId;
     /**
      * 产品ID
      */
@@ -24,11 +25,11 @@ public class OrderItem extends BaseEntity {
     /**
      * 产品名称
      */
-    @Transient
     private String productName;
     /**
      * 订单
      */
+    @JsonBackReference
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "order_id")
     private Order order;
@@ -45,12 +46,12 @@ public class OrderItem extends BaseEntity {
      */
     private OrderItemStatus orderItemStatus;
 
-    public Long getItemId() {
-        return itemId;
+    public Long getOrderItemId() {
+        return orderItemId;
     }
 
-    public void setItemId(Long itemId) {
-        this.itemId = itemId;
+    public void setOrderItemId(Long orderItemId) {
+        this.orderItemId = orderItemId;
     }
 
     public Long getProductId() {

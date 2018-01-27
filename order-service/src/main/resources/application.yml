@@ -1,21 +1,75 @@
 spring:
   profiles: development
+
+---
+spring:
+  profiles: development
+  jpa:
+    show_sql: false
+    database: H2
+  datasource:
+    url: jdbc:h2:mem:testdb;DB_CLOSE_ON_EXIT=FALSE
+    initialize: false
 security:
   oauth2:
     resource:
       jwt:
-        # Tells the JWT framework to fetch the public key from the authorization server during startup
-        # Note: The authorization server needs to be running...
-        key-uri: "http://localhost:8001/uaa/oauth/token_key"
+        key-uri: "http://localhost:8001/user-service/oauth/token_key"
 yikejian:
-  user:
-    api:
-      url: "http://user-service/uaa/v1/me"
-  store:
-    api:
-      url:
-  product:
-    api:
-      url:
+  api:
+    user:
+      url: "http://user-service/user-service/v1/me"
+    product:
+      url: "http://product-service/product-service/"
+    inventory:
+      url: "http://inventory-service/inventory-service/"
+    store:
+      url: "http://store-service/store-service/"
+---
+spring:
+  profiles: test
+  datasource:
+    url: jdbc:mysql://192.168.99.1:3306/store
+    username: root
+    password: 123456
+    initialize: true
+security:
+  oauth2:
+    resource:
+      jwt:
+        key-uri: "http://192.168.1.101:8001/user-service/oauth/token_key"
+yikejian:
+  api:
+    user:
+      url: "http://user-service/user-service/v1/me"
+    product:
+      url: "http://product-service/product-service/"
+    inventory:
+      url: "http://inventory-service/inventory-service/"
+    store:
+      url: "http://store-service/store-service/"
+---
+spring:
+  profiles: production
+  datasource:
+    url: jdbc:mysql://${rds}:3306/customer
+    username: ${username}
+    password: ${password}
+    initialize: true
+security:
+  oauth2:
+    resource:
+      jwt:
+        key-uri: "http://user-service/oauth/token_key"
+yikejian:
+  api:
+    user:
+      url: "http://user-service/user-service/v1/me"
+    product:
+      url: "http://product-service/product-service/"
+    inventory:
+      url: "http://inventory-service/inventory-service/"
+    store:
+      url: "http://store-service/store-service/"
         
             

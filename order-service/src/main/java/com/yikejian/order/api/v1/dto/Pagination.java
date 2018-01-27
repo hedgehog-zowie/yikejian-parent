@@ -9,37 +9,37 @@ package com.yikejian.order.api.v1.dto;
  */
 public class Pagination {
 
-    private static final Integer DEFAULT_CURRENT = 0;
-    private static final Integer DEFAULT_PAGESIZE = 10;
+    private static final Integer DEFAULT_CURRENT = 1;
+    private static final Integer DEFAULT_PAGESIZE = 100;
 
-    private Integer currentPage;
+    private Integer current;
     private Integer pageSize;
     private Integer totalPages;
-    private Long totalSize;
+    private Long total;
 
     public Pagination() {
-        this.currentPage = DEFAULT_CURRENT;
+        this.current = DEFAULT_CURRENT;
         this.pageSize = DEFAULT_PAGESIZE;
     }
 
     public Pagination(Integer currentPage, Integer pageSize) {
-        this.currentPage = currentPage;
+        this.current = currentPage;
         this.pageSize = pageSize;
     }
 
-    public Pagination(Integer currentPage, Integer pageSize, Integer totalPages, Long totalSize) {
-        this.currentPage = currentPage;
+    public Pagination(Integer current, Integer pageSize, Integer totalPages, Long total) {
+        this.current = current;
         this.pageSize = pageSize;
         this.totalPages = totalPages;
-        this.totalSize = totalSize;
+        this.total = total;
     }
 
-    public Integer getCurrentPage() {
-        return currentPage;
+    public Integer getCurrent() {
+        return current;
     }
 
-    public void setCurrentPage(Integer currentPage) {
-        this.currentPage = currentPage;
+    public void setCurrent(Integer current) {
+        this.current = current;
     }
 
     public Integer getPageSize() {
@@ -58,11 +58,11 @@ public class Pagination {
         this.totalPages = totalPages;
     }
 
-    public Long getTotalSize() {
-        return totalSize;
+    public Long getTotal() {
+        return total;
     }
 
-    public void setTotalSize(Long totalSize) {
-        this.totalSize = totalSize;
+    public void setTotal(Long total) {
+        this.total = total;
     }
 }

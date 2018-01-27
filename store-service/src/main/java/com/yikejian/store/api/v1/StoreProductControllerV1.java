@@ -39,9 +39,9 @@ public class StoreProductControllerV1 {
     public ResponseEntity addStoreProduct(
             final @PathVariable(value = "store_id") Long storeId,
             final @RequestBody StoreProduct storeProduct) {
+        // todo send log
         storeProduct.setStoreProductId(null);
         storeProduct.setStore(new Store(storeId));
-        // todo send log
         return Optional.ofNullable(storeProductService.saveStoreProduct(storeProduct))
                 .map(a -> new ResponseEntity<>(a, HttpStatus.OK))
                 .orElseThrow(() -> new StoreServiceException("Not save storeProduct."));
@@ -65,8 +65,8 @@ public class StoreProductControllerV1 {
     @RequestMapping(value = "/store/{store_id}/product", method = RequestMethod.PUT)
     public ResponseEntity updateStoreProduct(final @PathVariable(value = "store_id") Long storeId,
                                       final @RequestBody StoreProduct storeProduct) {
-        storeProduct.setStore(new Store(storeId));
         // todo send log
+        storeProduct.setStore(new Store(storeId));
         return Optional.ofNullable(storeProductService.saveStoreProduct(storeProduct))
                 .map(a -> new ResponseEntity<>(a, HttpStatus.OK))
                 .orElseThrow(() -> new StoreServiceException("Not save storeProduct."));
@@ -75,12 +75,12 @@ public class StoreProductControllerV1 {
     @RequestMapping(value = "/store/{store_id}/products", method = RequestMethod.PUT)
     public ResponseEntity updateStoreProducts(final @PathVariable(value = "store_id") Long storeId,
                                               final @RequestBody List<StoreProduct> storeProductList) {
+        // todo send log
         Store store = new Store(storeId);
         for (StoreProduct storeProduct : storeProductList) {
             storeProduct.setStoreProductId(null);
             storeProduct.setStore(store);
         }
-        // todo send log
         return Optional.ofNullable(storeProductService.saveStoreProducts(storeProductList))
                 .map(a -> new ResponseEntity<>(a, HttpStatus.OK))
                 .orElseThrow(() -> new StoreServiceException("Not save storeProduct."));

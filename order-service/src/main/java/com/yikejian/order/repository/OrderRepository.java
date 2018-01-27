@@ -5,6 +5,8 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**
  * <code>OrderRepository</code>.
  * ${DESCRIPTION}
@@ -18,6 +20,6 @@ public interface OrderRepository extends PagingAndSortingRepository<Order, Long>
 
     Order findByOrderId(Long orderId);
 
-    Order findByEffectiveAndDeleted(Integer effective, Integer deleted);
+    List<Order> findByEffectiveAndDeleted(Integer effective, Integer deleted);
 
 }

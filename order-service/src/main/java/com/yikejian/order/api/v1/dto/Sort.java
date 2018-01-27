@@ -10,7 +10,15 @@ package com.yikejian.order.api.v1.dto;
 public class Sort {
 
     private String field;
-    private String direction;
+    private String order;
+
+    private static final String DEFAULT_FIELD = "lastModifiedAt";
+    private static final String DEFAULT_ORDER = "ascend";
+
+    public Sort() {
+        this.field = DEFAULT_FIELD;
+        this.order = DEFAULT_ORDER;
+    }
 
     public String getField() {
         return field;
@@ -20,12 +28,11 @@ public class Sort {
         this.field = field;
     }
 
-    public String getDirection() {
-        return direction;
+    public String getOrder() {
+        return order;
     }
 
-    public void setDirection(String direction) {
-        this.direction = direction;
+    public void setOrder(String order) {
+        this.order = order;
     }
-
 }

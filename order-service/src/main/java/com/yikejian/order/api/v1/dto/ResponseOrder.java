@@ -14,24 +14,24 @@ import java.util.List;
  */
 public class ResponseOrder {
 
-    private List<Order> orderList;
+    private List<Order> list;
     private Pagination pagination;
 
-    public ResponseOrder(List<Order> orderList) {
-        this.orderList = orderList;
+    public ResponseOrder(List<Order> list) {
+        this.list = list;
     }
 
-    public ResponseOrder(List<Order> orderList, Pagination pagination) {
-        this.orderList = orderList;
+    public ResponseOrder(List<Order> list, Pagination pagination) {
+        this.list = list;
         this.pagination = pagination;
     }
 
-    public List<Order> getOrderList() {
-        return orderList;
+    public List<Order> getList() {
+        return list;
     }
 
-    public void setOrderList(List<Order> orderList) {
-        this.orderList = orderList;
+    public void setList(List<Order> list) {
+        this.list = list;
     }
 
     public Pagination getPagination() {

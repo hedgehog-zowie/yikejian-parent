@@ -1,6 +1,6 @@
 package com.yikejian.store.domain.store;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.yikejian.store.domain.BaseEntity;
 
 import javax.persistence.Entity;
@@ -9,7 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.Transient;
+import java.util.Objects;
 
 /**
  * <code>StoreProduct</code>.
@@ -44,7 +44,8 @@ public class StoreProduct extends BaseEntity {
     /**
      * 店铺
      */
-    @JsonManagedReference
+//    @JsonManagedReference
+    @JsonBackReference
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "store_id")
     private Store store;
@@ -53,18 +54,13 @@ public class StoreProduct extends BaseEntity {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         StoreProduct that = (StoreProduct) o;
-
-        if (!productId.equals(that.productId)) return false;
-        return store.equals(that.store);
+        return Objects.equals(productId, that.productId);
     }
 
     @Override
     public int hashCode() {
-        int result = productId.hashCode();
-        result = 31 * result + store.hashCode();
-        return result;
+        return Objects.hash(productId);
     }
 
     public StoreProduct mergeOther(StoreProduct other) {
