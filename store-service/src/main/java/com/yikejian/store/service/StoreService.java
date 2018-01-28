@@ -1,15 +1,18 @@
 package com.yikejian.store.service;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.yikejian.store.api.v1.dto.Pagination;
 import com.yikejian.store.api.v1.dto.RequestStore;
 import com.yikejian.store.api.v1.dto.ResponseStore;
+import com.yikejian.store.api.v1.dto.StoreDto;
 import com.yikejian.store.domain.product.Product;
 import com.yikejian.store.domain.store.Device;
 import com.yikejian.store.domain.store.DeviceProduct;
 import com.yikejian.store.domain.store.Store;
 import com.yikejian.store.domain.store.StoreProduct;
+import com.yikejian.store.repository.DeviceRepository;
 import com.yikejian.store.repository.StoreProductRepository;
 import com.yikejian.store.repository.StoreRepository;
 import org.apache.commons.lang.StringUtils;
@@ -23,6 +26,7 @@ import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.criteria.Predicate;
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -40,6 +44,7 @@ public class StoreService {
 
     private StoreRepository storeRepository;
     private StoreProductRepository storeProductRepository;
+    private DeviceRepository deviceRepository;
     private OAuth2RestTemplate oAuth2RestTemplate;
 
     @Value("${yikejian.api.product.url}")
@@ -48,10 +53,31 @@ public class StoreService {
     @Autowired
     public StoreService(StoreRepository storeRepository,
                         StoreProductRepository storeProductRepository,
+                        DeviceRepository deviceRepository,
                         OAuth2RestTemplate oAuth2RestTemplate) {
         this.storeRepository = storeRepository;
         this.storeProductRepository = storeProductRepository;
+        this.deviceRepository = deviceRepository;
         this.oAuth2RestTemplate = oAuth2RestTemplate;
+    }
+
+    @HystrixCommand
+    @Transactional
+    public Store saveStore(StoreDto storeDto) {
+        Store store = new Store();
+        if (storeDto.getStoreId() != null) {
+            store.setStoreId(storeDto.getStoreId());
+            if (storeDto.getProducts() != null && storeDto.getProducts().size() > 0) {
+                storeProductRepository.deleteByStore(store);
+            }
+            if (storeDto.getDevices() != null && storeDto.getDevices().size() > 0) {
+                deviceRepository.deleteByStore(store);
+            }
+        }
+        store.setEffective(1);
+        store.setDeleted(0);
+        Store newStore = transStore(store.fromStoreDto(storeDto));
+        return storeRepository.save(newStore);
     }
 
     @HystrixCommand
@@ -69,11 +95,10 @@ public class StoreService {
     }
 
     @HystrixCommand
-    public Store getStoreById(Long storeId) {
+    public StoreDto getStoreById(Long storeId) {
         Store store = storeRepository.findByStoreId(storeId);
-        checkStore(store);
-//        setProductName(store);
-        return store;
+        StoreDto storeDto = checkStore(store);
+        return storeDto;
     }
 
     @HystrixCommand
@@ -82,12 +107,13 @@ public class StoreService {
     }
 
     @HystrixCommand
-    public List<Store> getAllEffectiveStores() {
+    public List<StoreDto> getAllEffectiveStores() {
         List<Store> storeList = storeRepository.findByEffectiveAndDeleted(1, 0);
+        List<StoreDto> storeDtoList = Lists.newArrayList();
         for (Store store : storeList) {
-            checkStore(store);
+            storeDtoList.add(checkStore(store));
         }
-        return storeList;
+        return storeDtoList;
     }
 
     @HystrixCommand
@@ -155,28 +181,45 @@ public class StoreService {
         return newStore;
     }
 
-    private void checkStore(Store store) {
+    private StoreDto checkStore(Store store) {
         if (store == null) {
-            return;
+            return null;
         }
         Set<StoreProduct> storeProductSet = store.getStoreProductSet();
+        Set<StoreProduct> effectiveStoreProductSet = Sets.newHashSet();
         for (StoreProduct storeProduct : storeProductSet) {
             if (storeProduct.getEffective() != 1 || storeProduct.getDeleted() != 0) {
-                storeProductSet.remove(storeProduct);
+                continue;
             }
+            Long productId = storeProduct.getProductId();
+            Product product = oAuth2RestTemplate.getForObject(productApiUrl + "/" + productId, Product.class);
+            storeProduct.setProductName(product.getProductName());
+            effectiveStoreProductSet.add(storeProduct);
         }
+        store.setStoreProductSet(effectiveStoreProductSet);
+
         Set<Device> deviceSet = store.getDeviceSet();
+        Set<Device> effectiveDeviceSet = Sets.newHashSet();
         for (Device device : deviceSet) {
             if (device.getEffective() != 1 || device.getDeleted() != 0) {
-                deviceSet.remove(device);
+                continue;
             }
+            effectiveDeviceSet.add(device);
             Set<DeviceProduct> deviceProductSet = device.getDeviceProductSet();
+            Set<DeviceProduct> effectiveDeviceProductSet = Sets.newHashSet();
             for (DeviceProduct deviceProduct : deviceProductSet) {
                 if (deviceProduct.getEffective() != 1 || deviceProduct.getDeleted() != 0) {
-                    deviceProductSet.remove(deviceProduct);
+                    continue;
                 }
+                Long productId = deviceProduct.getProductId();
+                Product product = oAuth2RestTemplate.getForObject(productApiUrl + "/" + productId, Product.class);
+                deviceProduct.setProductName(product.getProductName());
+                effectiveDeviceProductSet.add(deviceProduct);
             }
+            device.setDeviceProductSet(effectiveDeviceProductSet);
         }
+        store.setDeviceSet(effectiveDeviceSet);
+        return store.toStoreDto();
     }
 
     @Deprecated

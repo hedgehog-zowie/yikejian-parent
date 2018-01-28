@@ -1,6 +1,6 @@
 server:
   port: 8006
-  contextPath: /order
+  contextPath: /order-service
 spring:
   application:
     name: order-service

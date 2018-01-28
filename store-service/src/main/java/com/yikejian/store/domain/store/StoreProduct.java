@@ -3,12 +3,7 @@ package com.yikejian.store.domain.store;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.yikejian.store.domain.BaseEntity;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 import java.util.Objects;
 
 /**
@@ -32,14 +27,17 @@ public class StoreProduct extends BaseEntity {
     /**
      * 产品名称
      */
+    @Transient
     private String productName;
     /**
      * 开始营业时间(精确到分，如1020表示10点20分)
      */
+    @Transient
     private String startTime;
     /**
      * 结束营业时间(精确到分，如1020表示10点20分)
      */
+    @Transient
     private String endTime;
     /**
      * 店铺

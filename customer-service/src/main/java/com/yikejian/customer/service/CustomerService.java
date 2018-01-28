@@ -112,6 +112,9 @@ public class CustomerService {
                 if (StringUtils.isNotBlank(customer.getCustomerName())) {
                     predicateList.add(cb.like(root.get("customerName").as(String.class), "%" + customer.getCustomerName() + "%"));
                 }
+                if (StringUtils.isNotBlank(customer.getMobileNumber())) {
+                    predicateList.add(cb.like(root.get("mobileNumber").as(String.class), "%" + customer.getMobileNumber() + "%"));
+                }
                 if (customer.getDeleted() != null) {
                     predicateList.add(cb.equal(root.get("deleted").as(Integer.class), customer.getDeleted()));
                 }

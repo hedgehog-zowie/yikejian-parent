@@ -1,5 +1,6 @@
 package com.yikejian.store.repository;
 
+import com.yikejian.store.domain.store.Store;
 import com.yikejian.store.domain.store.StoreProduct;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.PagingAndSortingRepository;
@@ -21,5 +22,7 @@ public interface StoreProductRepository extends PagingAndSortingRepository<Store
     StoreProduct findByStoreProductId(Long storeProductId);
 
 //    List<StoreProduct> findByStoreIdAndEffectiveAndDeleted(Long storeId, Integer effective, Integer deleted);
+
+    void deleteByStore(Store store);
 
 }

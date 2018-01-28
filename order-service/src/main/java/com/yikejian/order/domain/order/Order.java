@@ -4,15 +4,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.yikejian.order.domain.BaseEntity;
 import org.apache.commons.lang.StringUtils;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.PrimaryKeyJoinColumn;
+import javax.persistence.*;
 import java.util.Set;
 
 /**
@@ -23,7 +15,7 @@ import java.util.Set;
  * @version: 1.0-SNAPSHOT
  * date: 2018/1/16 9:55
  */
-@Entity
+@Entity(name = "orders")
 public class Order extends BaseEntity {
 
     @Id
@@ -36,6 +28,7 @@ public class Order extends BaseEntity {
     /**
      * 客户名称
      */
+    @Transient
     private String customerName;
     /**
      * 店铺ID
@@ -44,15 +37,8 @@ public class Order extends BaseEntity {
     /**
      * 店铺名称
      */
+    @Transient
     private String storeName;
-    /**
-     * 产品ID
-     */
-    private Long productId;
-    /**
-     * 产品名称
-     */
-    private String productName;
     /**
      * 订单金额
      */
@@ -66,15 +52,20 @@ public class Order extends BaseEntity {
      */
     @JsonManagedReference
     @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private Set<OrderItem> orderItemSet;
+    private Set<OrderItem> orderItems;
     /**
-     * 附加信息
+     * 订单状态
      */
-//    @JsonManagedReference
-    @OneToOne
-    @JoinColumn(name = "extra_id")
-//    @PrimaryKeyJoinColumn
-    private OrderExtra orderExtra;
+//    @Transient
+    private OrderStatus orderStatus;
+//    /**
+//     * 附加信息
+//     */
+////    @JsonManagedReference
+//    @OneToOne
+//    @JoinColumn(name = "extra_id")
+////    @PrimaryKeyJoinColumn
+//    private OrderExtra orderExtra;
     /**
      * 订单事件
      */
@@ -92,21 +83,14 @@ public class Order extends BaseEntity {
         if (other.getStoreId() != null) {
             setStoreId(other.getStoreId());
         }
-        if (other.getProductId() != null) {
-            setProductId(other.getProductId());
-        }
-        if (StringUtils.isNotBlank(other.getProductName())) {
-            setProductName(other.getProductName());
-        }
         if (other.getAmount() != null) {
             setAmount(other.getAmount());
         }
         if (other.getActualAmount() != null) {
             setActualAmount(other.getActualAmount());
         }
-        // TODO: 2018/1/25 add itemset
-        if (other.getOrderExtra() != null) {
-            setOrderExtra(other.getOrderExtra());
+        if (other.getOrderItems() != null) {
+            setOrderItems(other.getOrderItems());
         }
         return this;
     }
@@ -151,22 +135,6 @@ public class Order extends BaseEntity {
         this.storeName = storeName;
     }
 
-    public Long getProductId() {
-        return productId;
-    }
-
-    public void setProductId(Long productId) {
-        this.productId = productId;
-    }
-
-    public String getProductName() {
-        return productName;
-    }
-
-    public void setProductName(String productName) {
-        this.productName = productName;
-    }
-
     public Double getAmount() {
         return amount;
     }
@@ -183,21 +151,29 @@ public class Order extends BaseEntity {
         this.actualAmount = actualAmount;
     }
 
-    public Set<OrderItem> getOrderItemSet() {
-        return orderItemSet;
+    public Set<OrderItem> getOrderItems() {
+        return orderItems;
     }
 
-    public void setOrderItemSet(Set<OrderItem> orderItemSet) {
-        this.orderItemSet = orderItemSet;
+    public void setOrderItems(Set<OrderItem> orderItems) {
+        this.orderItems = orderItems;
     }
 
-    public OrderExtra getOrderExtra() {
-        return orderExtra;
+    public OrderStatus getOrderStatus() {
+        return orderStatus;
     }
 
-    public void setOrderExtra(OrderExtra orderExtra) {
-        this.orderExtra = orderExtra;
+    public void setOrderStatus(OrderStatus orderStatus) {
+        this.orderStatus = orderStatus;
     }
+
+    //    public OrderExtra getOrderExtra() {
+//        return orderExtra;
+//    }
+//
+//    public void setOrderExtra(OrderExtra orderExtra) {
+//        this.orderExtra = orderExtra;
+//    }
 
 //    public Set<OrderEvent> getEventSet() {
 //        return eventSet;

@@ -1,15 +1,15 @@
 package com.yikejian.store.domain.store;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
+import com.yikejian.store.api.v1.dto.DeviceDto;
+import com.yikejian.store.api.v1.dto.StoreDto;
 import com.yikejian.store.domain.BaseEntity;
 import org.apache.commons.lang.StringUtils;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -121,11 +121,125 @@ public class Store extends BaseEntity {
         }
         // check product set
         if (other.getStoreProductSet() != null && other.getStoreProductSet().size() > 0) {
-            storeProductSet.addAll(other.getStoreProductSet());
+            setStoreProductSet(other.getStoreProductSet());
+//            for (StoreProduct storeProduct : storeProductSet) {
+//                if(other.getStoreProductSet().contains(storeProduct)) {
+//                    continue;
+//                }
+//                storeProduct.setDeleted(1);
+//            }
+//            storeProductSet.addAll(other.getStoreProductSet());
+//            for (StoreProduct storeProduct : storeProductSet) {
+//                storeProduct.setStore(this);
+//            }
         }
         // check device set
         if (other.getDeviceSet() != null && other.getDeviceSet().size() > 0) {
-            deviceSet.addAll(other.getDeviceSet());
+            setDeviceSet(other.getDeviceSet());
+//            for (Device device : deviceSet) {
+//                if(other.getDeviceSet().contains(device)) {
+//                    continue;
+//                }
+//                device.setDeleted(1);
+//                for (DeviceProduct deviceProduct : device.getDeviceProductSet()) {
+//                    deviceProduct.setDeleted(1);
+//                }
+//            }
+//            deviceSet.addAll(other.getDeviceSet());
+//            for (Device device : deviceSet) {
+//                device.setStore(this);
+//            }
+        }
+        return this;
+    }
+
+    public StoreDto toStoreDto() {
+        StoreDto storeDto = new StoreDto();
+        storeDto.setStoreId(getStoreId());
+        storeDto.setStoreName(getStoreName());
+        storeDto.setAddress(getAddress());
+        storeDto.setPhoneNumber(getPhoneNumber());
+        storeDto.setStartTime(getStartTime());
+        storeDto.setEndTime(getEndTime());
+        storeDto.setUnitDuration(getUnitDuration());
+        storeDto.setUnitTimes(getUnitTimes());
+        storeDto.setTraffic(getTraffic());
+        storeDto.setLongitude(getLongitude());
+        storeDto.setLatitude(getLatitude());
+        storeDto.setEffective(getEffective());
+        storeDto.setDeleted(getDeleted());
+        List<Long> productIdList = Lists.newArrayList();
+        for (StoreProduct storeProduct : getStoreProductSet()) {
+            productIdList.add(storeProduct.getProductId());
+        }
+        storeDto.setProducts(productIdList);
+        List<DeviceDto> deviceDtoList = Lists.newArrayList();
+        for (Device device : getDeviceSet()) {
+            deviceDtoList.add(device.toDeviceDto());
+        }
+        storeDto.setDevices(deviceDtoList);
+        return storeDto;
+    }
+
+    public Store fromStoreDto(StoreDto storeDto) {
+        if (StringUtils.isNotBlank(storeDto.getStoreName())) {
+            setStoreName(storeDto.getStoreName());
+        }
+        if (StringUtils.isNotBlank(storeDto.getAddress())) {
+            setAddress(storeDto.getAddress());
+        }
+        if (StringUtils.isNotBlank(storeDto.getPhoneNumber())) {
+            setPhoneNumber(storeDto.getPhoneNumber());
+        }
+        if (StringUtils.isNotBlank(storeDto.getStartTime())) {
+            setStartTime(storeDto.getStartTime());
+        }
+        if (StringUtils.isNotBlank(storeDto.getEndTime())) {
+            setEndTime(storeDto.getEndTime());
+        }
+        if (storeDto.getUnitDuration() != null) {
+            setUnitDuration(storeDto.getUnitDuration());
+        }
+        if (storeDto.getUnitTimes() != null) {
+            setUnitTimes(storeDto.getUnitTimes());
+        }
+        if (StringUtils.isNotBlank(storeDto.getTraffic())) {
+            setTraffic(storeDto.getTraffic());
+        }
+        if (storeDto.getLongitude() != null) {
+            setLongitude(storeDto.getLongitude());
+        }
+        if (storeDto.getLatitude() != null) {
+            setLatitude(storeDto.getLatitude());
+        }
+        if (storeDto.getEffective() != null) {
+            setEffective(storeDto.getEffective());
+        }
+        if (storeDto.getDeleted() != null) {
+            setDeleted(storeDto.getDeleted());
+        }
+        if (storeDto.getProducts() != null) {
+            Set<StoreProduct> storeProductSet = Sets.newHashSet();
+            for (Long productId : storeDto.getProducts()) {
+                StoreProduct storeProduct = new StoreProduct();
+                storeProduct.setProductId(productId);
+                storeProduct.setStore(this);
+                storeProduct.setEffective(1);
+                storeProduct.setDeleted(0);
+                storeProductSet.add(storeProduct);
+            }
+            setStoreProductSet(storeProductSet);
+        }
+        if (storeDto.getDevices() != null) {
+            Set<Device> deviceSet = Sets.newHashSet();
+            for (DeviceDto deviceDto : storeDto.getDevices()) {
+                Device device = new Device();
+                device.setStore(this);
+                device.setEffective(1);
+                device.setDeleted(0);
+                deviceSet.add(device.fromDeviceDto(deviceDto));
+            }
+            setDeviceSet(deviceSet);
         }
         return this;
     }

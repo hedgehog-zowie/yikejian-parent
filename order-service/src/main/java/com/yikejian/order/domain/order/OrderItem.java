@@ -25,7 +25,16 @@ public class OrderItem extends BaseEntity {
     /**
      * 产品名称
      */
+    @Transient
     private String productName;
+    /**
+     * 实际体验产品的人
+     */
+    private String experiencer;
+    /**
+     * 预约的时间
+     */
+    private String bookedTime;
     /**
      * 订单
      */
@@ -34,16 +43,9 @@ public class OrderItem extends BaseEntity {
     @JoinColumn(name = "order_id")
     private Order order;
     /**
-     * 实际体验产品的人
-     */
-    private String experiencer;
-    /**
-     * 预约的时间
-     */
-    private String dateTime;
-    /**
      * 服务状态
      */
+//    @Transient
     private OrderItemStatus orderItemStatus;
 
     public Long getOrderItemId() {
@@ -86,12 +88,12 @@ public class OrderItem extends BaseEntity {
         this.experiencer = experiencer;
     }
 
-    public String getDateTime() {
-        return dateTime;
+    public String getBookedTime() {
+        return bookedTime;
     }
 
-    public void setDateTime(String dateTime) {
-        this.dateTime = dateTime;
+    public void setBookedTime(String bookedTime) {
+        this.bookedTime = bookedTime;
     }
 
     public OrderItemStatus getOrderItemStatus() {

@@ -31,7 +31,7 @@ yikejian:
 spring:
   profiles: test
   datasource:
-    url: jdbc:mysql://192.168.99.1:3306/customer
+    url: jdbc:mysql://192.168.99.1:3306/customer?characterEncoding=utf-8
     username: root
     password: 123456
     initialize: true
@@ -48,7 +48,7 @@ yikejian:
 spring:
   profiles: production
   datasource:
-    url: jdbc:mysql://${rds}:3306/customer
+    url: jdbc:mysql://${rds}:3306/customer?characterEncoding=utf-8
     username: ${username}
     password: ${password}
     initialize: true

@@ -55,28 +55,28 @@ public class JsonUtilsTest {
         orderItem1.setProductId(1L);
         orderItem1.setProductName("产品1");
         orderItem1.setExperiencer("项目1使用者");
-        orderItem1.setDateTime("201801201300");
+        orderItem1.setBookedTime("201801201300");
 
         OrderItem orderItem2 = new OrderItem();
         orderItem2.setProductId(1L);
         orderItem2.setProductName("产品1");
         orderItem2.setExperiencer("项目2使用者");
-        orderItem2.setDateTime("201801201400");
+        orderItem2.setBookedTime("201801201400");
         OrderItem orderItem3 = new OrderItem();
         orderItem3.setProductId(2L);
         orderItem3.setProductName("产品2");
         orderItem3.setExperiencer("项目3使用者");
-        orderItem3.setDateTime("201801201500");
+        orderItem3.setBookedTime("201801201500");
         Set<OrderItem> orderItemSet = Sets.newHashSet();
         orderItemSet.add(orderItem1);
         orderItemSet.add(orderItem2);
         orderItemSet.add(orderItem3);
-        order.setOrderItemSet(orderItemSet);
+        order.setOrderItems(orderItemSet);
 
         OrderExtra extra = new OrderExtra();
         extra.setDrink("饮料");
         extra.setRemark("备注");
-        order.setOrderExtra(extra);
+        extra.setOrder(order);
 
         System.out.println(JsonUtils.toJson(order));
         System.out.println(JsonUtils.toJson(extra));

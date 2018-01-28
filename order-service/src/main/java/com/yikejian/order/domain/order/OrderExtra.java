@@ -34,9 +34,14 @@ public class OrderExtra extends BaseEntity {
     /**
      * 订单
      */
-//    @JsonBackReference
-//    @OneToOne(mappedBy = "orderExtra", fetch=FetchType.EAGER)
-//    private Order order;
+    /**
+     * 附加信息
+     */
+//    @JsonManagedReference
+    @OneToOne
+    @JoinColumn(name = "order_id")
+//    @PrimaryKeyJoinColumn
+    private Order order;
 
     public Long getExtraId() {
         return extraId;
@@ -62,11 +67,11 @@ public class OrderExtra extends BaseEntity {
         this.remark = remark;
     }
 
-//    public Order getOrder() {
-//        return order;
-//    }
-//
-//    public void setOrder(Order order) {
-//        this.order = order;
-//    }
+    public Order getOrder() {
+        return order;
+    }
+
+    public void setOrder(Order order) {
+        this.order = order;
+    }
 }

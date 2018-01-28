@@ -9,6 +9,7 @@ import com.yikejian.order.domain.order.Order;
 import com.yikejian.order.domain.order.OrderItem;
 import com.yikejian.order.domain.product.Product;
 import com.yikejian.order.domain.store.Store;
+import com.yikejian.order.repository.OrderItemRepository;
 import com.yikejian.order.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -41,12 +42,15 @@ public class OrderService {
     private String productApi;
 
     private OrderRepository orderRepository;
+    private OrderItemRepository orderItemRepository;
     private OAuth2RestTemplate oAuth2RestTemplate;
 
     @Autowired
     public OrderService(OrderRepository orderRepository,
+                        OrderItemRepository orderItemRepository,
                         OAuth2RestTemplate oAuth2RestTemplate) {
         this.orderRepository = orderRepository;
+        this.orderItemRepository = orderItemRepository;
         this.oAuth2RestTemplate = oAuth2RestTemplate;
     }
 
@@ -69,7 +73,7 @@ public class OrderService {
         Long storeId = order.getStoreId();
         Store store = oAuth2RestTemplate.getForObject(storeApi + "/" + storeId, Store.class);
         order.setStoreName(store.getStoreName());
-        for (OrderItem orderItem : order.getOrderItemSet()) {
+        for (OrderItem orderItem : order.getOrderItems()) {
             Long productId = orderItem.getProductId();
             Product product = oAuth2RestTemplate.getForObject(productApi + "/" + productId, Product.class);
             orderItem.setProductName(product.getProductName());
@@ -78,7 +82,7 @@ public class OrderService {
     }
 
     @HystrixCommand
-    public List<Order> getAllEffectiveStores() {
+    public List<Order> getAllEffectiveOrders() {
         List<Order> storeList = orderRepository.findByEffectiveAndDeleted(1, 0);
         return storeList;
     }
@@ -122,7 +126,7 @@ public class OrderService {
 //            Long storeId = order.getStoreId();
 //            Store store = oAuth2RestTemplate.getForObject(storeApi + "/" + storeId, Store.class);
 //            order.setStoreName(store.getStoreName());
-//            for (OrderItem orderItem : order.getOrderItemSet()) {
+//            for (OrderItem orderItem : order.getOrderItems()) {
 //                Long productId = orderItem.getProductId();
 //                Product product = oAuth2RestTemplate.getForObject(productApi + "/" + productId, Product.class);
 //                orderItem.setProductName(product.getProductName());
@@ -148,12 +152,21 @@ public class OrderService {
     }
 
     private Order transform(Order order) {
-        Order newInventory = order;
+        Order newOrder = order;
         if (order.getOrderId() != null) {
-            Order oldInventory = orderRepository.findByOrderId(order.getOrderId());
-            newInventory = oldInventory.mergeOther(order);
+            if (order.getOrderItems() != null && order.getOrderItems().size() > 0) {
+                orderItemRepository.deleteByOrder(order);
+            }
+            Order oldOrder = orderRepository.findByOrderId(order.getOrderId());
+            newOrder = oldOrder.mergeOther(order);
         }
-        return newInventory;
+        if(newOrder.getOrderItems() != null && newOrder.getOrderItems().size() > 0) {
+            for (OrderItem orderItem : newOrder.getOrderItems()) {
+                orderItem.setEffective(1);
+                orderItem.setDeleted(0);
+            }
+        }
+        return newOrder;
     }
 
 }

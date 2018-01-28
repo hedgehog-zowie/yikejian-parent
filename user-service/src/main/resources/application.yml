@@ -56,7 +56,7 @@ spring:
 spring:
   profiles: test
   datasource:
-    url: jdbc:mysql://192.168.99.1:3306/user
+    url: jdbc:mysql://192.168.99.1:3306/user?characterEncoding=utf-8
     username: root
     password: 123456
     initialize: true
@@ -64,7 +64,7 @@ spring:
 spring:
   profiles: production
   datasource:
-    url: jdbc:mysql://${rds}:3306/user
+    url: jdbc:mysql://${rds}:3306/user?characterEncoding=utf-8
     username: ${username}
     password: ${password}
     initialize: true

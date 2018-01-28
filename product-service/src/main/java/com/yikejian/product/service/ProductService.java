@@ -72,7 +72,7 @@ public class ProductService {
 
     @HystrixCommand
     public List<Product> getAllEffectiveStores(){
-        return (List<Product>) productRepository.findByEffectiveAndDeleted(1, 0);
+        return productRepository.findByEffectiveAndDeleted(1, 0);
     }
 
     @HystrixCommand

@@ -2,6 +2,9 @@ package com.yikejian.store.domain.store;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
+import com.yikejian.store.api.v1.dto.DeviceDto;
 import com.yikejian.store.domain.BaseEntity;
 import org.apache.commons.lang.StringUtils;
 
@@ -13,6 +16,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -96,6 +100,43 @@ public class Device extends BaseEntity {
         if (other.getDeleted() != null) {
             setDeleted(other.getDeleted());
         }
+        return this;
+    }
+
+    public DeviceDto toDeviceDto(){
+        DeviceDto deviceDto = new DeviceDto();
+        deviceDto.setDeviceId(getDeviceId());
+        deviceDto.setDeviceCode(getDeviceCode());
+        deviceDto.setDeviceName(getDeviceName());
+        deviceDto.setRoomName(getRoomName());
+        List<Long> productIdList = Lists.newArrayList();
+        for(DeviceProduct deviceProduct: getDeviceProductSet()){
+            productIdList.add(deviceProduct.getProductId());
+        }
+        deviceDto.setProducts(productIdList);
+        return deviceDto;
+    }
+
+    public Device fromDeviceDto(DeviceDto deviceDto){
+        if (StringUtils.isNotBlank(deviceDto.getDeviceCode())) {
+            setDeviceCode(deviceDto.getDeviceCode());
+        }
+        if (StringUtils.isNotBlank(deviceDto.getDeviceName())) {
+            setDeviceName(deviceDto.getDeviceName());
+        }
+        if (StringUtils.isNotBlank(deviceDto.getRoomName())) {
+            setRoomName(deviceDto.getRoomName());
+        }
+        Set<DeviceProduct> deviceProductSet = Sets.newHashSet();
+        for(Long productId: deviceDto.getProducts()){
+            DeviceProduct deviceProduct = new DeviceProduct();
+            deviceProduct.setProductId(productId);
+            deviceProduct.setDevice(this);
+            deviceProduct.setEffective(1);
+            deviceProduct.setDeleted(0);
+            deviceProductSet.add(deviceProduct);
+        }
+        setDeviceProductSet(deviceProductSet);
         return this;
     }
 

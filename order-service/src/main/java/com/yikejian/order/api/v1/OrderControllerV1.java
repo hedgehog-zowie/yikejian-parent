@@ -2,6 +2,9 @@ package com.yikejian.order.api.v1;
 
 import com.yikejian.order.api.v1.dto.RequestOrder;
 import com.yikejian.order.domain.order.Order;
+import com.yikejian.order.domain.order.OrderItem;
+import com.yikejian.order.domain.order.OrderItemStatus;
+import com.yikejian.order.domain.order.OrderStatus;
 import com.yikejian.order.exception.OrderServiceException;
 import com.yikejian.order.service.OrderService;
 import com.yikejian.order.util.JsonUtils;
@@ -32,6 +35,7 @@ import java.util.Optional;
  * date: 2018/1/16 9:57
  */
 @RestController
+@RequestMapping("/v1")
 public class OrderControllerV1 {
 
     private OrderService orderService;
@@ -44,6 +48,17 @@ public class OrderControllerV1 {
     @PostMapping("/order")
     public ResponseEntity addOrder(final @RequestBody Order order) {
         // todo send log
+        order.setOrderId(null);
+        order.setDeleted(0);
+        order.setEffective(1);
+        order.setOrderStatus(OrderStatus.CREATED);
+        if(order.getOrderItems() != null && order.getOrderItems().size() > 0){
+            for(OrderItem orderItem: order.getOrderItems()){
+                orderItem.setDeleted(0);
+                orderItem.setEffective(1);
+                orderItem.setOrderItemStatus(OrderItemStatus.NOT_SERVE);
+            }
+        }
         return Optional.ofNullable(orderService.saveOrder(order))
                 .map(a -> new ResponseEntity<>(a, HttpStatus.OK))
                 .orElseThrow(() -> new OrderServiceException("Not found order."));
@@ -69,7 +84,7 @@ public class OrderControllerV1 {
     public ResponseEntity getOrders(final @RequestParam(value = "params", required = false) String params) {
         // todo send log
         if (StringUtils.isBlank(params)) {
-            return Optional.ofNullable(orderService.getAllEffectiveStores())
+            return Optional.ofNullable(orderService.getAllEffectiveOrders())
                     .map(a -> new ResponseEntity<>(a, HttpStatus.OK))
                     .orElseThrow(() -> new OrderServiceException("Not found any store."));
         }

@@ -1,6 +1,7 @@
 package com.yikejian.store.api.v1;
 
 import com.yikejian.store.api.v1.dto.RequestStore;
+import com.yikejian.store.api.v1.dto.StoreDto;
 import com.yikejian.store.domain.store.Store;
 import com.yikejian.store.exception.StoreServiceException;
 import com.yikejian.store.service.StoreService;
@@ -43,18 +44,18 @@ public class StoreControllerV1 {
     }
 
     @PostMapping("/store")
-    public ResponseEntity addStore(final @RequestBody Store store) {
+    public ResponseEntity addStore(final @RequestBody StoreDto storeDto) {
         // todo send log
-        store.setStoreId(null);
-        return Optional.ofNullable(storeService.saveStore(store))
+        storeDto.setStoreId(null);
+        return Optional.ofNullable(storeService.saveStore(storeDto))
                 .map(a -> new ResponseEntity<>(a, HttpStatus.OK))
-                .orElseThrow(() -> new StoreServiceException("Not found store."));
+                .orElseThrow(() -> new StoreServiceException("Not save store."));
     }
 
     @PutMapping("/store")
-    public ResponseEntity updateStore(final @RequestBody Store store) {
+    public ResponseEntity updateStore(final @RequestBody StoreDto storeDto) {
         // todo send log
-        return Optional.ofNullable(storeService.saveStore(store))
+        return Optional.ofNullable(storeService.saveStore(storeDto))
                 .map(a -> new ResponseEntity<>(a, HttpStatus.OK))
                 .orElseThrow(() -> new StoreServiceException("Not found store."));
     }

@@ -2,11 +2,14 @@ package com.yikejian.store.service;
 
 import com.google.common.collect.Lists;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import com.yikejian.store.domain.product.Product;
 import com.yikejian.store.domain.store.Store;
 import com.yikejian.store.domain.store.StoreProduct;
 import com.yikejian.store.repository.StoreProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.criteria.Join;
@@ -26,10 +29,16 @@ import java.util.List;
 public class StoreProductService {
 
     private StoreProductRepository storeProductRepository;
+    private OAuth2RestTemplate oAuth2RestTemplate;
+
+    @Value("${yikejian.api.product.url}")
+    private String productApiUrl;
 
     @Autowired
-    public StoreProductService(StoreProductRepository storeProductRepository) {
+    public StoreProductService(StoreProductRepository storeProductRepository,
+                               OAuth2RestTemplate oAuth2RestTemplate) {
         this.storeProductRepository = storeProductRepository;
+        this.oAuth2RestTemplate = oAuth2RestTemplate;
     }
 
     @HystrixCommand
@@ -62,13 +71,18 @@ public class StoreProductService {
 
     @HystrixCommand
     public List<StoreProduct> getStoreProductByStoreId(Long storeId) {
-        StoreProduct storeProduct = new StoreProduct();
+        StoreProduct queryStoreProduct = new StoreProduct();
         Store store = new Store(storeId);
-        storeProduct.setStore(store);
-        storeProduct.setDeleted(0);
-        storeProduct.setEffective(1);
-        return storeProductRepository.findAll(storeSpec(storeProduct));
-//        return (List<StoreProduct>) storeProductRepository.findAll();
+        queryStoreProduct.setStore(store);
+        queryStoreProduct.setDeleted(0);
+        queryStoreProduct.setEffective(1);
+        List<StoreProduct> storeProductList = storeProductRepository.findAll(storeSpec(queryStoreProduct));
+        for(StoreProduct storeProduct: storeProductList){
+            Long productId = storeProduct.getProductId();
+            Product product = oAuth2RestTemplate.getForObject(productApiUrl + "/" + productId, Product.class);
+            storeProduct.setProductName(product.getProductName());
+        }
+        return storeProductList;
     }
 
     private Specification<StoreProduct> storeSpec(final StoreProduct storeProduct) {

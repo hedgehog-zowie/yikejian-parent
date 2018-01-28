@@ -1,11 +1,10 @@
 package com.yikejian.store.repository;
 
 import com.yikejian.store.domain.store.Device;
+import com.yikejian.store.domain.store.Store;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
 
 /**
  * <code>DeviceRepository</code>.
@@ -21,5 +20,7 @@ public interface DeviceRepository extends PagingAndSortingRepository<Device, Lon
     Device findByDeviceId(Long deviceId);
 
 //    List<Device> findByStoreIdAndDeleted(Long storeId, Integer deleted);
+
+    void deleteByStore(Store store);
 
 }
