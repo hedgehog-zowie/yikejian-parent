@@ -1,0 +1,7 @@
+账号neomal_m
+密码Neomal2018
+ecs: 120.79.174.62
+root/Neomal2018
+远程连接密码： 300391
+rds: rm-wz9zran8v261152v0
+root/neomal2018@)!*
