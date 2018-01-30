@@ -30,6 +30,7 @@ import java.util.Optional;
  * date: 2018/1/16 9:57
  */
 @RestController
+@RequestMapping(path = "/v1")
 public class InventoryControllerV1 {
 
     private InventoryService inventoryService;
@@ -40,7 +41,7 @@ public class InventoryControllerV1 {
     }
 
     @PutMapping("/inventories")
-    public ResponseEntity updateInventories(final List<Inventory> inventoryList) {
+    public ResponseEntity updateInventories(final @RequestBody  List<Inventory> inventoryList) {
         // todo send log
         return Optional.ofNullable(inventoryService.saveInventories(inventoryList))
                 .map(a -> new ResponseEntity<>(a, HttpStatus.OK))
@@ -48,7 +49,7 @@ public class InventoryControllerV1 {
     }
 
     @PutMapping("/inventory")
-    public ResponseEntity updateInventory(final Inventory inventory) {
+    public ResponseEntity updateInventory(final @RequestBody  Inventory inventory) {
         // todo send log
         return Optional.ofNullable(inventoryService.saveInventory(inventory))
                 .map(a -> new ResponseEntity<>(a, HttpStatus.OK))
@@ -56,7 +57,7 @@ public class InventoryControllerV1 {
     }
 
     @GetMapping("/inventories")
-    public ResponseEntity getInventories(final Inventory inventory) {
+    public ResponseEntity getInventories(final @RequestBody  Inventory inventory) {
         // todo send log
         return Optional.ofNullable(inventoryService.getInventories(inventory))
                 .map(a -> new ResponseEntity<>(a, HttpStatus.OK))
@@ -64,7 +65,7 @@ public class InventoryControllerV1 {
     }
 
     @RequestMapping(value = "/inventory/store", method = RequestMethod.POST)
-    public ResponseEntity initStoreInventory(@RequestBody Store store){
+    public ResponseEntity initStoreInventory(final @RequestBody Store store){
         // TODO: 2018/1/22
         return Optional.ofNullable(inventoryService.initInventoryOfStore(store))
                 .map(a -> new ResponseEntity<>(a, HttpStatus.OK))

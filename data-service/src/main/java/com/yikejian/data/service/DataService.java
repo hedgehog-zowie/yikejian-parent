@@ -93,17 +93,17 @@ public class DataService {
 
         Sort sort = null;
         if (requestDataDto != null && requestDataDto.getSort() != null) {
-            sort = new Sort(requestDataDto.getSort().getDirection(), requestDataDto.getSort().getField());
+            sort = new Sort(requestDataDto.getSort().getOrder(), requestDataDto.getSort().getField());
         }
 
         PageRequest pageRequest = new PageRequest(
-                pagination.getCurrentPage(),
+                pagination.getCurrent(),
                 pagination.getPageSize(),
                 sort);
         Page<Data> page = dataRepository.findAll(dataSpec(requestDataDto.getData()), pageRequest);
 
         pagination.setTotalPages(page.getTotalPages());
-        pagination.setTotalSize(page.getTotalElements());
+        pagination.setTotal(page.getTotalElements());
         List<DataDto> dataDtoList = Lists.newArrayList(page.getContent().stream().
                 map(Data::toDataDto).collect(Collectors.toList()));
         return new ResponseDataDto(dataDtoList, pagination);

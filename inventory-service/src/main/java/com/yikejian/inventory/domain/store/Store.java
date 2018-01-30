@@ -1,9 +1,11 @@
 package com.yikejian.inventory.domain.store;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -17,6 +19,10 @@ import java.util.Set;
 public class Store {
 
     private Long storeId;
+    /**
+     * 店铺名称
+     */
+//    private String storeName;
     /**
      * 开始营业时间(精确到分，如1020表示10点20分)
      */
@@ -36,11 +42,12 @@ public class Store {
     /**
      * 产品
      */
+    @JsonManagedReference
     private Set<StoreProduct> storeProductSet;
     /**
      * 设备
      */
-    @JsonIgnore
+    @JsonManagedReference
     @OneToMany(mappedBy = "store", fetch = FetchType.LAZY)
     private Set<Device> deviceSet;
 
@@ -48,16 +55,13 @@ public class Store {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         Store store = (Store) o;
-
-        return storeId.equals(store.storeId);
-
+        return Objects.equals(storeId, store.storeId);
     }
 
     @Override
     public int hashCode() {
-        return storeId.hashCode();
+        return Objects.hash(storeId);
     }
 
     public Long getStoreId() {

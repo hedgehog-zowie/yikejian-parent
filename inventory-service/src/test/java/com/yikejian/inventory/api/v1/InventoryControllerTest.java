@@ -1,24 +1,17 @@
-package com.yikejian.inventory.service;
+package com.yikejian.inventory.api.v1;
 
 import com.google.common.collect.Sets;
-import com.yikejian.inventory.InventoryServiceApplication;
 import com.yikejian.inventory.domain.inventory.Inventory;
 import com.yikejian.inventory.domain.store.Device;
 import com.yikejian.inventory.domain.store.DeviceProduct;
 import com.yikejian.inventory.domain.store.Store;
 import com.yikejian.inventory.domain.store.StoreProduct;
+import com.yikejian.inventory.service.InventoryServiceTest;
 import com.yikejian.inventory.util.JsonUtils;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 import java.util.Set;
@@ -26,26 +19,25 @@ import java.util.Set;
 import static org.junit.Assert.assertEquals;
 
 /**
- * <code>InventoryServiceTest</code>.
- * ${DESCRIPTION}
- *
- * @author zweig
- * @version: 1.0-SNAPSHOT
- * date: 2018/1/25 10:58
+ * @author jackalope
+ * @Title: InventoryControllerTest
+ * @Package com.yikejian.inventory.api.v1
+ * @Description: TODO
+ * @date 2018/1/30 23:52
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringBootTest(classes = InventoryServiceApplication.class)
-public class InventoryServiceTest {
+public class InventoryControllerTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(InventoryServiceTest.class);
 
-    @Autowired
-    private InventoryService inventoryService;
-
+    private static RestTemplate restTemplate;
+    private static final String INIT_STORE_TEMPLATE = "http://localhost:8005/inventory-service/v1/inventory/store?access_token=%s";
+    private static final String ACCESS_TOKEN = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MTczNzA5OTYsInVzZXJfbmFtZSI6ImFkbWluIiwiYXV0aG9yaXRpZXMiOlsiUFJPRFVDVF9XUklURSIsIkRFVklDRV9SRUFEIiwiQk9PS19XUklURSIsIlVTRVJfV1JJVEUiLCJPUkRFUl9SRUFEIiwiQk9PS19SRUFEIiwiU1RPUkVfUkVBRCIsIkNVU1RPTUVSX1JFQUQiLCJPUkRFUl9XUklURSIsIlJPTEVfV1JJVEUiLCJDVVNUT01FUl9XUklURSIsIlNUT1JFX1dSSVRFIiwiREVWSUNFX1dSSVRFIiwiVVNFUl9SRUFEIiwiUk9MRV9SRUFEIiwiTE9HX1JFQUQiLCJQUk9EVUNUX1JFQUQiXSwianRpIjoiYjk4NTQ1ZWMtYjY3Mi00NmFhLWIyMjEtOGFmZWZiMjY1N2Y5IiwiY2xpZW50X2lkIjoidHJ1c3RlZCIsInNjb3BlIjpbInJlYWQiLCJ3cml0ZSJdfQ.g199tP0MoRLEWeSPo7YgEEO4bKbI2KMX-T_xQC2K_D3W-sxWFLJ9nWZS6OrbFaF01EcSkWEgZGnBGP0fiMWLbPLlBEyBrrTe8tIACWHNoJjd1Uy5XB7nDC7hloJ62Olsu5N3jwvz4SjE6milf2-_taKN6qUBe7X2Fy-3O_V1Nmt9Mr5Vc3GuqZHNIklkXnUcss0kbVHc1Hbjl7CitYjTEflL_t8uj1Nuwyeonuhh9ffg2SjzmbzftA1koHlCpCtP8ejpcqMD-7f0-k42d4kdW4XOij3dv9WgELfSObGynYwyNILUd38nobPCoEwcg0u324Pw4snQmM8lNhyUvlEopQ";
     private static Store store;
 
     @BeforeClass
     public static void beforeClass() {
+        restTemplate = new RestTemplate();
+
         store = new Store();
         store.setStoreId(1L);
         store.setStartTime("1000");
@@ -57,12 +49,12 @@ public class InventoryServiceTest {
         storeProduct1.setProductId(1L);
         storeProduct1.setStartTime("1100");
         storeProduct1.setEndTime("1800");
-        storeProduct1.setStore(store);
+//        storeProduct1.setStore(store);
         StoreProduct storeProduct2 = new StoreProduct();
         storeProduct2.setProductId(2L);
         storeProduct2.setStartTime("1200");
         storeProduct2.setEndTime("1900");
-        storeProduct2.setStore(store);
+//        storeProduct2.setStore(store);
         Set<StoreProduct> storeProductSet = Sets.newHashSet();
         storeProductSet.add(storeProduct1);
         storeProductSet.add(storeProduct2);
@@ -70,7 +62,7 @@ public class InventoryServiceTest {
 
         Device device1 = new Device();
         device1.setDeviceId(1L);
-        device1.setStore(store);
+//        device1.setStore(store);
         DeviceProduct deviceProduct11 = new DeviceProduct();
         deviceProduct11.setProductId(1L);
         deviceProduct11.setDevice(device1);
@@ -84,7 +76,7 @@ public class InventoryServiceTest {
 
         Device device2 = new Device();
         device2.setDeviceId(2L);
-        device2.setStore(store);
+//        device2.setStore(store);
         DeviceProduct deviceProduct21 = new DeviceProduct();
         deviceProduct21.setProductId(1L);
         deviceProduct21.setDevice(device2);
@@ -98,7 +90,7 @@ public class InventoryServiceTest {
 
         Device device3 = new Device();
         device3.setDeviceId(3L);
-        device3.setStore(store);
+//        device3.setStore(store);
         DeviceProduct deviceProduct31 = new DeviceProduct();
         deviceProduct31.setProductId(1L);
         deviceProduct31.setDevice(device3);
@@ -126,19 +118,11 @@ public class InventoryServiceTest {
     }
 
     @Test
-    public void initInventoryOfStoreTest() {
-        List<Inventory> inventoryList = inventoryService.initInventoryOfStore(store, "20180131");
-        assertEquals(26, inventoryList.size());
-        System.out.println("=================");
-        System.out.println(JsonUtils.toJson(inventoryList));
-        inventoryList = inventoryService.initInventoryOfStore(store, "20180201");
-        assertEquals(26, inventoryList.size());
-        System.out.println("=================");
-        System.out.println(JsonUtils.toJson(inventoryList));
-        inventoryList = inventoryService.initInventoryOfStore(store);
+    public void testInitStoreInventory() {
+        String url = String.format(INIT_STORE_TEMPLATE, ACCESS_TOKEN);
+//        LOGGER.info(JsonUtils.toJson(store));
+        List<Inventory> inventoryList = restTemplate.postForObject(url, store, List.class);
         assertEquals(130, inventoryList.size());
-        System.out.println("=================");
-        System.out.println(JsonUtils.toJson(inventoryList));
     }
 
 }

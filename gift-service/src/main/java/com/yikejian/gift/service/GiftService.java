@@ -67,17 +67,17 @@ public class GiftService {
 
         Sort sort = null;
         if (requestGift != null && requestGift.getSort() != null) {
-            sort = new Sort(requestGift.getSort().getDirection(), requestGift.getSort().getField());
+            sort = new Sort(requestGift.getSort().getOrder(), requestGift.getSort().getField());
         }
 
         PageRequest pageRequest = new PageRequest(
-                pagination.getCurrentPage(),
+                pagination.getCurrent(),
                 pagination.getPageSize(),
                 sort);
         Page<Gift> page = giftRepository.findAll(giftSpec(requestGift.getGift()), pageRequest);
 
         pagination.setTotalPages(page.getTotalPages());
-        pagination.setTotalSize(page.getTotalElements());
+        pagination.setTotal(page.getTotalElements());
 
         return new ResponseGift(page.getContent(), pagination);
     }

@@ -23,6 +23,8 @@ public interface InventoryRepository extends PagingAndSortingRepository<Inventor
 
     Set<Inventory> findByStoreIdAndProductIdAndDay(Long storeId, Long productId, String day);
 
+    void deleteByStoreIdAndProductIdAndDay(Long storeId, Long productId, String day);
+
     List<Inventory> findByStoreIdAndDay(Long storeId, String day);
 
     Long countByStoreIdAndProductIdAndDay(Long storeId, Long productId, String day);

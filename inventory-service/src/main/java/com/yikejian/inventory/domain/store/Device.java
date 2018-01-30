@@ -1,8 +1,12 @@
 package com.yikejian.inventory.domain.store;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -18,10 +22,12 @@ public class Device {
     /**
      * 设备支持的产品
      */
+    @JsonManagedReference
     private Set<DeviceProduct> deviceProductSet;
     /**
      * 店铺
      */
+    @JsonBackReference
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "store_id")
     private Store store;
@@ -33,19 +39,13 @@ public class Device {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         Device device = (Device) o;
-
-        if (!deviceId.equals(device.deviceId)) return false;
-        return store.equals(device.store);
-
+        return Objects.equals(deviceId, device.deviceId);
     }
 
     @Override
     public int hashCode() {
-        int result = deviceId.hashCode();
-        result = 31 * result + store.hashCode();
-        return result;
+        return Objects.hash(deviceId);
     }
 
     public Long getDeviceId() {

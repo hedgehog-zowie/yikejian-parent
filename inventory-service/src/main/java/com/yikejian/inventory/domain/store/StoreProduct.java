@@ -1,5 +1,7 @@
 package com.yikejian.inventory.domain.store;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -38,6 +40,7 @@ public class StoreProduct {
     /**
      * 店铺
      */
+    @JsonBackReference
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "store_id")
     private Store store;
@@ -46,19 +49,13 @@ public class StoreProduct {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         StoreProduct that = (StoreProduct) o;
-
-        if (!productId.equals(that.productId)) return false;
-        return store.equals(that.store);
-
+        return Objects.equals(productId, that.productId);
     }
 
     @Override
     public int hashCode() {
-        int result = productId.hashCode();
-        result = 31 * result + store.hashCode();
-        return result;
+        return Objects.hash(productId);
     }
 
     public Long getProductId() {

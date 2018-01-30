@@ -12,6 +12,8 @@ public class Product {
 
     private Long productId;
     private String productName;
+    private Double price;
+    private Integer duration;
 
     public Long getProductId() {
         return productId;
@@ -27,5 +29,21 @@ public class Product {
 
     public void setProductName(String productName) {
         this.productName = productName;
+    }
+
+    public Double getPrice() {
+        return price;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
+    }
+
+    public Integer getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Integer duration) {
+        this.duration = duration;
     }
 }

@@ -45,7 +45,7 @@ public class JsonUtilsTest {
     @Test
     public void orderToJson(){
         Order order = new Order();
-        order.setCustomerId(1L);
+        order.setMobileNumber("1234");
         order.setCustomerName("客户1");
         order.setStoreId(1L);
         order.setStoreName("店铺1");

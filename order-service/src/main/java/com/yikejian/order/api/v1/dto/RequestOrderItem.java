@@ -1,6 +1,7 @@
-package com.yikejian.user.api.v1.dto;
+package com.yikejian.order.api.v1.dto;
 
-import com.yikejian.user.domain.role.Role;
+import com.yikejian.order.domain.order.Order;
+import com.yikejian.order.domain.order.OrderItem;
 
 /**
  * @author jackalope
@@ -9,27 +10,18 @@ import com.yikejian.user.domain.role.Role;
  * @Description: TODO
  * @date 2018/1/14 21:51
  */
-public class RequestRole {
+public class RequestOrderItem {
 
-    private Role role;
+    private OrderItem orderItem;
     private Pagination pagination;
     private Sort sorter;
 
-    public RequestRole() {
+    public OrderItem getOrderItem() {
+        return orderItem;
     }
 
-    public RequestRole(Role role, Pagination pagination, Sort sorter) {
-        this.role = role;
-        this.pagination = pagination;
-        this.sorter = sorter;
-    }
-
-    public Role getRole() {
-        return role;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
+    public void setOrderItem(OrderItem orderItem) {
+        this.orderItem = orderItem;
     }
 
     public Pagination getPagination() {

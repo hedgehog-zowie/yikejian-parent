@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 
 import javax.persistence.criteria.Predicate;
+import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -131,6 +132,7 @@ public class InventoryService {
         };
     }
 
+    @Transactional
     public List<Inventory> initInventoryOfStore(Store store) {
         LocalDate currentDate = LocalDate.now();
         List<Inventory> allInventorySet = Lists.newArrayList();
@@ -144,6 +146,7 @@ public class InventoryService {
         return allInventorySet;
     }
 
+    @Transactional
     public List<Inventory> initInventoryOfStore(Store store, String day) {
         if (store == null) {
             String msg = "init inventory error. store is null.";
@@ -161,11 +164,12 @@ public class InventoryService {
         Set<Inventory> allInventorySet = Sets.newHashSet();
         for (StoreProduct storeProduct : store.getStoreProductSet()) {
             Long productId = storeProduct.getProductId();
-            Set<Inventory> oldInventorySet = inventoryRepository.findByStoreIdAndProductIdAndDay(storeId, productId, day);
-            for (Inventory productInventory : oldInventorySet) {
-                productInventory.setEffective(storeProduct.getEffective());
-                productInventory.setDeleted(storeProduct.getDeleted());
-            }
+            inventoryRepository.deleteByStoreIdAndProductIdAndDay(storeId, productId, day);
+//            Set<Inventory> oldInventorySet = inventoryRepository.findByStoreIdAndProductIdAndDay(storeId, productId, day);
+//            for (Inventory productInventory : oldInventorySet) {
+//                productInventory.setEffective(storeProduct.getEffective());
+//                productInventory.setDeleted(storeProduct.getDeleted());
+//            }
             List<String> pieceTimeList = DateUtils.generatePieceTimeOfDay(
                     day,
                     store.getStartTime().compareTo(storeProduct.getStartTime()) < 0 ? storeProduct.getStartTime() : store.getStartTime(),
@@ -176,13 +180,13 @@ public class InventoryService {
             Integer stock = productDeviceNums.get(productId) == null ? 0 : productDeviceNums.get(productId);
             for (String pieceTime : pieceTimeList) {
                 Inventory inventory = new Inventory(storeId, productId, store.getUnitTimes() > stock ? stock : store.getUnitTimes(), day, pieceTime);
-                inventory.setEffective(storeProduct.getEffective());
-                inventory.setDeleted(storeProduct.getDeleted());
+//                inventory.setEffective(storeProduct.getEffective());
+//                inventory.setDeleted(storeProduct.getDeleted());
                 newInventorySet.add(inventory);
             }
             Set<Inventory> mergedInventorySet = Sets.newHashSet();
-            mergedInventorySet.addAll(oldInventorySet);
             mergedInventorySet.addAll(newInventorySet);
+//            mergedInventorySet.addAll(oldInventorySet);
             allInventorySet.addAll(mergedInventorySet);
         }
 

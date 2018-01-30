@@ -40,18 +40,18 @@ yikejian:
 spring:
   profiles: production
   datasource:
-    url: jdbc:mysql://${rds}:3306/product?characterEncoding=utf-8
-    username: ${username}
-    password: ${password}
+    url: jdbc:mysql://rm-wz9zran8v261152v0.mysql.rds.aliyuncs.com:3306/product?characterEncoding=utf-8
+    username: root
+    password: neomal2018@)!*
     initialize: true
 security:
   oauth2:
     resource:
       jwt:
-        key-uri: "http://user-service/oauth/token_key"
+        key-uri: "http://localhost:8001/user-service/oauth/token_key"
 yikejian:
   user:
     api:
-      url: "http://user-service/v1/me"
+      url: "http://localhost:8001/user-service/v1/me"
         
             

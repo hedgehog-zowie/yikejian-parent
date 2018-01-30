@@ -22,9 +22,13 @@ public class Order extends BaseEntity {
     @GeneratedValue
     private Long orderId;
     /**
-     * 客户ID
+     * 订单编号
      */
-    private Long customerId;
+    private String orderCode;
+    /**
+     * 客户电话
+     */
+    private String mobileNumber;
     /**
      * 客户名称
      */
@@ -48,16 +52,17 @@ public class Order extends BaseEntity {
      */
     private Double actualAmount;
     /**
+     * 订单状态
+     */
+//    @Transient
+    private OrderStatus orderStatus;
+    /**
      * 项目
      */
     @JsonManagedReference
     @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<OrderItem> orderItems;
-    /**
-     * 订单状态
-     */
-//    @Transient
-    private OrderStatus orderStatus;
+
 //    /**
 //     * 附加信息
 //     */
@@ -66,16 +71,16 @@ public class Order extends BaseEntity {
 //    @JoinColumn(name = "extra_id")
 ////    @PrimaryKeyJoinColumn
 //    private OrderExtra orderExtra;
+
     /**
      * 订单事件
      */
 //    @JsonIgnore
 //    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
 //    private Set<OrderEvent> eventSet;
-
     public Order mergeOther(Order other) {
-        if (other.getCustomerId() != null) {
-            setCustomerId(other.getCustomerId());
+        if (StringUtils.isNotBlank(other.getMobileNumber())) {
+            setMobileNumber(other.getMobileNumber());
         }
         if (StringUtils.isNotBlank(other.getCustomerName())) {
             setCustomerName(other.getCustomerName());
@@ -92,6 +97,12 @@ public class Order extends BaseEntity {
         if (other.getOrderItems() != null) {
             setOrderItems(other.getOrderItems());
         }
+        if (other.getEffective() != null) {
+            setEffective(other.getEffective());
+        }
+        if (other.getDeleted() != null) {
+            setDeleted(other.getDeleted());
+        }
         return this;
     }
 
@@ -103,12 +114,20 @@ public class Order extends BaseEntity {
         this.orderId = orderId;
     }
 
-    public Long getCustomerId() {
-        return customerId;
+    public String getOrderCode() {
+        return orderCode;
     }
 
-    public void setCustomerId(Long customerId) {
-        this.customerId = customerId;
+    public void setOrderCode(String orderCode) {
+        this.orderCode = orderCode;
+    }
+
+    public String getMobileNumber() {
+        return mobileNumber;
+    }
+
+    public void setMobileNumber(String mobileNumber) {
+        this.mobileNumber = mobileNumber;
     }
 
     public String getCustomerName() {

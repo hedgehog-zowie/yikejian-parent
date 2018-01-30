@@ -1,6 +1,6 @@
 server:
   port: 8005
-  contextPath: /inventory
+  contextPath: /inventory-service
 spring:
   application:
     name: inventory-service

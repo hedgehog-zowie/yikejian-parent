@@ -29,7 +29,7 @@ yikejian:
 spring:
   profiles: test
   datasource:
-    url: jdbc:mysql://192.168.99.1:3306/order?characterEncoding=utf-8
+    url: jdbc:mysql://192.168.99.1:3306/orders?characterEncoding=utf-8
     username: root
     password: 123456
     initialize: true
@@ -41,20 +41,22 @@ security:
 yikejian:
   api:
     user:
-      url: "http://user-service/user-service/v1/me"
+      url: "http://192.168.1.101:8001/user-service/v1/me"
+    customer:
+      url: "http://192.168.1.101:8002/customer-service/v1"
     product:
-      url: "http://product-service/product-service/"
+      url: "http://192.168.1.101:8004/product-service/v1"
     inventory:
-      url: "http://inventory-service/inventory-service/"
+      url: "http://192.168.1.101:8005/inventory-service/v1"
     store:
-      url: "http://store-service/store-service/"
+      url: "http://192.168.1.101:8003/store-service/v1"
 ---
 spring:
   profiles: production
   datasource:
-    url: jdbc:mysql://${rds}:3306/order?characterEncoding=utf-8
-    username: ${username}
-    password: ${password}
+    url: jdbc:mysql://rm-wz9zran8v261152v0.mysql.rds.aliyuncs.com:3306/orders?characterEncoding=utf-8
+    username: root
+    password: neomal2018@)!*
     initialize: true
 security:
   oauth2:
@@ -64,12 +66,14 @@ security:
 yikejian:
   api:
     user:
-      url: "http://user-service/user-service/v1/me"
+      url: "http://localhost:8001/user-service/v1/me"
+    customer:
+      url: "http://localhost:8002/customer-service/v1"
     product:
-      url: "http://product-service/product-service/"
+      url: "http://localhost:8004/product-service/v1"
     inventory:
-      url: "http://inventory-service/inventory-service/"
+      url: "http://localhost:8005/inventory-service/v1"
     store:
-      url: "http://store-service/store-service/"
+      url: "http://localhost:8003/store-service/v1"
         
             

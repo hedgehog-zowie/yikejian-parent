@@ -67,17 +67,17 @@ public class CouponService {
 
         Sort sort = null;
         if (requestCoupon != null && requestCoupon.getSort() != null) {
-            sort = new Sort(requestCoupon.getSort().getDirection(), requestCoupon.getSort().getField());
+            sort = new Sort(requestCoupon.getSort().getOrder(), requestCoupon.getSort().getField());
         }
 
         PageRequest pageRequest = new PageRequest(
-                pagination.getCurrentPage(),
+                pagination.getCurrent(),
                 pagination.getPageSize(),
                 sort);
         Page<Coupon> page = couponRepository.findAll(couponSpec(requestCoupon.getCoupon()), pageRequest);
 
         pagination.setTotalPages(page.getTotalPages());
-        pagination.setTotalSize(page.getTotalElements());
+        pagination.setTotal(page.getTotalElements());
 
         return new ResponseCoupon(page.getContent(), pagination);
     }

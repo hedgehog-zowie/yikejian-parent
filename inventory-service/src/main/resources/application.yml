@@ -1,18 +1,79 @@
 spring:
   profiles: development
+
+---
+spring:
+  profiles: development
+  jpa:
+    show_sql: false
+    database: H2
+  datasource:
+    url: jdbc:h2:mem:testdb;DB_CLOSE_ON_EXIT=FALSE
+    initialize: false
 security:
   oauth2:
     resource:
       jwt:
-        # Tells the JWT framework to fetch the public key from the authorization server during startup
-        # Note: The authorization server needs to be running...
-        key-uri: "http://localhost:8001/uaa/oauth/token_key"
+        key-uri: "http://localhost:8001/user-service/oauth/token_key"
 yikejian:
   api:
     user:
-      url: "http://user-service/uaa/v1/me"
+      url: "http://user-service/user-service/v1/me"
+    customer:
+      url: "http://customer-service/customer-service/"
     product:
-      url: "http://product-service/product/v1/product"
+      url: "http://product-service/product-service/"
+    order:
+      url: "http://order-service/order-service/"
     store:
-      url: "http://store-service/store/v1/store"
-            
+      url: "http://store-service/store-service/"
+---
+spring:
+  profiles: test
+  datasource:
+    url: jdbc:mysql://192.168.99.1:3306/inventory?characterEncoding=utf-8
+    username: root
+    password: 123456
+    initialize: true
+security:
+  oauth2:
+    resource:
+      jwt:
+        key-uri: "http://192.168.1.101:8001/user-service/oauth/token_key"
+yikejian:
+  api:
+    user:
+      url: "http://192.168.1.101:8001/user-service/v1/me"
+    customer:
+      url: "http://192.168.1.101:8002/customer-service/v1"
+    product:
+      url: "http://192.168.1.101:8004/product-service/v1"
+    store:
+      url: "http://192.168.1.101:8003/store-service/v1"
+    order:
+      url: "http://192.168.1.101:8006/order-service/v1"
+---
+spring:
+  profiles: production
+  datasource:
+    url: jdbc:mysql://rm-wz9zran8v261152v0.mysql.rds.aliyuncs.com:3306/inventory?characterEncoding=utf-8
+    username: root
+    password: neomal2018@)!*
+    initialize: true
+security:
+  oauth2:
+    resource:
+      jwt:
+        key-uri: "http://localhost:8001/user-service/oauth/token_key"
+yikejian:
+  api:
+    user:
+      url: "http://localhost:8001/user-service/v1/me"
+    customer:
+      url: "http://localhost:8002/customer-service/v1"
+    product:
+      url: "http://localhost:8004/product-service/v1"
+    store:
+      url: "http://localhost:8003/store-service/v1"
+    order:
+      url: "http://localhost:8006/order-service/v1"

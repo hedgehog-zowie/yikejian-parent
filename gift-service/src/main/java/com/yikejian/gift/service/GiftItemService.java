@@ -84,17 +84,17 @@ public class GiftItemService {
 
         Sort sort = null;
         if (requestGiftItem != null && requestGiftItem.getSort() != null) {
-            sort = new Sort(requestGiftItem.getSort().getDirection(), requestGiftItem.getSort().getField());
+            sort = new Sort(requestGiftItem.getSort().getOrder(), requestGiftItem.getSort().getField());
         }
 
         PageRequest pageRequest = new PageRequest(
-                pagination.getCurrentPage(),
+                pagination.getCurrent(),
                 pagination.getPageSize(),
                 sort);
         Page<GiftItem> page = giftItemRepository.findAll(couponSpec(requestGiftItem.getGiftItem()), pageRequest);
 
         pagination.setTotalPages(page.getTotalPages());
-        pagination.setTotalSize(page.getTotalElements());
+        pagination.setTotal(page.getTotalElements());
 
         for (GiftItem giftItem : page.getContent()) {
             Long customerId = giftItem.getCustomerId();

@@ -64,7 +64,7 @@ spring:
 spring:
   profiles: production
   datasource:
-    url: jdbc:mysql://${rds}:3306/user?characterEncoding=utf-8
-    username: ${username}
-    password: ${password}
+    url: jdbc:mysql://rm-wz9zran8v261152v0.mysql.rds.aliyuncs.com:3306/user?characterEncoding=utf-8
+    username: root
+    password: neomal2018@)!*
     initialize: true

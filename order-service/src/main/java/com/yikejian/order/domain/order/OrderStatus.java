@@ -10,7 +10,6 @@ package com.yikejian.order.domain.order;
 public enum OrderStatus {
 
     CREATED,
-    CONFIRMED,
     CANCELED,
     PAID,
     REFUNDED,

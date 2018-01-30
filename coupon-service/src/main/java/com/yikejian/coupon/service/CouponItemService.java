@@ -84,17 +84,17 @@ public class CouponItemService {
 
         Sort sort = null;
         if (requestCouponItem != null && requestCouponItem.getSort() != null) {
-            sort = new Sort(requestCouponItem.getSort().getDirection(), requestCouponItem.getSort().getField());
+            sort = new Sort(requestCouponItem.getSort().getOrder(), requestCouponItem.getSort().getField());
         }
 
         PageRequest pageRequest = new PageRequest(
-                pagination.getCurrentPage(),
+                pagination.getCurrent(),
                 pagination.getPageSize(),
                 sort);
         Page<CouponItem> page = couponItemRepository.findAll(couponSpec(requestCouponItem.getCouponItem()), pageRequest);
 
         pagination.setTotalPages(page.getTotalPages());
-        pagination.setTotalSize(page.getTotalElements());
+        pagination.setTotal(page.getTotalElements());
 
         for (CouponItem couponItem : page.getContent()) {
             Long customerId = couponItem.getCustomerId();

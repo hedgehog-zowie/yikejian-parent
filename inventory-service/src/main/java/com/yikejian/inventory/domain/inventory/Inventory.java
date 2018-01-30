@@ -91,12 +91,6 @@ public class Inventory extends BaseEntity {
         if (StringUtils.isNotBlank(other.getPieceTime())) {
             setPieceTime(other.getPieceTime());
         }
-        if (other.getEffective() != null) {
-            setEffective(other.getEffective());
-        }
-        if (other.getDeleted() != null) {
-            setDeleted(other.getDeleted());
-        }
         return this;
     }
 

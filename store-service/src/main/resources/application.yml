@@ -48,9 +48,9 @@ yikejian:
 spring:
   profiles: production
   datasource:
-    url: jdbc:mysql://${rds}:3306/store?characterEncoding=utf-8
-    username: ${username}
-    password: ${password}
+    url: jdbc:mysql://rm-wz9zran8v261152v0.mysql.rds.aliyuncs.com:3306/store?characterEncoding=utf-8
+    username: root
+    password: neomal2018@)!*
     initialize: true
 security:
   oauth2:
@@ -60,8 +60,8 @@ security:
 yikejian:
   api:
     user:
-      url: "http://user-service/user-service/v1/me"
+      url: "http://localhost:8001/user-service/v1/me"
     product:
-      url: "http://product-service/product-service/"
+      url: "http://localhost:8004/product-service/v1/product"
     inventory:
-      url: "http://inventory-service/inventory-service/"
+      url: "http://localhost:8005/inventory-service/"

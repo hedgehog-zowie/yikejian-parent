@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.Optional;
+import java.util.UUID;
 
 /**
  * <code>OrderControllerV1</code>.
@@ -52,13 +53,6 @@ public class OrderControllerV1 {
         order.setDeleted(0);
         order.setEffective(1);
         order.setOrderStatus(OrderStatus.CREATED);
-        if(order.getOrderItems() != null && order.getOrderItems().size() > 0){
-            for(OrderItem orderItem: order.getOrderItems()){
-                orderItem.setDeleted(0);
-                orderItem.setEffective(1);
-                orderItem.setOrderItemStatus(OrderItemStatus.NOT_SERVE);
-            }
-        }
         return Optional.ofNullable(orderService.saveOrder(order))
                 .map(a -> new ResponseEntity<>(a, HttpStatus.OK))
                 .orElseThrow(() -> new OrderServiceException("Not found order."));
@@ -73,7 +67,7 @@ public class OrderControllerV1 {
     }
 
     @RequestMapping(value = "/order/{order_id}", method = RequestMethod.GET)
-    public ResponseEntity getOrders(final @PathVariable(value = "order_id") Long orderId) {
+    public ResponseEntity getOrder(final @PathVariable(value = "order_id") Long orderId) {
         // todo send log
         return Optional.ofNullable(orderService.getOrderById(orderId))
                 .map(a -> new ResponseEntity<>(a, HttpStatus.OK))
