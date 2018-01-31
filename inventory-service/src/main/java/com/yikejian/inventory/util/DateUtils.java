@@ -71,4 +71,21 @@ public final class DateUtils {
         return localDate.format(dayTimeFormatter);
     }
 
+    public static List<String> getNeighborPieceTime(final String pieceTime,
+                                                    final Integer duration,
+                                                    final Integer unitDuration) {
+        LocalDateTime selfDateTime = pieceTimeStrToDate(pieceTime);
+        // 根据duration和unitDuration重新计算时间间距
+        Long newDuration = (long) Math.ceil(duration / unitDuration) * unitDuration;
+        LocalDateTime startDateTime = selfDateTime.minusMinutes(newDuration);
+        LocalDateTime endDateTime = selfDateTime.plusMinutes(newDuration);
+        LocalDateTime currentDateTime = startDateTime;
+        List<String> pieceTimeList = Lists.newArrayList();
+        while (currentDateTime.compareTo(endDateTime) <= 0) {
+            currentDateTime = currentDateTime.plusMinutes(unitDuration);
+            pieceTimeList.add(dateToPieceTimeStr(currentDateTime));
+        }
+        return pieceTimeList;
+    }
+
 }

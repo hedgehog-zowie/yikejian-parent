@@ -2,12 +2,18 @@ package com.yikejian.order.service;
 
 import com.google.common.collect.Lists;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
-import com.yikejian.order.api.v1.dto.*;
+import com.yikejian.order.api.v1.dto.Pagination;
+import com.yikejian.order.api.v1.dto.RequestOrder;
+import com.yikejian.order.api.v1.dto.RequestOrderItem;
+import com.yikejian.order.api.v1.dto.ResponseOrder;
+import com.yikejian.order.api.v1.dto.ResponseOrderItem;
+import com.yikejian.order.domain.inventory.Inventory;
 import com.yikejian.order.domain.order.Order;
 import com.yikejian.order.domain.order.OrderItem;
 import com.yikejian.order.domain.order.OrderItemStatus;
 import com.yikejian.order.domain.product.Product;
 import com.yikejian.order.domain.store.Store;
+import com.yikejian.order.exception.OrderServiceException;
 import com.yikejian.order.repository.OrderItemRepository;
 import com.yikejian.order.repository.OrderRepository;
 import org.apache.commons.lang.StringUtils;
@@ -28,7 +34,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.stream.Collectors;
 
 /**
  * <code>OrderService</code>.
@@ -50,6 +55,8 @@ public class OrderService {
     private String storeApi;
     @Value("${yikejian.api.product.url}")
     private String productApi;
+    @Value("${yikejian.api.inventory.url}")
+    private String inventoryApiUrl;
 
     private OrderRepository orderRepository;
     private OrderItemRepository orderItemRepository;
@@ -66,15 +73,26 @@ public class OrderService {
 
     @HystrixCommand
     public Order saveOrder(Order order) {
+        Order newOrder = transform(order);
+        List<Inventory> inventoryList = oAuth2RestTemplate.postForObject(inventoryApiUrl, newOrder, List.class);
+        if (inventoryList.size() == 0) {
+            throw new OrderServiceException("change inventory error.");
+        }
         return orderRepository.save(transform(order));
     }
 
     @HystrixCommand
     public List<Order> saveOrders(List<Order> orderList) {
-        return (List<Order>) orderRepository.save(
-                Lists.newArrayList(orderList.stream().
-                        map(this::transform).collect(Collectors.toList()))
-        );
+        List<Order> newOrderList = Lists.newArrayList();
+        for (Order order : orderList) {
+            Order newOrder = transform(order);
+            newOrderList.add(newOrder);
+            List<Inventory> inventoryList = oAuth2RestTemplate.postForObject(inventoryApiUrl, newOrder, List.class);
+            if (inventoryList.size() == 0) {
+                throw new OrderServiceException("change inventory error.");
+            }
+        }
+        return (List<Order>) orderRepository.save(newOrderList);
     }
 
     @HystrixCommand

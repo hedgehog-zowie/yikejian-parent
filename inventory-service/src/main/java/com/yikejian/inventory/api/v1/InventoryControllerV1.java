@@ -2,6 +2,7 @@ package com.yikejian.inventory.api.v1;
 
 import com.yikejian.inventory.domain.inventory.Inventory;
 import com.yikejian.inventory.domain.inventory.InventoryEvent;
+import com.yikejian.inventory.domain.order.Order;
 import com.yikejian.inventory.domain.store.Store;
 import com.yikejian.inventory.exception.InventoryServiceException;
 import com.yikejian.inventory.service.InventoryService;
@@ -64,14 +65,7 @@ public class InventoryControllerV1 {
                 .orElseThrow(() -> new InventoryServiceException("Not found any inventory."));
     }
 
-    @RequestMapping(value = "/inventory/store", method = RequestMethod.POST)
-    public ResponseEntity initStoreInventory(final @RequestBody Store store){
-        // TODO: 2018/1/22
-        return Optional.ofNullable(inventoryService.initInventoryOfStore(store))
-                .map(a -> new ResponseEntity<>(a, HttpStatus.OK))
-                .orElseThrow(() -> new InventoryServiceException("Not found any inventory."));
-    }
-
+    @Deprecated
     @RequestMapping(value = "/inventory/{inventory_id}/event", method = RequestMethod.POST)
     public ResponseEntity addInventoryEvent(
             @RequestBody InventoryEvent inventoryEvent,
@@ -83,6 +77,34 @@ public class InventoryControllerV1 {
         return Optional.ofNullable(inventoryService.addInventoryEvent(inventoryEvent))
                 .map(a -> new ResponseEntity<>(a, HttpStatus.OK))
                 .orElseThrow(() -> new InventoryServiceException("Inventory event could not be applied to inventory."));
+    }
+
+    @RequestMapping(value = "/inventories/{store_id}/{product_id}", method = RequestMethod.GET)
+    public ResponseEntity getStoreProductInventory(final @PathVariable(value = "store_id") Long storeId,
+                                                   final @PathVariable(value = "product_id") Long productId){
+        // TODO: 2018/1/22
+        Inventory inventory = new Inventory();
+        inventory.setStoreId(storeId);
+        inventory.setProductId(productId);
+        return Optional.ofNullable(inventoryService.getInventories(inventory))
+                .map(a -> new ResponseEntity<>(a, HttpStatus.OK))
+                .orElseThrow(() -> new InventoryServiceException("Not found any inventory."));
+    }
+
+    @RequestMapping(value = "/inventory/store", method = RequestMethod.POST)
+    public ResponseEntity initStoreInventory(final @RequestBody Store store){
+        // TODO: 2018/1/22
+        return Optional.ofNullable(inventoryService.initInventoryOfStore(store))
+                .map(a -> new ResponseEntity<>(a, HttpStatus.OK))
+                .orElseThrow(() -> new InventoryServiceException("Not found any inventory."));
+    }
+
+    @RequestMapping(value = "/inventory/order", method = RequestMethod.POST)
+    public ResponseEntity changeInventory(final @RequestBody Order order){
+        // TODO: 2018/1/22
+        return Optional.ofNullable(inventoryService.changeInventoryOnOrderChange(order))
+                .map(a -> new ResponseEntity<>(a, HttpStatus.OK))
+                .orElseThrow(() -> new InventoryServiceException("Not change any inventory."));
     }
 
 }

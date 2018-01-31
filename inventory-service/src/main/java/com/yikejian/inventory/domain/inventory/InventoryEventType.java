@@ -10,11 +10,11 @@ package com.yikejian.inventory.domain.inventory;
 public enum InventoryEventType {
 
     /**
-     * 递增库存
+     * 递增已预定库存
      */
     INCREASE_STOCK,
     /**
-     * 递减库存
+     * 递减已预定库存
      */
     DECREASE_STOCK,
 

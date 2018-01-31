@@ -109,6 +109,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
                 .authorizedGrantTypes("client_credentials", "authorization_code", "refresh_token")
                 .scopes("read", "write")
                 .redirectUris("http://localhost:8000")
+                .accessTokenValiditySeconds(2592000)
 
                 .and()
 
@@ -119,6 +120,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
                 .authorizedGrantTypes("implicit")
                 .scopes("read")
                 .redirectUris("http://localhost:8000")
+                .accessTokenValiditySeconds(2592000)
 
                 .and()
 
@@ -128,7 +130,9 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
                 .autoApprove(true)
                 .authorizedGrantTypes("client_credentials", "password", "authorization_code", "refresh_token")
                 .scopes("read", "write")
-                .redirectUris("http://localhost:8000");
+                .redirectUris("http://localhost:8000")
+                .accessTokenValiditySeconds(2592000)
+        ;
     }
 
 }

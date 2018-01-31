@@ -1,0 +1,72 @@
+package com.yikejian.inventory.domain.order;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
+/**
+ * @author jackalope
+ * @Title: Item
+ * @Package com.yikejian.order.domain.item
+ * @Description: TODO
+ * @date 2018/1/17 1:14
+ */
+public class OrderItem {
+
+    private Long orderItemId;
+    /**
+     * 产品ID
+     */
+    private Long productId;
+    /**
+     * 预约的时间
+     */
+    private String bookedTime;
+    /**
+     * 订单
+     */
+    @JsonBackReference
+    private Order order;
+    /**
+     * 服务状态
+     */
+    private OrderItemStatus orderItemStatus;
+
+    public Long getOrderItemId() {
+        return orderItemId;
+    }
+
+    public void setOrderItemId(Long orderItemId) {
+        this.orderItemId = orderItemId;
+    }
+
+    public Long getProductId() {
+        return productId;
+    }
+
+    public void setProductId(Long productId) {
+        this.productId = productId;
+    }
+
+    public String getBookedTime() {
+        return bookedTime;
+    }
+
+    public void setBookedTime(String bookedTime) {
+        this.bookedTime = bookedTime;
+    }
+
+    public Order getOrder() {
+        return order;
+    }
+
+    public void setOrder(Order order) {
+        this.order = order;
+    }
+
+    public OrderItemStatus getOrderItemStatus() {
+        return orderItemStatus;
+    }
+
+    public void setOrderItemStatus(OrderItemStatus orderItemStatus) {
+        this.orderItemStatus = orderItemStatus;
+    }
+}

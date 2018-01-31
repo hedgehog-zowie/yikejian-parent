@@ -22,9 +22,34 @@ public class InventoryEvent {
      */
     private Long inventoryId;
     /**
+     * 店铺ID
+     */
+    private Long storeId;
+    /**
+     * 产品ID
+     */
+    private Long productId;
+    /**
+     * 预约时间
+     */
+    private String pieceTime;
+    /**
      * 事件类型
      */
     private InventoryEventType inventoryEventType;
+
+    public InventoryEvent(Long storeId, Long productId, String pieceTime) {
+        this.storeId = storeId;
+        this.productId = productId;
+        this.pieceTime = pieceTime;
+    }
+
+    public InventoryEvent(Long storeId, Long productId, String pieceTime, InventoryEventType inventoryEventType) {
+        this.storeId = storeId;
+        this.productId = productId;
+        this.pieceTime = pieceTime;
+        this.inventoryEventType = inventoryEventType;
+    }
 
     public Long getInventoryEventId() {
         return inventoryEventId;
@@ -40,6 +65,30 @@ public class InventoryEvent {
 
     public void setInventoryId(Long inventoryId) {
         this.inventoryId = inventoryId;
+    }
+
+    public Long getStoreId() {
+        return storeId;
+    }
+
+    public void setStoreId(Long storeId) {
+        this.storeId = storeId;
+    }
+
+    public Long getProductId() {
+        return productId;
+    }
+
+    public void setProductId(Long productId) {
+        this.productId = productId;
+    }
+
+    public String getPieceTime() {
+        return pieceTime;
+    }
+
+    public void setPieceTime(String pieceTime) {
+        this.pieceTime = pieceTime;
     }
 
     public InventoryEventType getInventoryEventType() {

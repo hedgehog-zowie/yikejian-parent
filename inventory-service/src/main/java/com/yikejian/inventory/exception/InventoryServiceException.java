@@ -10,8 +10,25 @@ package com.yikejian.inventory.exception;
  */
 public class InventoryServiceException extends RuntimeException {
 
-    public InventoryServiceException(String msg) {
-        super(msg);
+    private InventoryExceptionCodeConstants inventoryExceptionCodeConstants;
+
+    public InventoryServiceException(String message) {
+        super(message);
+        this.inventoryExceptionCodeConstants = InventoryExceptionCodeConstants.OTHER_ERROR;
+    }
+
+    public InventoryServiceException(InventoryExceptionCodeConstants inventoryExceptionCodeConstants,
+                                     String message) {
+        super(message);
+        this.inventoryExceptionCodeConstants = inventoryExceptionCodeConstants;
+    }
+
+    public InventoryExceptionCodeConstants getInventoryExceptionCodeConstants() {
+        return inventoryExceptionCodeConstants;
+    }
+
+    public void setInventoryExceptionCodeConstants(InventoryExceptionCodeConstants inventoryExceptionCodeConstants) {
+        this.inventoryExceptionCodeConstants = inventoryExceptionCodeConstants;
     }
 
 }

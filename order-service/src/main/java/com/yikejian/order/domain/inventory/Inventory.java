@@ -1,12 +1,6 @@
-package com.yikejian.inventory.domain.inventory;
-
-import com.yikejian.inventory.domain.BaseEntity;
-import org.apache.commons.lang.StringUtils;
+package com.yikejian.order.domain.inventory;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Transient;
 
 /**
  * <code>Inventory</code>.
@@ -17,10 +11,8 @@ import javax.persistence.Transient;
  * date: 2018/1/16 9:55
  */
 @Entity
-public class Inventory extends BaseEntity {
+public class Inventory {
 
-    @Id
-    @GeneratedValue
     private Long inventoryId;
     /**
      * 店铺ID
@@ -41,7 +33,6 @@ public class Inventory extends BaseEntity {
     /**
      * 剩余的可预约次数
      */
-    @Transient
     private Integer restStock;
     /**
      * 日期
@@ -83,39 +74,6 @@ public class Inventory extends BaseEntity {
         result = 31 * result + day.hashCode();
         result = 31 * result + pieceTime.hashCode();
         return result;
-    }
-
-    public Inventory mergeOther(Inventory other){
-        if (other.getStoreId() != null) {
-            setStoreId(other.getStoreId());
-        }
-        if (other.getProductId() != null) {
-            setProductId(other.getProductId());
-        }
-        if (other.getStock() != null) {
-            setStock(other.getStock());
-        }
-        if (StringUtils.isNotBlank(other.getDay())) {
-            setDay(other.getDay());
-        }
-        if (StringUtils.isNotBlank(other.getPieceTime())) {
-            setPieceTime(other.getPieceTime());
-        }
-        return this;
-    }
-
-    public Inventory incorporate(InventoryEvent inventoryEvent) {
-        switch (inventoryEvent.getInventoryEventType()) {
-            case DECREASE_STOCK:
-                bookedStock--;
-                break;
-            case INCREASE_STOCK:
-                bookedStock++;
-                break;
-            default:
-                break;
-        }
-        return this;
     }
 
     public Long getInventoryId() {

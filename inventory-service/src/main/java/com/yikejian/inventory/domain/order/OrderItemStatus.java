@@ -1,4 +1,4 @@
-package com.yikejian.order.domain.order;
+package com.yikejian.inventory.domain.order;
 
 /**
  * @author jackalope

@@ -1,4 +1,4 @@
-package com.yikejian.order.domain.order;
+package com.yikejian.inventory.domain.order;
 
 /**
  * @author jackalope
@@ -7,11 +7,12 @@ package com.yikejian.order.domain.order;
  * @Description: TODO
  * @date 2018/1/17 1:04
  */
-public enum OrderItemStatus {
+public enum OrderStatus {
 
-    NOT_SERVE,
-    SERVING,
-    SERVED,
+    CREATED,
     CANCELED,
+    PAID,
+    REFUNDED,
+    FINISHED,
 
 }

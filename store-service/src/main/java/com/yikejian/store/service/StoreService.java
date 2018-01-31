@@ -7,11 +7,13 @@ import com.yikejian.store.api.v1.dto.Pagination;
 import com.yikejian.store.api.v1.dto.RequestStore;
 import com.yikejian.store.api.v1.dto.ResponseStore;
 import com.yikejian.store.api.v1.dto.StoreDto;
+import com.yikejian.store.domain.inventory.Inventory;
 import com.yikejian.store.domain.product.Product;
 import com.yikejian.store.domain.store.Device;
 import com.yikejian.store.domain.store.DeviceProduct;
 import com.yikejian.store.domain.store.Store;
 import com.yikejian.store.domain.store.StoreProduct;
+import com.yikejian.store.exception.StoreServiceException;
 import com.yikejian.store.repository.DeviceRepository;
 import com.yikejian.store.repository.StoreProductRepository;
 import com.yikejian.store.repository.StoreRepository;
@@ -49,6 +51,8 @@ public class StoreService {
 
     @Value("${yikejian.api.product.url}")
     private String productApiUrl;
+    @Value("${yikejian.api.inventory.url}")
+    private String inventoryApiUrl;
 
     @Autowired
     public StoreService(StoreRepository storeRepository,
@@ -77,6 +81,10 @@ public class StoreService {
         store.setEffective(1);
         store.setDeleted(0);
         Store newStore = transStore(store.fromStoreDto(storeDto));
+        List<Inventory> inventoryList = oAuth2RestTemplate.postForObject(inventoryApiUrl, newStore, List.class);
+        if (inventoryList.size() == 0) {
+            throw new StoreServiceException("init inventory error.");
+        }
         return storeRepository.save(newStore);
     }
 
@@ -89,7 +97,12 @@ public class StoreService {
     public List<Store> saveStores(List<Store> storeList) {
         List<Store> newStoreList = Lists.newArrayList();
         for (Store store : storeList) {
-            newStoreList.add(transStore(store));
+            Store newStore = transStore(store);
+            newStoreList.add(newStore);
+            List<Inventory> inventoryList = oAuth2RestTemplate.postForObject(inventoryApiUrl, newStore, List.class);
+            if (inventoryList.size() == 0) {
+                throw new StoreServiceException("init inventory error.");
+            }
         }
         return (List<Store>) storeRepository.save(newStoreList);
     }

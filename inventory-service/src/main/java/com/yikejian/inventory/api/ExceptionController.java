@@ -36,7 +36,7 @@ public class ExceptionController {
     @ExceptionHandler(Exception.class)
     public ResponseEntity handleException(final Exception e) {
         LOGGER.error("Error: ", e);
-        return new ResponseEntity(e.getLocalizedMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity(e, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
 }

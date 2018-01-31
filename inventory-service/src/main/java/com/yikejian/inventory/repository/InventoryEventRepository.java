@@ -21,4 +21,6 @@ public interface InventoryEventRepository extends PagingAndSortingRepository<Inv
 
     Stream<InventoryEvent> findByInventoryId(Long inventoryId);
 
+    Stream<InventoryEvent> findByStoreIdAndProductIdAndPieceTime(Long storeId, Long productId, String pieceTime);
+
 }
