@@ -11,9 +11,18 @@ package com.yikejian.inventory.domain.product;
 public class Product {
 
     private Long productId;
-    private String productName;
-    private Double price;
+    /**
+     * 时长
+     */
     private Integer duration;
+    /**
+     * 开始营业时间(精确到分，如1020表示10点20分)
+     */
+    private String startTime;
+    /**
+     * 结束营业时间(精确到分，如1020表示10点20分)
+     */
+    private String endTime;
 
     public Long getProductId() {
         return productId;
@@ -21,22 +30,6 @@ public class Product {
 
     public void setProductId(Long productId) {
         this.productId = productId;
-    }
-
-    public String getProductName() {
-        return productName;
-    }
-
-    public void setProductName(String productName) {
-        this.productName = productName;
-    }
-
-    public Double getPrice() {
-        return price;
-    }
-
-    public void setPrice(Double price) {
-        this.price = price;
     }
 
     public Integer getDuration() {
@@ -47,4 +40,19 @@ public class Product {
         this.duration = duration;
     }
 
+    public String getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
+    }
+
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
+    }
 }

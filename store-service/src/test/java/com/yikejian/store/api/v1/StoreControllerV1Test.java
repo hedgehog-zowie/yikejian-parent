@@ -128,15 +128,11 @@ public class StoreControllerV1Test {
 
         StoreProduct storeProduct1 = new StoreProduct();
         storeProduct1.setProductId(1L);
-        storeProduct1.setStartTime("1100");
-        storeProduct1.setEndTime("1800");
         storeProduct1.setStore(store);
         storeProduct1.setEffective(1);
         storeProduct1.setDeleted(0);
         StoreProduct storeProduct2 = new StoreProduct();
         storeProduct2.setProductId(2L);
-        storeProduct2.setStartTime("1200");
-        storeProduct2.setEndTime("1900");
         storeProduct2.setStore(store);
         storeProduct2.setEffective(1);
         storeProduct2.setDeleted(0);

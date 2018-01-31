@@ -1,6 +1,6 @@
 server:
   port: 8007
-  contextPath: /payment
+  contextPath: /payment-service
 spring:
   application:
     name: payment-service

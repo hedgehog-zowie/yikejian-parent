@@ -10,6 +10,10 @@ package com.yikejian.order.exception;
  */
 public class OrderServiceException extends RuntimeException {
 
+    public OrderServiceException(Throwable cause) {
+        super(cause);
+    }
+
     public OrderServiceException(String msg) {
         super(msg);
     }

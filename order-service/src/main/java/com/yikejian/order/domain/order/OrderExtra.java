@@ -40,7 +40,6 @@ public class OrderExtra extends BaseEntity {
 //    @JsonManagedReference
     @OneToOne
     @JoinColumn(name = "order_id")
-//    @PrimaryKeyJoinColumn
     private Order order;
 
     public Long getExtraId() {

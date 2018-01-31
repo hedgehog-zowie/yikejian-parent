@@ -72,18 +72,25 @@ public final class DateUtils {
     }
 
     public static List<String> getNeighborPieceTime(final String pieceTime,
+                                                    final String start,
+                                                    final String end,
                                                     final Integer duration,
                                                     final Integer unitDuration) {
+        String day = pieceTime.substring(0, 8);
+        LocalDateTime startDateTime = pieceTimeStrToDate(day + start);
+        LocalDateTime endDateTime = pieceTimeStrToDate(day + end);
         LocalDateTime selfDateTime = pieceTimeStrToDate(pieceTime);
         // 根据duration和unitDuration重新计算时间间距
         Long newDuration = (long) Math.ceil(duration / unitDuration) * unitDuration;
-        LocalDateTime startDateTime = selfDateTime.minusMinutes(newDuration);
-        LocalDateTime endDateTime = selfDateTime.plusMinutes(newDuration);
+        LocalDateTime minusDateTime = selfDateTime.minusMinutes(newDuration);
+        LocalDateTime plusDateTime = selfDateTime.plusMinutes(newDuration);
+        startDateTime = startDateTime.compareTo(minusDateTime) > 0 ? startDateTime : minusDateTime;
+        endDateTime = endDateTime.compareTo(plusDateTime) < 0 ? endDateTime : plusDateTime;
         LocalDateTime currentDateTime = startDateTime;
         List<String> pieceTimeList = Lists.newArrayList();
         while (currentDateTime.compareTo(endDateTime) <= 0) {
-            currentDateTime = currentDateTime.plusMinutes(unitDuration);
             pieceTimeList.add(dateToPieceTimeStr(currentDateTime));
+            currentDateTime = currentDateTime.plusMinutes(unitDuration);
         }
         return pieceTimeList;
     }

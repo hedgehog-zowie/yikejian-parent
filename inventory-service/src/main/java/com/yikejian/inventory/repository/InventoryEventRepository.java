@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.stream.Stream;
 
 /**
@@ -18,8 +19,6 @@ import java.util.stream.Stream;
  */
 @Repository
 public interface InventoryEventRepository extends PagingAndSortingRepository<InventoryEvent, Long>, JpaSpecificationExecutor<InventoryEvent> {
-
-    Stream<InventoryEvent> findByInventoryId(Long inventoryId);
 
     Stream<InventoryEvent> findByStoreIdAndProductIdAndPieceTime(Long storeId, Long productId, String pieceTime);
 

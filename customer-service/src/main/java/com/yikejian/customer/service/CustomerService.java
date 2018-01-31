@@ -68,6 +68,11 @@ public class CustomerService {
     }
 
     @HystrixCommand
+    public Customer getCustomerByCustomerName(String customerName){
+        return customerRepository.findByCustomerName(customerName);
+    }
+
+    @HystrixCommand
     public ResponseCustomer getAll() {
         return new ResponseCustomer((List<Customer>) customerRepository.findAll());
     }

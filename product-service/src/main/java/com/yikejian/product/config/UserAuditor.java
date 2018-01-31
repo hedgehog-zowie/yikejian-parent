@@ -19,9 +19,6 @@ public class UserAuditor implements AuditorAware<String> {
 
     private final String DEFAULT = "sys";
 
-    @Value("${yikejian.user.api.url}")
-    private String userUrl;
-
     @Override
     public String getCurrentAuditor() {
         SecurityContext securityContext = SecurityContextHolder.getContext();

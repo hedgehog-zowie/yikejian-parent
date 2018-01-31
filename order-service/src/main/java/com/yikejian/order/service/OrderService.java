@@ -2,18 +2,16 @@ package com.yikejian.order.service;
 
 import com.google.common.collect.Lists;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
-import com.yikejian.order.api.v1.dto.Pagination;
-import com.yikejian.order.api.v1.dto.RequestOrder;
-import com.yikejian.order.api.v1.dto.RequestOrderItem;
-import com.yikejian.order.api.v1.dto.ResponseOrder;
-import com.yikejian.order.api.v1.dto.ResponseOrderItem;
+import com.yikejian.order.api.v1.dto.*;
 import com.yikejian.order.domain.inventory.Inventory;
 import com.yikejian.order.domain.order.Order;
+import com.yikejian.order.domain.order.OrderExtra;
 import com.yikejian.order.domain.order.OrderItem;
 import com.yikejian.order.domain.order.OrderItemStatus;
 import com.yikejian.order.domain.product.Product;
 import com.yikejian.order.domain.store.Store;
 import com.yikejian.order.exception.OrderServiceException;
+import com.yikejian.order.repository.OrderExtraRepository;
 import com.yikejian.order.repository.OrderItemRepository;
 import com.yikejian.order.repository.OrderRepository;
 import org.apache.commons.lang.StringUtils;
@@ -25,6 +23,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpServerErrorException;
 
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Predicate;
@@ -59,14 +58,17 @@ public class OrderService {
     private String inventoryApiUrl;
 
     private OrderRepository orderRepository;
+    private OrderExtraRepository orderExtraRepository;
     private OrderItemRepository orderItemRepository;
     private OAuth2RestTemplate oAuth2RestTemplate;
 
     @Autowired
     public OrderService(OrderRepository orderRepository,
+                        OrderExtraRepository orderExtraRepository,
                         OrderItemRepository orderItemRepository,
                         OAuth2RestTemplate oAuth2RestTemplate) {
         this.orderRepository = orderRepository;
+        this.orderExtraRepository = orderExtraRepository;
         this.orderItemRepository = orderItemRepository;
         this.oAuth2RestTemplate = oAuth2RestTemplate;
     }
@@ -74,11 +76,15 @@ public class OrderService {
     @HystrixCommand
     public Order saveOrder(Order order) {
         Order newOrder = transform(order);
-        List<Inventory> inventoryList = oAuth2RestTemplate.postForObject(inventoryApiUrl, newOrder, List.class);
-        if (inventoryList.size() == 0) {
-            throw new OrderServiceException("change inventory error.");
+        try {
+            List<Inventory> inventoryList = oAuth2RestTemplate.postForObject(inventoryApiUrl + "/inventory/order", newOrder, List.class);
+            if (inventoryList.size() == 0) {
+                throw new OrderServiceException("change inventory error.");
+            }
+        } catch (HttpServerErrorException e) {
+            throw new OrderServiceException(e.getResponseBodyAsString());
         }
-        return orderRepository.save(transform(order));
+        return orderRepository.save(newOrder);
     }
 
     @HystrixCommand
@@ -273,4 +279,7 @@ public class OrderService {
         return now.format(orderTimeFormatter) + String.format("%04d", sequenceNumber.incrementAndGet() % loopNumber);
     }
 
+    public OrderExtra saveOrderExtra(OrderExtra orderExtra) {
+        return orderExtraRepository.save(orderExtra);
+    }
 }

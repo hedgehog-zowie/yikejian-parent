@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.UnsupportedEncodingException;
@@ -71,6 +72,17 @@ public class CustomerControllerV1 {
         return Optional.ofNullable(customerService.getCustomerById(customerId))
                 .map(a -> new ResponseEntity<>(a, HttpStatus.OK))
                 .orElseThrow(() -> new CustomerServiceException("Not found customer."));
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity me(Principal principal) {
+        Customer customer = null;
+        if (principal != null) {
+            customer = customerService.getCustomerByCustomerName(principal.getName());
+        }
+        return Optional.ofNullable(customer)
+                .map(a -> new ResponseEntity<>(a, HttpStatus.OK))
+                .orElseThrow(() -> new UsernameNotFoundException("Username not found"));
     }
 
 }

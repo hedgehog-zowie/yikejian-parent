@@ -11,9 +11,13 @@ package com.yikejian.inventory.exception;
 public enum InventoryExceptionCodeConstants {
 
     /**
+     * 不存在的库存
+     */
+    NOT_EXISTS_INVENTORY,
+    /**
      * 无足够库存
      */
-    INSUFFICIENT,
+    INSUFFICIENT_INVENTORY,
     /**
      * 店铺信息非法
      */

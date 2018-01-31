@@ -48,7 +48,7 @@ public class Order extends BaseEntity {
      */
     private Double amount;
     /**
-     * 实付金额
+     * 实际应付金额
      */
     private Double actualAmount;
     /**
@@ -71,6 +71,13 @@ public class Order extends BaseEntity {
 //    @JoinColumn(name = "extra_id")
 ////    @PrimaryKeyJoinColumn
 //    private OrderExtra orderExtra;
+
+    public Order() {
+    }
+
+    public Order(Long orderId) {
+        this.orderId = orderId;
+    }
 
     /**
      * 订单事件

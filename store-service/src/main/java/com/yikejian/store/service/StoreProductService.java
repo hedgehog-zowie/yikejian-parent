@@ -13,7 +13,6 @@ import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.criteria.Join;
-import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
 import java.util.ArrayList;
 import java.util.List;
@@ -77,10 +76,10 @@ public class StoreProductService {
         queryStoreProduct.setDeleted(0);
         queryStoreProduct.setEffective(1);
         List<StoreProduct> storeProductList = storeProductRepository.findAll(storeSpec(queryStoreProduct));
-        for(StoreProduct storeProduct: storeProductList){
+        for (StoreProduct storeProduct : storeProductList) {
             Long productId = storeProduct.getProductId();
             Product product = oAuth2RestTemplate.getForObject(productApiUrl + "/" + productId, Product.class);
-            storeProduct.setProductName(product.getProductName());
+            storeProduct.setProduct(product);
         }
         return storeProductList;
     }

@@ -62,7 +62,7 @@ public class StoreProductControllerV1Test {
         String postUrl = String.format(POST_URL_TEMPLATE, ACCESS_TOKEN);
         StoreProduct storeProduct = restTemplate.postForObject(postUrl, newStoreProduct("产品XX"), StoreProduct.class);
         assertEquals(1, storeProduct.getProductId().intValue());
-        assertEquals("产品XX", storeProduct.getProductName());
+        assertEquals("产品XX", storeProduct.getProduct().getProductName());
         LOGGER.info(JsonUtils.toJson(storeProduct));
         List<StoreProduct> storeProductList = restTemplate.postForObject(postUrl, newStoreProductSet(), List.class);
         assertEquals(2, storeProductList.size());
@@ -77,7 +77,7 @@ public class StoreProductControllerV1Test {
         String getUrl = String.format(GET_URL_TEMPLATE, 1, ACCESS_TOKEN);
         StoreProduct gotStoreProduct = restTemplate.getForObject(getUrl, StoreProduct.class);
         assertEquals(1, gotStoreProduct.getStoreProductId().longValue());
-        assertEquals("产品XX_put", gotStoreProduct.getProductName());
+        assertEquals("产品XX_put", gotStoreProduct.getProduct().getProductName());
         LOGGER.info(JsonUtils.toJson(gotStoreProduct));
     }
 
@@ -100,23 +100,14 @@ public class StoreProductControllerV1Test {
     private StoreProduct newStoreProduct(String name) {
         StoreProduct storeProduct = new StoreProduct();
         storeProduct.setProductId(1L);
-        storeProduct.setProductName(name);
-        storeProduct.setStartTime("1100");
-        storeProduct.setEndTime("1800");
         return storeProduct;
     }
 
     private Set<StoreProduct> newStoreProductSet() {
         StoreProduct storeProduct1 = new StoreProduct();
         storeProduct1.setProductId(1L);
-        storeProduct1.setProductName("产品1");
-        storeProduct1.setStartTime("1100");
-        storeProduct1.setEndTime("1800");
         StoreProduct storeProduct2 = new StoreProduct();
         storeProduct2.setProductId(2L);
-        storeProduct2.setProductName("产品2");
-        storeProduct2.setStartTime("1200");
-        storeProduct2.setEndTime("1900");
         Set<StoreProduct> storeProductSet = Sets.newHashSet();
         storeProductSet.add(storeProduct1);
         storeProductSet.add(storeProduct2);

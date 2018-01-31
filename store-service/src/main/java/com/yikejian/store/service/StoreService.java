@@ -160,7 +160,7 @@ public class StoreService {
         pagination.setTotal(page.getTotalElements());
 
 //        for (Store store : page.getContent()) {
-//            setProductName(store);
+//            setProductInfo(store);
 //        }
 
         return new ResponseStore(page.getContent(), pagination);
@@ -206,7 +206,7 @@ public class StoreService {
             }
             Long productId = storeProduct.getProductId();
             Product product = oAuth2RestTemplate.getForObject(productApiUrl + "/" + productId, Product.class);
-            storeProduct.setProductName(product.getProductName());
+            storeProduct.setProduct(product);
             effectiveStoreProductSet.add(storeProduct);
         }
         store.setStoreProductSet(effectiveStoreProductSet);
@@ -236,12 +236,12 @@ public class StoreService {
     }
 
     @Deprecated
-    private void setProductName(Store store) {
+    private void setProductInfo(Store store) {
         if (store != null && store.getStoreProductSet() == null) return;
         for (StoreProduct storeProduct : store.getStoreProductSet()) {
             Long productId = storeProduct.getProductId();
             Product product = oAuth2RestTemplate.getForObject(productApiUrl + "/" + productId, Product.class);
-            storeProduct.setProductName(product.getProductName());
+            storeProduct.setProduct(product);
         }
     }
 

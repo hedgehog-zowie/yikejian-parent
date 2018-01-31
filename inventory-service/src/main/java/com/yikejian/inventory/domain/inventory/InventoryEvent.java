@@ -18,10 +18,6 @@ public class InventoryEvent {
     @GeneratedValue
     private Long inventoryEventId;
     /**
-     * 库存ID
-     */
-    private Long inventoryId;
-    /**
      * 店铺ID
      */
     private Long storeId;
@@ -37,6 +33,9 @@ public class InventoryEvent {
      * 事件类型
      */
     private InventoryEventType inventoryEventType;
+
+    public InventoryEvent() {
+    }
 
     public InventoryEvent(Long storeId, Long productId, String pieceTime) {
         this.storeId = storeId;
@@ -57,14 +56,6 @@ public class InventoryEvent {
 
     public void setInventoryEventId(Long inventoryEventId) {
         this.inventoryEventId = inventoryEventId;
-    }
-
-    public Long getInventoryId() {
-        return inventoryId;
-    }
-
-    public void setInventoryId(Long inventoryId) {
-        this.inventoryId = inventoryId;
     }
 
     public Long getStoreId() {

@@ -1,5 +1,6 @@
-package com.yikejian.user.api;
+package com.yikejian.inventory.api;
 
+import com.yikejian.inventory.exception.InventoryServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -25,6 +26,20 @@ public class ExceptionController {
      * 日志记录器.
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(ExceptionController.class);
+
+    /**
+     * 500 - Internal Server Error
+     *
+     * @param e 异常
+     * @return 返回Response对象
+     */
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(InventoryServiceException.class)
+    public ResponseEntity handleException(final InventoryServiceException e) {
+        LOGGER.error("Error: ", e);
+        return new ResponseEntity(e.getInventoryExceptionCodeConstants(),
+                HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 
     /**
      * 500 - Internal Server Error

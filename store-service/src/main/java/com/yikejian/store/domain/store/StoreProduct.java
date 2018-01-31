@@ -2,6 +2,7 @@ package com.yikejian.store.domain.store;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.yikejian.store.domain.BaseEntity;
+import com.yikejian.store.domain.product.Product;
 
 import javax.persistence.*;
 import java.util.Objects;
@@ -25,21 +26,6 @@ public class StoreProduct extends BaseEntity {
      */
     private Long productId;
     /**
-     * 产品名称
-     */
-    @Transient
-    private String productName;
-    /**
-     * 开始营业时间(精确到分，如1020表示10点20分)
-     */
-    @Transient
-    private String startTime;
-    /**
-     * 结束营业时间(精确到分，如1020表示10点20分)
-     */
-    @Transient
-    private String endTime;
-    /**
      * 店铺
      */
 //    @JsonManagedReference
@@ -47,6 +33,12 @@ public class StoreProduct extends BaseEntity {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "store_id")
     private Store store;
+
+    /**
+     * 产品详情
+     */
+    @Transient
+    private Product product;
 
     @Override
     public boolean equals(Object o) {
@@ -87,35 +79,19 @@ public class StoreProduct extends BaseEntity {
         this.productId = productId;
     }
 
-    public String getProductName() {
-        return productName;
-    }
-
-    public void setProductName(String productName) {
-        this.productName = productName;
-    }
-
-    public String getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(String startTime) {
-        this.startTime = startTime;
-    }
-
-    public String getEndTime() {
-        return endTime;
-    }
-
-    public void setEndTime(String endTime) {
-        this.endTime = endTime;
-    }
-
     public Store getStore() {
         return store;
     }
 
     public void setStore(Store store) {
         this.store = store;
+    }
+
+    public Product getProduct() {
+        return product;
+    }
+
+    public void setProduct(Product product) {
+        this.product = product;
     }
 }

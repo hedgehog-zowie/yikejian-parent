@@ -91,11 +91,9 @@ public class JsonUtilsTest {
 
         StoreProduct storeProduct1 = new StoreProduct();
         storeProduct1.setProductId(1L);
-        storeProduct1.setProductName("小睡");
         storeProduct1.setStore(store);
         StoreProduct storeProduct2 = new StoreProduct();
         storeProduct2.setProductId(2L);
-        storeProduct2.setProductName("按摩");
         storeProduct2.setStore(store);
 
         Set<StoreProduct> storeProductSet = Sets.newHashSet();

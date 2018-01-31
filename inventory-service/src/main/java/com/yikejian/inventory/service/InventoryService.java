@@ -265,9 +265,18 @@ public class InventoryService {
                 Long productId = orderItem.getProductId();
                 Product product = oAuth2RestTemplate.getForObject(productApi + "/product/" + productId, Product.class);
                 Integer duration = product.getDuration();
-                List<String> affectedPieceTimeList = DateUtils.getNeighborPieceTime(pieceTime, duration, unitDuration);
+                List<String> affectedPieceTimeList = DateUtils.getNeighborPieceTime(
+                        pieceTime,
+                        store.getStartTime().compareTo(product.getStartTime()) < 0 ? product.getStartTime() : store.getStartTime(),
+                        store.getEndTime().compareTo(product.getEndTime()) > 0 ? product.getEndTime() : store.getEndTime(),
+                        duration,
+                        unitDuration);
                 for (String affectedPieceTime : affectedPieceTimeList) {
                     Inventory inventory = inventoryRepository.findByStoreIdAndProductIdAndPieceTime(storeId, productId, affectedPieceTime);
+                    if (inventory == null) {
+                        LOGGER.error("not exists inventory. storeId = {}, productId = {}, pieceTime = {}.", storeId, productId, affectedPieceTime);
+                        throw new InventoryServiceException(InventoryExceptionCodeConstants.NOT_EXISTS_INVENTORY, "not exists inventory.");
+                    }
                     inventoryList.add(inventory);
                     InventoryEvent inventoryEvent = new InventoryEvent(inventory.getStoreId(), inventory.getProductId(), inventory.getPieceTime());
                     inventoryEventList.add(inventoryEvent);
@@ -293,10 +302,14 @@ public class InventoryService {
             computedInventoryList = Lists.newArrayList(
                     inventoryList.stream().map(this::recomputeInventory).collect(Collectors.toList())
             );
+            for (Inventory inventory : computedInventoryList) {
+                if (inventory.getBookedStock() > inventory.getStock()) {
+                    String msg = "not exist enough inventory.";
+                    LOGGER.error(msg);
+                    throw new InventoryServiceException(InventoryExceptionCodeConstants.INSUFFICIENT_INVENTORY, msg);
+                }
+            }
             inventoryRepository.save(computedInventoryList);
-        } catch (Exception e) {
-            LOGGER.error(e.getLocalizedMessage());
-            throw new InventoryServiceException(InventoryExceptionCodeConstants.OTHER_ERROR, e.getLocalizedMessage());
         } finally {
             inventoryLock.writeLock().unlock();
         }
@@ -304,6 +317,7 @@ public class InventoryService {
     }
 
     private Inventory recomputeInventory(Inventory inventory) {
+        inventory.setBookedStock(0);
         Flux<InventoryEvent> inventoryEvents =
                 Flux.fromStream(inventoryEventRepository.findByStoreIdAndProductIdAndPieceTime(
                         inventory.getStoreId(), inventory.getProductId(), inventory.getPieceTime()));

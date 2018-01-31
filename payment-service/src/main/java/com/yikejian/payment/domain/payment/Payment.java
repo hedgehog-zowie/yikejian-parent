@@ -2,6 +2,7 @@ package com.yikejian.payment.domain.payment;
 
 import com.yikejian.payment.domain.BaseEntity;
 
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
@@ -13,6 +14,7 @@ import javax.persistence.Id;
  * @version: 1.0-SNAPSHOT
  * date: 2018/1/16 9:55
  */
+@Entity
 public class Payment extends BaseEntity {
 
     @Id

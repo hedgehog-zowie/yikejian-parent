@@ -70,9 +70,9 @@ public class InventoryControllerV1 {
     public ResponseEntity addInventoryEvent(
             @RequestBody InventoryEvent inventoryEvent,
             @PathVariable("inventory_id") String inventoryId){
-        if(!Objects.equals(inventoryId, inventoryEvent.getInventoryId())){
-            throw new InventoryServiceException("params error.");
-        }
+//        if(!Objects.equals(inventoryId, inventoryEvent.getInventoryId())){
+//            throw new InventoryServiceException("params error.");
+//        }
         // todo send log
         return Optional.ofNullable(inventoryService.addInventoryEvent(inventoryEvent))
                 .map(a -> new ResponseEntity<>(a, HttpStatus.OK))

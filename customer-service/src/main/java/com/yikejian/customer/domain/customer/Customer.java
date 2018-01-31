@@ -1,5 +1,6 @@
 package com.yikejian.customer.domain.customer;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.yikejian.customer.domain.BaseEntity;
 import com.yikejian.customer.domain.account.Account;
 import com.yikejian.customer.domain.title.Title;

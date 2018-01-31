@@ -1,5 +1,7 @@
 package com.yikejian.customer.domain.title;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.yikejian.customer.domain.BaseEntity;
 import com.yikejian.customer.domain.customer.Customer;
 import org.apache.commons.lang.StringUtils;
@@ -28,6 +30,10 @@ public class Title extends BaseEntity {
      * 消费金额门槛
      */
     private Double threshold;
+    /**
+     * 会员
+     */
+    @JsonIgnore
     @OneToMany(mappedBy = "title", fetch = FetchType.LAZY)
     private Set<Customer> customerSet;
 

@@ -62,7 +62,7 @@ security:
   oauth2:
     resource:
       jwt:
-        key-uri: "http://user-service/oauth/token_key"
+        key-uri: "http://localhost:8001/user-service/oauth/token_key"
 yikejian:
   api:
     user:

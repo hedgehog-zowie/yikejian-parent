@@ -10,7 +10,6 @@ import javax.persistence.Entity;
  * @version: 1.0-SNAPSHOT
  * date: 2018/1/16 9:55
  */
-@Entity
 public class Inventory {
 
     private Long inventoryId;

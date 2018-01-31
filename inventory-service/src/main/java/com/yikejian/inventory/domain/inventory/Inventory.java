@@ -39,11 +39,6 @@ public class Inventory extends BaseEntity {
      */
     private Integer bookedStock;
     /**
-     * 剩余的可预约次数
-     */
-    @Transient
-    private Integer restStock;
-    /**
      * 日期
      */
     private String day;
@@ -156,14 +151,6 @@ public class Inventory extends BaseEntity {
 
     public void setBookedStock(Integer bookedStock) {
         this.bookedStock = bookedStock;
-    }
-
-    public Integer getRestStock() {
-        return restStock;
-    }
-
-    public void setRestStock(Integer restStock) {
-        this.restStock = restStock;
     }
 
     public String getDay() {

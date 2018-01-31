@@ -1,6 +1,7 @@
 package com.yikejian.customer.domain.account;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.yikejian.customer.domain.BaseEntity;
 import com.yikejian.customer.domain.customer.Customer;
 
