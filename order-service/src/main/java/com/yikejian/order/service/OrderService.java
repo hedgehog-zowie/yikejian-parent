@@ -173,11 +173,11 @@ public class OrderService {
         return (root, query, cb) -> {
             List<Predicate> predicateList = new ArrayList<>();
             if (order != null) {
-                if (order.getMobileNumber() != null) {
-                    predicateList.add(cb.equal(root.get("mobileNumber").as(Integer.class), order.getMobileNumber()));
+                if (StringUtils.isNotBlank(order.getOrderCode())) {
+                    predicateList.add(cb.like(root.get("orderCode").as(String.class), "%" + order.getOrderCode() + "%"));
                 }
-                if (order.getStoreId() != null) {
-                    predicateList.add(cb.equal(root.get("storeId").as(Integer.class), order.getStoreId()));
+                if (StringUtils.isNotBlank(order.getMobileNumber())) {
+                    predicateList.add(cb.like(root.get("mobileNumber").as(String.class), "%" + order.getMobileNumber() + "%"));
                 }
             }
             Predicate[] predicates = new Predicate[predicateList.size()];
