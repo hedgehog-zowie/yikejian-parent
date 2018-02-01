@@ -210,7 +210,7 @@ public class OrderService {
                 pagination.getCurrent() - 1,
                 pagination.getPageSize(),
                 sort);
-        Page<OrderItem> page = orderItemRepository.findAll(orderItemSpec(requestOrderItem.getOrderItem()), pageRequest);
+        Page<OrderItem> page = orderItemRepository.findAll(orderItemSpec(requestOrderItem.getOrderItem(), requestOrderItem.getRunning()), pageRequest);
 
         pagination.setTotalPages(page.getTotalPages());
         pagination.setTotal(page.getTotalElements());
@@ -228,20 +228,26 @@ public class OrderService {
         return new ResponseOrderItem(page.getContent(), pagination);
     }
 
-    private Specification<OrderItem> orderItemSpec(final OrderItem orderItem) {
+    private Specification<OrderItem> orderItemSpec(final OrderItem orderItem, final Boolean running) {
         return (root, query, cb) -> {
             List<Predicate> predicateList = new ArrayList<>();
             if (orderItem != null) {
                 if (orderItem.getOrder() != null) {
                     if (StringUtils.isNotBlank(orderItem.getOrder().getOrderCode())) {
                         Join<OrderItem, Order> join = root.join("order");
-                        predicateList.add(cb.like(join.<String>get("orderCode"), "%" + orderItem.getOrder().getOrderCode() + "%"));
+                        predicateList.add(cb.equal(join.<String>get("orderCode"), orderItem.getOrder().getOrderCode()));
                     }
                     if (StringUtils.isNotBlank(orderItem.getOrder().getMobileNumber())) {
                         Join<OrderItem, Order> join = root.join("order");
-                        predicateList.add(cb.like(join.<String>get("mobileNumber"), "%" + orderItem.getOrder().getMobileNumber() + "%"));
+                        predicateList.add(cb.equal(join.<String>get("mobileNumber"), orderItem.getOrder().getMobileNumber()));
+                    }
+                    if (orderItem.getOrderItemStatus() != null) {
+                        predicateList.add(cb.equal(root.get("orderItemStatus").as(OrderItemStatus.class), orderItem.getOrderItemStatus()));
                     }
                 }
+            }
+            if (running) {
+                predicateList.add(cb.isNotNull(root.get("startAt").as(String.class)));
             }
             Predicate[] predicates = new Predicate[predicateList.size()];
             return cb.and(predicateList.toArray(predicates));

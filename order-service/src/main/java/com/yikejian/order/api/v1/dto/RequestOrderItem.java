@@ -15,6 +15,7 @@ public class RequestOrderItem {
     private OrderItem orderItem;
     private Pagination pagination;
     private Sort sorter;
+    private Boolean running;
 
     public OrderItem getOrderItem() {
         return orderItem;
@@ -38,5 +39,13 @@ public class RequestOrderItem {
 
     public void setSorter(Sort sorter) {
         this.sorter = sorter;
+    }
+
+    public Boolean getRunning() {
+        return running;
+    }
+
+    public void setRunning(Boolean running) {
+        this.running = running;
     }
 }
