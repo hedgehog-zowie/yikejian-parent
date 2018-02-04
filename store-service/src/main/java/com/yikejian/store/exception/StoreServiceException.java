@@ -10,6 +10,10 @@ package com.yikejian.store.exception;
  */
 public class StoreServiceException extends RuntimeException {
 
+    public StoreServiceException(Throwable cause) {
+        super(cause);
+    }
+
     public StoreServiceException(String msg) {
         super(msg);
     }

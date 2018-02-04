@@ -1,5 +1,8 @@
 package com.yikejian.store.api.v1.dto;
 
+import com.yikejian.store.domain.store.Store;
+
+import javax.persistence.Transient;
 import java.util.List;
 
 /**
@@ -9,13 +12,17 @@ import java.util.List;
  * @Description: TODO
  * @date 2018/1/28 9:37
  */
-public class StoreDto {
+public class StoreDto implements Comparable {
 
     private Long storeId;
     /**
      * 店铺名称
      */
     private String storeName;
+    /**
+     * 店铺信息
+     */
+    private String information;
     /**
      * 店铺地址
      */
@@ -24,6 +31,14 @@ public class StoreDto {
      * 电话
      */
     private String phoneNumber;
+    /**
+     * 起始工作日
+     */
+    private Integer workDayStart;
+    /**
+     * 结束工作日
+     */
+    private Integer workDayEnd;
     /**
      * 开始营业时间(精确到分，如1020表示10点20分)
      */
@@ -45,6 +60,14 @@ public class StoreDto {
      */
     private String traffic;
     /**
+     * 城市
+     */
+    private String city;
+    /**
+     * 商场
+     */
+    private String mall;
+    /**
      * 经度
      */
     private Float longitude;
@@ -60,9 +83,23 @@ public class StoreDto {
      * 拥有的设备
      */
     private List<DeviceDto> devices;
+    /**
+     * 图片
+     */
+    private List<ImageDto> images;
 
     private Integer effective;
     private Integer deleted;
+
+    private Double distance;
+
+    @Override
+    public int compareTo(Object o) {
+        if (o == null || getClass() != o.getClass())
+            return this.getDistance().intValue();
+        StoreDto other = (StoreDto) o;
+        return this.getDistance().compareTo(other.getDistance());
+    }
 
     public Long getStoreId() {
         return storeId;
@@ -168,6 +205,14 @@ public class StoreDto {
         this.devices = devices;
     }
 
+    public List<ImageDto> getImages() {
+        return images;
+    }
+
+    public void setImages(List<ImageDto> images) {
+        this.images = images;
+    }
+
     public Integer getEffective() {
         return effective;
     }
@@ -182,5 +227,53 @@ public class StoreDto {
 
     public void setDeleted(Integer deleted) {
         this.deleted = deleted;
+    }
+
+    public String getInformation() {
+        return information;
+    }
+
+    public void setInformation(String information) {
+        this.information = information;
+    }
+
+    public Integer getWorkDayStart() {
+        return workDayStart;
+    }
+
+    public void setWorkDayStart(Integer workDayStart) {
+        this.workDayStart = workDayStart;
+    }
+
+    public Integer getWorkDayEnd() {
+        return workDayEnd;
+    }
+
+    public void setWorkDayEnd(Integer workDayEnd) {
+        this.workDayEnd = workDayEnd;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getMall() {
+        return mall;
+    }
+
+    public void setMall(String mall) {
+        this.mall = mall;
+    }
+
+    public Double getDistance() {
+        return distance;
+    }
+
+    public void setDistance(Double distance) {
+        this.distance = distance;
     }
 }

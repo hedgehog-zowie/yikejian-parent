@@ -24,6 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.stereotype.Service;
@@ -101,15 +102,6 @@ public class InventoryService {
 
     private Inventory transform(Inventory inventory) {
         Inventory newInventory = inventory;
-        if (inventory.getProductId() != null) {
-            Inventory oldInventory = inventoryRepository.findByInventoryId(inventory.getInventoryId());
-            newInventory = oldInventory.mergeOther(inventory);
-        }
-        return newInventory;
-    }
-
-    private Inventory transInventory(Inventory inventory) {
-        Inventory newInventory = inventory;
         if (inventory.getInventoryId() != null) {
             Inventory oldInventory = inventoryRepository.findByInventoryId(inventory.getInventoryId());
             newInventory = oldInventory.mergeOther(inventory);
@@ -119,21 +111,9 @@ public class InventoryService {
 
     @HystrixCommand
     public List<Inventory> getInventories(Inventory params) {
-        List<Inventory> inventoryList = inventoryRepository.findAll(inventorySpec(params));
+        Sort sort = new Sort(Sort.Direction.ASC, "pieceTime");
+        List<Inventory> inventoryList = inventoryRepository.findAll(inventorySpec(params), sort);
         return inventoryList;
-//        List<Inventory> newInventoryList = Lists.newArrayList();
-////        List<Inventory> changedInventoryList = Lists.newArrayList();
-//        for (Inventory inventory : inventoryList) {
-//            Flux<InventoryEvent> inventoryEvents =
-//                    Flux.fromStream(inventoryEventRepository.findByInventoryId(inventory.getInventoryId()));
-//            Inventory newInventory = inventoryEvents.reduceWith(() -> inventory, Inventory::incorporate).get();
-////            if (!inventory.equals(newInventory)) {
-////                changedInventoryList.add(newInventory);
-////            }
-//            newInventoryList.add(newInventory);
-//        }
-////        saveInventories(changedInventoryList);
-//        return newInventoryList;
     }
 
     private Specification<Inventory> inventorySpec(final Inventory inventory) {
@@ -193,11 +173,17 @@ public class InventoryService {
             Set<Inventory> allInventorySet = Sets.newHashSet();
             for (StoreProduct storeProduct : store.getStoreProductSet()) {
                 Long productId = storeProduct.getProductId();
+                Product product = oAuth2RestTemplate.getForObject(productApi + "/product/" + productId, Product.class);
+                if (product == null) {
+                    String msg = "init inventory error, not found product for id: " + productId;
+                    LOGGER.error(msg);
+                    throw new InventoryServiceException(InventoryExceptionCodeConstants.ILLEGAL_PRODUCT, msg);
+                }
                 inventoryRepository.deleteByStoreIdAndProductIdAndDay(storeId, productId, day);
                 List<String> pieceTimeList = DateUtils.generatePieceTimeOfDay(
                         day,
-                        store.getStartTime().compareTo(storeProduct.getStartTime()) < 0 ? storeProduct.getStartTime() : store.getStartTime(),
-                        store.getEndTime().compareTo(storeProduct.getEndTime()) > 0 ? storeProduct.getEndTime() : store.getEndTime(),
+                        store.getStartTime().compareTo(product.getStartTime()) < 0 ? product.getStartTime() : store.getStartTime(),
+                        store.getEndTime().compareTo(product.getEndTime()) > 0 ? product.getEndTime() : store.getEndTime(),
                         unitDuration
                 );
                 Set<Inventory> newInventorySet = Sets.newHashSet();
@@ -206,11 +192,15 @@ public class InventoryService {
                     Inventory inventory = new Inventory(storeId, productId, store.getUnitTimes() > stock ? stock : store.getUnitTimes(), day, pieceTime);
                     newInventorySet.add(recomputeInventory(inventory));
                 }
-                Set<Inventory> mergedInventorySet = Sets.newHashSet();
-                mergedInventorySet.addAll(newInventorySet);
-                allInventorySet.addAll(mergedInventorySet);
+                allInventorySet.addAll(newInventorySet);
             }
-
+            for (Inventory inventory : allInventorySet) {
+                if (inventory.getBookedStock() > inventory.getStock()) {
+                    String msg = "not exist enough inventory.";
+                    LOGGER.error(msg);
+                    throw new InventoryServiceException(InventoryExceptionCodeConstants.INSUFFICIENT_INVENTORY, msg);
+                }
+            }
             result = (List<Inventory>) inventoryRepository.save(allInventorySet);
         } catch (Exception e) {
             LOGGER.error(e.getLocalizedMessage());
@@ -257,7 +247,7 @@ public class InventoryService {
         Integer unitDuration = store.getUnitDuration();
         List<Inventory> inventoryList = Lists.newArrayList();
         List<InventoryEvent> inventoryEventList = Lists.newArrayList();
-        List<Inventory> computedInventoryList = Lists.newArrayList();
+        List<Inventory> computedInventoryList;
         inventoryLock.writeLock().lock();
         try {
             for (OrderItem orderItem : order.getOrderItems()) {
@@ -309,6 +299,7 @@ public class InventoryService {
                     throw new InventoryServiceException(InventoryExceptionCodeConstants.INSUFFICIENT_INVENTORY, msg);
                 }
             }
+            // TODO: 2018/2/4 need not change computedInventory, don't need to persist bookedInventory.
             inventoryRepository.save(computedInventoryList);
         } finally {
             inventoryLock.writeLock().unlock();

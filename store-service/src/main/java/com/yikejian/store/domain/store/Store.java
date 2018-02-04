@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.yikejian.store.api.v1.dto.DeviceDto;
+import com.yikejian.store.api.v1.dto.ImageDto;
 import com.yikejian.store.api.v1.dto.StoreDto;
 import com.yikejian.store.domain.BaseEntity;
 import org.apache.commons.lang.StringUtils;
@@ -31,6 +32,10 @@ public class Store extends BaseEntity {
      */
     private String storeName;
     /**
+     * 店铺信息
+     */
+    private String information;
+    /**
      * 店铺地址
      */
     private String address;
@@ -38,6 +43,14 @@ public class Store extends BaseEntity {
      * 电话
      */
     private String phoneNumber;
+    /**
+     * 起始工作日
+     */
+    private Integer workDayStart;
+    /**
+     * 结束工作日
+     */
+    private Integer workDayEnd;
     /**
      * 开始营业时间(精确到分，如1020表示10点20分)
      */
@@ -59,6 +72,14 @@ public class Store extends BaseEntity {
      */
     private String traffic;
     /**
+     * 城市
+     */
+    private String city;
+    /**
+     * 商场
+     */
+    private String mall;
+    /**
      * 经度
      */
     private Float longitude;
@@ -73,6 +94,9 @@ public class Store extends BaseEntity {
     @JsonManagedReference
     @OneToMany(mappedBy = "store", cascade = CascadeType.ALL)
     private Set<StoreProduct> storeProductSet;
+    @JsonManagedReference
+    @OneToMany(mappedBy = "store", cascade = CascadeType.ALL)
+    private Set<Image> imageSet;
     /**
      * 设备
      */
@@ -92,11 +116,20 @@ public class Store extends BaseEntity {
         if (StringUtils.isNotBlank(other.getStoreName())) {
             setStoreName(other.getStoreName());
         }
+        if (StringUtils.isNotBlank(other.getInformation())) {
+            setInformation(other.getInformation());
+        }
         if (StringUtils.isNotBlank(other.getAddress())) {
             setAddress(other.getAddress());
         }
         if (StringUtils.isNotBlank(other.getPhoneNumber())) {
             setPhoneNumber(other.getPhoneNumber());
+        }
+        if (other.getWorkDayStart() != null) {
+            setWorkDayStart(other.getWorkDayStart());
+        }
+        if (other.getWorkDayEnd() != null) {
+            setWorkDayEnd(other.getWorkDayEnd());
         }
         if (StringUtils.isNotBlank(other.getStartTime())) {
             setStartTime(other.getStartTime());
@@ -106,6 +139,12 @@ public class Store extends BaseEntity {
         }
         if (StringUtils.isNotBlank(other.getTraffic())) {
             setTraffic(other.getTraffic());
+        }
+        if (StringUtils.isNotBlank(other.getCity())) {
+            setCity(other.getCity());
+        }
+        if (StringUtils.isNotBlank(other.getMall())) {
+            setMall(other.getMall());
         }
         if (other.getLongitude() != null) {
             setLongitude(other.getLongitude());
@@ -133,6 +172,10 @@ public class Store extends BaseEntity {
 //                storeProduct.setStore(this);
 //            }
         }
+        // check image set
+        if (other.getImageSet() != null && other.getImageSet().size() > 0) {
+            setImageSet(other.getImageSet());
+        }
         // check device set
         if (other.getDeviceSet() != null && other.getDeviceSet().size() > 0) {
             setDeviceSet(other.getDeviceSet());
@@ -157,13 +200,18 @@ public class Store extends BaseEntity {
         StoreDto storeDto = new StoreDto();
         storeDto.setStoreId(getStoreId());
         storeDto.setStoreName(getStoreName());
+        storeDto.setInformation(getInformation());
         storeDto.setAddress(getAddress());
         storeDto.setPhoneNumber(getPhoneNumber());
+        storeDto.setWorkDayStart(getWorkDayStart());
+        storeDto.setWorkDayEnd(getWorkDayEnd());
         storeDto.setStartTime(getStartTime());
         storeDto.setEndTime(getEndTime());
         storeDto.setUnitDuration(getUnitDuration());
         storeDto.setUnitTimes(getUnitTimes());
         storeDto.setTraffic(getTraffic());
+        storeDto.setCity(getCity());
+        storeDto.setMall(getMall());
         storeDto.setLongitude(getLongitude());
         storeDto.setLatitude(getLatitude());
         storeDto.setEffective(getEffective());
@@ -178,6 +226,11 @@ public class Store extends BaseEntity {
             deviceDtoList.add(device.toDeviceDto());
         }
         storeDto.setDevices(deviceDtoList);
+        List<ImageDto> imageDtoList = Lists.newArrayList();
+        for (Image image : getImageSet()) {
+            imageDtoList.add(image.toImageDto());
+        }
+        storeDto.setImages(imageDtoList);
         return storeDto;
     }
 
@@ -188,8 +241,17 @@ public class Store extends BaseEntity {
         if (StringUtils.isNotBlank(storeDto.getAddress())) {
             setAddress(storeDto.getAddress());
         }
+        if (StringUtils.isNotBlank(storeDto.getInformation())) {
+            setInformation(storeDto.getInformation());
+        }
         if (StringUtils.isNotBlank(storeDto.getPhoneNumber())) {
             setPhoneNumber(storeDto.getPhoneNumber());
+        }
+        if (storeDto.getWorkDayStart() != null) {
+            setWorkDayStart(storeDto.getWorkDayStart());
+        }
+        if (storeDto.getWorkDayEnd() != null) {
+            setWorkDayEnd(storeDto.getWorkDayEnd());
         }
         if (StringUtils.isNotBlank(storeDto.getStartTime())) {
             setStartTime(storeDto.getStartTime());
@@ -205,6 +267,12 @@ public class Store extends BaseEntity {
         }
         if (StringUtils.isNotBlank(storeDto.getTraffic())) {
             setTraffic(storeDto.getTraffic());
+        }
+        if (StringUtils.isNotBlank(storeDto.getCity())) {
+            setCity(storeDto.getCity());
+        }
+        if (StringUtils.isNotBlank(storeDto.getMall())) {
+            setMall(storeDto.getMall());
         }
         if (storeDto.getLongitude() != null) {
             setLongitude(storeDto.getLongitude());
@@ -240,6 +308,24 @@ public class Store extends BaseEntity {
                 deviceSet.add(device.fromDeviceDto(deviceDto));
             }
             setDeviceSet(deviceSet);
+        }
+        if (storeDto.getImages() != null) {
+            Set<Image> imageSet = Sets.newHashSet();
+            boolean cover = true;
+            for (ImageDto imageDto : storeDto.getImages()) {
+                Image image = new Image();
+                image.setStore(this);
+                image.setEffective(1);
+                image.setDeleted(0);
+                if (cover) {
+                    image.setCover(1);
+                    cover = false;
+                } else {
+                    image.setCover(0);
+                }
+                imageSet.add(image.fromImageDto(imageDto));
+            }
+            setImageSet(imageSet);
         }
         return this;
     }
@@ -292,6 +378,22 @@ public class Store extends BaseEntity {
         this.phoneNumber = phoneNumber;
     }
 
+    public Integer getWorkDayStart() {
+        return workDayStart;
+    }
+
+    public void setWorkDayStart(Integer workDayStart) {
+        this.workDayStart = workDayStart;
+    }
+
+    public Integer getWorkDayEnd() {
+        return workDayEnd;
+    }
+
+    public void setWorkDayEnd(Integer workDayEnd) {
+        this.workDayEnd = workDayEnd;
+    }
+
     public String getStartTime() {
         return startTime;
     }
@@ -322,6 +424,14 @@ public class Store extends BaseEntity {
 
     public void setUnitTimes(Integer unitTimes) {
         this.unitTimes = unitTimes;
+    }
+
+    public String getInformation() {
+        return information;
+    }
+
+    public void setInformation(String information) {
+        this.information = information;
     }
 
     public String getTraffic() {
@@ -356,6 +466,14 @@ public class Store extends BaseEntity {
         this.storeProductSet = storeProductSet;
     }
 
+    public Set<Image> getImageSet() {
+        return imageSet;
+    }
+
+    public void setImageSet(Set<Image> imageSet) {
+        this.imageSet = imageSet;
+    }
+
     public Set<Device> getDeviceSet() {
         return deviceSet;
     }
@@ -363,4 +481,21 @@ public class Store extends BaseEntity {
     public void setDeviceSet(Set<Device> deviceSet) {
         this.deviceSet = deviceSet;
     }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getMall() {
+        return mall;
+    }
+
+    public void setMall(String mall) {
+        this.mall = mall;
+    }
+
 }

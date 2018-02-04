@@ -23,6 +23,10 @@ public enum InventoryExceptionCodeConstants {
      */
     ILLEGAL_STORE,
     /**
+     * 产品信息非法
+     */
+    ILLEGAL_PRODUCT,
+    /**
      * 订单信息非法
      */
     ILLEGAL_ORDER,

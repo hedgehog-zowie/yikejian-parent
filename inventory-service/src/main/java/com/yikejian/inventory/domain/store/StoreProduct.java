@@ -22,14 +22,6 @@ public class StoreProduct {
      */
     private Long productId;
     /**
-     * 开始营业时间(精确到分，如1020表示10点20分)
-     */
-    private String startTime;
-    /**
-     * 结束营业时间(精确到分，如1020表示10点20分)
-     */
-    private String endTime;
-    /**
      * 删除标识
      */
     private Integer deleted = 0;
@@ -64,22 +56,6 @@ public class StoreProduct {
 
     public void setProductId(Long productId) {
         this.productId = productId;
-    }
-
-    public String getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(String startTime) {
-        this.startTime = startTime;
-    }
-
-    public String getEndTime() {
-        return endTime;
-    }
-
-    public void setEndTime(String endTime) {
-        this.endTime = endTime;
     }
 
     public Integer getDeleted() {

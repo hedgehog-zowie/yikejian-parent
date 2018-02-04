@@ -1,8 +1,7 @@
 package com.yikejian.store.api.v1;
 
 import com.google.common.collect.Sets;
-import com.yikejian.store.api.v1.dto.RequestStore;
-import com.yikejian.store.api.v1.dto.ResponseStore;
+import com.yikejian.store.api.v1.dto.*;
 import com.yikejian.store.domain.store.Device;
 import com.yikejian.store.domain.store.DeviceProduct;
 import com.yikejian.store.domain.store.Store;
@@ -42,7 +41,7 @@ public class StoreControllerV1Test {
     private static final String GET_STORE_URL_TEMPLATE = "http://localhost:8003/store-service/v1/store/%s?access_token=%s";
     private static final String GET_STORES_URL_TEMPLATE = "http://localhost:8003/store-service/v1/stores?access_token=%s";
     private static final String GET_STORES_URL_TEMPLATE2 = "http://localhost:8003/store-service/v1/stores?access_token=%s&params=%s";
-    private static final String ACCESS_TOKEN = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MTcwNzU0NDUsInVzZXJfbmFtZSI6ImFkbWluIiwiYXV0aG9yaXRpZXMiOlsiUFJPRFVDVF9XUklURSIsIkRFVklDRV9SRUFEIiwiQk9PS19XUklURSIsIlVTRVJfV1JJVEUiLCJPUkRFUl9SRUFEIiwiQk9PS19SRUFEIiwiU1RPUkVfUkVBRCIsIkNVU1RPTUVSX1JFQUQiLCJPUkRFUl9XUklURSIsIlJPTEVfV1JJVEUiLCJDVVNUT01FUl9XUklURSIsIlNUT1JFX1dSSVRFIiwiREVWSUNFX1dSSVRFIiwiVVNFUl9SRUFEIiwiUk9MRV9SRUFEIiwiTE9HX1JFQUQiLCJQUk9EVUNUX1JFQUQiXSwianRpIjoiMzg1MjkyMWUtMzUyZi00ZDc2LWI5ZjAtM2NmNTgzZGM5YmI5IiwiY2xpZW50X2lkIjoidHJ1c3RlZCIsInNjb3BlIjpbInJlYWQiLCJ3cml0ZSJdfQ.d8dLNvoU4kQfVyMFV47YCOP9B9RMECeFvE8Q8bYXW6FTgcOEG9CYJVvWB_VhrKcS9krMhuk_abQywF189MOuBddzK4GAdjJHYS60UdSpMHisCIUehgAJ5w12cepAnirfVVOAh_6jN2xghyE4vvM1xC9ytkSCCKE5rXEZA-D81FU4XN_wSFt0CNDLkbAg1mJLV7ZkFeGnjpyvT8kYPgYuaJi1yYvAcDLutcK6_u3SHADKKR76uUSFkH7b1dxoTpxUxM79noDibXyBFIHCXaIcvKKsjvg1QJw2_fGviW1bF90XsMh9vUKLiR0HxJ4g7vR-gcelOzEmcWcXJYX8mqE98Q";
+    private static final String ACCESS_TOKEN = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MjAwMTc5MTUsInVzZXJfbmFtZSI6ImFkbWluIiwiYXV0aG9yaXRpZXMiOlsiUFJPRFVDVF9XUklURSIsIkRFVklDRV9SRUFEIiwiQk9PS19XUklURSIsIlVTRVJfV1JJVEUiLCJPUkRFUl9SRUFEIiwiQk9PS19SRUFEIiwiU1RPUkVfUkVBRCIsIkNVU1RPTUVSX1JFQUQiLCJPUkRFUl9XUklURSIsIlJPTEVfV1JJVEUiLCJDVVNUT01FUl9XUklURSIsIlNUT1JFX1dSSVRFIiwiREVWSUNFX1dSSVRFIiwiVVNFUl9SRUFEIiwiUk9MRV9SRUFEIiwiTE9HX1JFQUQiLCJQUk9EVUNUX1JFQUQiXSwianRpIjoiZGMwYjE2NDMtZmE5NS00ZGEzLTkwNDQtNDIxOGMzZTZhZTM5IiwiY2xpZW50X2lkIjoidHJ1c3RlZCIsInNjb3BlIjpbInJlYWQiLCJ3cml0ZSJdfQ.Tkjr4N6s8VoZWOsVTmQIqXrVV0WYnKWKhF4gcVWRXH5-KI3MtrgfqRW6vBOMoYFPao2FOhVR7GQ5nU3eQAdnfILTZJUJTWinxX1NlTL6ucEqOxm2-XgssXYFaORA4Y6Wei9XkV_q-Pq44snhghn9OWrjdLCgYhlI2RfleUU6AelU3iwBW1GzxsOdPC28dsrn-0oXo2qn0v0fVxRSmTDln5cZBQYjXhGtBV0PDJatgxfPIPR5cDYk30ilcAEgfbu3Fawpv3CU0U_qaoggY2pOJKgZcaUT18Qxie_OSEJXoFtbodGEtC-XksHScB5Xt1LxI_Up1Vi4nGt5slCheRLL8g";
 
     @BeforeClass
     public static void beforeClass() {
@@ -109,6 +108,23 @@ public class StoreControllerV1Test {
         assertEquals(100, responseStore.getPagination().getPageSize().intValue());
         assertEquals(2, responseStore.getList().size());
         LOGGER.info(JsonUtils.toJson(responseStore));
+    }
+
+    @Test
+    public void testGetsFromClient() throws UnsupportedEncodingException {
+        RequestStoreOfClient requestStoreOfClient = new RequestStoreOfClient();
+        requestStoreOfClient.setLocation(new Location(1D, 2D));
+        requestStoreOfClient.setPagination(new Pagination(1, 5));
+        String jsonString = JsonUtils.toJson(requestStoreOfClient);
+        LOGGER.info(jsonString);
+        String params = URLEncoder.encode(jsonString, "UTF-8");
+        LOGGER.info(params);
+        String getUrl2 = String.format(GET_STORES_URL_TEMPLATE2, ACCESS_TOKEN, params);
+        ResponseStoreOfClient responseStoreOfClient = restTemplate.getForObject(getUrl2, ResponseStoreOfClient.class);
+        assertEquals(1, responseStoreOfClient.getPagination().getCurrent().intValue());
+        assertEquals(5, responseStoreOfClient.getPagination().getPageSize().intValue());
+        assertEquals(5, responseStoreOfClient.getList().size());
+        LOGGER.info(JsonUtils.toJson(responseStoreOfClient));
     }
 
     private Store newStore(String name) {

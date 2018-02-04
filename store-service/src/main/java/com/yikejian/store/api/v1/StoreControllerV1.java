@@ -1,8 +1,8 @@
 package com.yikejian.store.api.v1;
 
 import com.yikejian.store.api.v1.dto.RequestStore;
+import com.yikejian.store.api.v1.dto.RequestStoreOfClient;
 import com.yikejian.store.api.v1.dto.StoreDto;
-import com.yikejian.store.domain.store.Store;
 import com.yikejian.store.exception.StoreServiceException;
 import com.yikejian.store.service.StoreService;
 import com.yikejian.store.util.JsonUtils;
@@ -10,15 +10,7 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -76,16 +68,25 @@ public class StoreControllerV1 {
                     .map(a -> new ResponseEntity<>(a, HttpStatus.OK))
                     .orElseThrow(() -> new StoreServiceException("Not found any store."));
         }
+        RequestStoreOfClient requestStoreOfClient;
         RequestStore requestStore;
         try {
+            requestStoreOfClient = JsonUtils.fromJson(URLDecoder.decode(params, "UTF-8"), RequestStoreOfClient.class);
             requestStore = JsonUtils.fromJson(URLDecoder.decode(params, "UTF-8"), RequestStore.class);
         } catch (UnsupportedEncodingException e) {
             throw new StoreServiceException(e.getLocalizedMessage());
         }
-        requestStore.getStore().setDeleted(0);
-        return Optional.ofNullable(storeService.getStores(requestStore))
-                .map(a -> new ResponseEntity<>(a, HttpStatus.OK))
-                .orElseThrow(() -> new StoreServiceException("Not found any store."));
+
+        if (requestStoreOfClient.getLocation() != null) {
+            return Optional.ofNullable(storeService.getStores(requestStoreOfClient))
+                    .map(a -> new ResponseEntity<>(a, HttpStatus.OK))
+                    .orElseThrow(() -> new StoreServiceException("Not found any store."));
+        } else {
+            requestStore.getStore().setDeleted(0);
+            return Optional.ofNullable(storeService.getStores(requestStore))
+                    .map(a -> new ResponseEntity<>(a, HttpStatus.OK))
+                    .orElseThrow(() -> new StoreServiceException("Not found any store."));
+        }
     }
 
 }

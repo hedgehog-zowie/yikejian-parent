@@ -3,10 +3,7 @@ package com.yikejian.store.service;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
-import com.yikejian.store.api.v1.dto.Pagination;
-import com.yikejian.store.api.v1.dto.RequestStore;
-import com.yikejian.store.api.v1.dto.ResponseStore;
-import com.yikejian.store.api.v1.dto.StoreDto;
+import com.yikejian.store.api.v1.dto.*;
 import com.yikejian.store.domain.inventory.Inventory;
 import com.yikejian.store.domain.product.Product;
 import com.yikejian.store.domain.store.Device;
@@ -15,8 +12,10 @@ import com.yikejian.store.domain.store.Store;
 import com.yikejian.store.domain.store.StoreProduct;
 import com.yikejian.store.exception.StoreServiceException;
 import com.yikejian.store.repository.DeviceRepository;
+import com.yikejian.store.repository.ImageRepository;
 import com.yikejian.store.repository.StoreProductRepository;
 import com.yikejian.store.repository.StoreRepository;
+import com.yikejian.store.util.DistanceUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,6 +29,7 @@ import org.springframework.stereotype.Service;
 import javax.persistence.criteria.Predicate;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -47,6 +47,7 @@ public class StoreService {
     private StoreRepository storeRepository;
     private StoreProductRepository storeProductRepository;
     private DeviceRepository deviceRepository;
+    private ImageRepository imageRepository;
     private OAuth2RestTemplate oAuth2RestTemplate;
 
     @Value("${yikejian.api.product.url}")
@@ -58,10 +59,12 @@ public class StoreService {
     public StoreService(StoreRepository storeRepository,
                         StoreProductRepository storeProductRepository,
                         DeviceRepository deviceRepository,
+                        ImageRepository imageRepository,
                         OAuth2RestTemplate oAuth2RestTemplate) {
         this.storeRepository = storeRepository;
         this.storeProductRepository = storeProductRepository;
         this.deviceRepository = deviceRepository;
+        this.imageRepository = imageRepository;
         this.oAuth2RestTemplate = oAuth2RestTemplate;
     }
 
@@ -77,15 +80,23 @@ public class StoreService {
             if (storeDto.getDevices() != null && storeDto.getDevices().size() > 0) {
                 deviceRepository.deleteByStore(store);
             }
+            if (storeDto.getImages() != null && storeDto.getImages().size() > 0) {
+                imageRepository.deleteByStore(store);
+            }
         }
         store.setEffective(1);
         store.setDeleted(0);
         Store newStore = transStore(store.fromStoreDto(storeDto));
-        List<Inventory> inventoryList = oAuth2RestTemplate.postForObject(inventoryApiUrl, newStore, List.class);
-        if (inventoryList.size() == 0) {
-            throw new StoreServiceException("init inventory error.");
+        Store savedStore = storeRepository.save(newStore);
+        try {
+            List<Inventory> inventoryList = oAuth2RestTemplate.postForObject(inventoryApiUrl, savedStore, List.class);
+            if (inventoryList.size() == 0) {
+                throw new StoreServiceException("init inventory error.");
+            }
+        } catch (Exception e) {
+            throw new StoreServiceException(e);
         }
-        return storeRepository.save(newStore);
+        return savedStore;
     }
 
     @HystrixCommand
@@ -127,6 +138,35 @@ public class StoreService {
             storeDtoList.add(checkStore(store));
         }
         return storeDtoList;
+    }
+
+    @HystrixCommand
+    public ResponseStoreOfClient getStores(RequestStoreOfClient requestStoreOfClient) {
+        Pagination pagination = requestStoreOfClient.getPagination();
+        Location location = requestStoreOfClient.getLocation();
+        List<StoreDto> storeDtoList = getAllEffectiveStores();
+        for (StoreDto storeDto : storeDtoList) {
+            storeDto.setDistance(DistanceUtils.Distance(location.getLatitude(), location.getLongitude(), storeDto.getLatitude(), storeDto.getLongitude()));
+        }
+        Collections.sort(storeDtoList);
+        List<StoreDto> resultList = Lists.newArrayList();
+        int i = 0;
+        int start = (pagination.getCurrent() - 1) * pagination.getPageSize();
+        boolean inPage = false;
+        for (StoreDto storeDto : storeDtoList) {
+            if (i == start) {
+                inPage = true;
+            }
+            if (inPage) {
+                resultList.add(storeDto);
+            }
+            if (resultList.size() == pagination.getPageSize()) {
+                break;
+            }
+        }
+        pagination.setTotal((long) storeDtoList.size());
+        pagination.setTotalPages((int) Math.ceil(storeDtoList.size() / pagination.getPageSize()));
+        return new ResponseStoreOfClient(resultList, pagination);
     }
 
     @HystrixCommand

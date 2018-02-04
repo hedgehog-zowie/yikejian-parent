@@ -27,6 +27,7 @@
         <module>coupon-service</module>
         <module>data-service</module>
         <module>message-service</module>
+        <module>file-service</module>
     </modules>
 
     <properties>

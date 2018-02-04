@@ -1,6 +1,8 @@
 package com.yikejian.store.util;
 
 import com.google.common.collect.Sets;
+import com.yikejian.store.api.v1.dto.RequestStore;
+import com.yikejian.store.api.v1.dto.RequestStoreOfClient;
 import com.yikejian.store.domain.product.Product;
 import com.yikejian.store.domain.store.Store;
 import com.yikejian.store.domain.store.StoreProduct;
@@ -100,6 +102,15 @@ public class JsonUtilsTest {
         storeProductSet.add(storeProduct1);
         storeProductSet.add(storeProduct2);
         System.out.println(JsonUtils.toJson(storeProductSet));
+    }
+
+    @Test
+    public void testClientRequest(){
+        String string = "{a:b,c:d}";
+        RequestStoreOfClient requestStoreOfClient = JsonUtils.fromJson(string, RequestStoreOfClient.class);
+        RequestStore requestStore = JsonUtils.fromJson(string, RequestStore.class);
+        System.out.println(JsonUtils.toJson(requestStoreOfClient));
+        System.out.println(JsonUtils.toJson(requestStore));
     }
 
 }

@@ -17,10 +17,10 @@ public final class DistanceUtils {
 
     /**
      * 给定的经度1，纬度1；经度2，纬度2. 计算2个经纬度之间的距离。
-     * @param latitude1 经度1
-     * @param longitude1 纬度1
-     * @param latitude2 经度2
-     * @param longitude2 纬度2
+     * @param latitude1 纬度1
+     * @param longitude1 经度1
+     * @param latitude2 纬度2
+     * @param longitude2 经度2
      * @return 距离（公里、千米）
      */
     public static double Distance(double latitude1, double longitude1, double latitude2, double longitude2) {

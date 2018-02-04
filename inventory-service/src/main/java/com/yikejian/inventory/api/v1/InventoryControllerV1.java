@@ -6,20 +6,13 @@ import com.yikejian.inventory.domain.order.Order;
 import com.yikejian.inventory.domain.store.Store;
 import com.yikejian.inventory.exception.InventoryServiceException;
 import com.yikejian.inventory.service.InventoryService;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -42,7 +35,7 @@ public class InventoryControllerV1 {
     }
 
     @PutMapping("/inventories")
-    public ResponseEntity updateInventories(final @RequestBody  List<Inventory> inventoryList) {
+    public ResponseEntity updateInventories(final @RequestBody List<Inventory> inventoryList) {
         // todo send log
         return Optional.ofNullable(inventoryService.saveInventories(inventoryList))
                 .map(a -> new ResponseEntity<>(a, HttpStatus.OK))
@@ -50,7 +43,7 @@ public class InventoryControllerV1 {
     }
 
     @PutMapping("/inventory")
-    public ResponseEntity updateInventory(final @RequestBody  Inventory inventory) {
+    public ResponseEntity updateInventory(final @RequestBody Inventory inventory) {
         // todo send log
         return Optional.ofNullable(inventoryService.saveInventory(inventory))
                 .map(a -> new ResponseEntity<>(a, HttpStatus.OK))
@@ -58,7 +51,7 @@ public class InventoryControllerV1 {
     }
 
     @GetMapping("/inventories")
-    public ResponseEntity getInventories(final @RequestBody  Inventory inventory) {
+    public ResponseEntity getInventories(final @RequestBody Inventory inventory) {
         // todo send log
         return Optional.ofNullable(inventoryService.getInventories(inventory))
                 .map(a -> new ResponseEntity<>(a, HttpStatus.OK))
@@ -69,7 +62,7 @@ public class InventoryControllerV1 {
     @RequestMapping(value = "/inventory/{inventory_id}/event", method = RequestMethod.POST)
     public ResponseEntity addInventoryEvent(
             @RequestBody InventoryEvent inventoryEvent,
-            @PathVariable("inventory_id") String inventoryId){
+            @PathVariable("inventory_id") String inventoryId) {
 //        if(!Objects.equals(inventoryId, inventoryEvent.getInventoryId())){
 //            throw new InventoryServiceException("params error.");
 //        }
@@ -81,18 +74,22 @@ public class InventoryControllerV1 {
 
     @RequestMapping(value = "/inventories/{store_id}/{product_id}", method = RequestMethod.GET)
     public ResponseEntity getStoreProductInventory(final @PathVariable(value = "store_id") Long storeId,
-                                                   final @PathVariable(value = "product_id") Long productId){
+                                                   final @PathVariable(value = "product_id") Long productId,
+                                                   final @RequestParam(value = "day", required = false) String day) {
         // TODO: 2018/1/22
         Inventory inventory = new Inventory();
         inventory.setStoreId(storeId);
         inventory.setProductId(productId);
+        if (StringUtils.isNotBlank(day)) {
+            inventory.setDay(day);
+        }
         return Optional.ofNullable(inventoryService.getInventories(inventory))
                 .map(a -> new ResponseEntity<>(a, HttpStatus.OK))
                 .orElseThrow(() -> new InventoryServiceException("Not found any inventory."));
     }
 
     @RequestMapping(value = "/inventory/store", method = RequestMethod.POST)
-    public ResponseEntity initStoreInventory(final @RequestBody Store store){
+    public ResponseEntity initStoreInventory(final @RequestBody Store store) {
         // TODO: 2018/1/22
         return Optional.ofNullable(inventoryService.initInventoryOfStore(store))
                 .map(a -> new ResponseEntity<>(a, HttpStatus.OK))
@@ -100,7 +97,7 @@ public class InventoryControllerV1 {
     }
 
     @RequestMapping(value = "/inventory/order", method = RequestMethod.POST)
-    public ResponseEntity changeInventory(final @RequestBody Order order){
+    public ResponseEntity changeInventory(final @RequestBody Order order) {
         // TODO: 2018/1/22
         return Optional.ofNullable(inventoryService.changeInventoryOnOrderChange(order))
                 .map(a -> new ResponseEntity<>(a, HttpStatus.OK))

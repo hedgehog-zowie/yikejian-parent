@@ -43,7 +43,7 @@ yikejian:
     product:
       url: "http://192.168.1.101:8004/product-service/v1/product"
     inventory:
-      url: "http://192.168.1.101:8005/inventory-service/"
+      url: "http://192.168.1.101:8005/inventory-service/v1/inventory/store"
 ---
 spring:
   profiles: production
@@ -64,4 +64,4 @@ yikejian:
     product:
       url: "http://localhost:8004/product-service/v1/product"
     inventory:
-      url: "http://localhost:8005/inventory-service/"
+      url: "http://localhost:8005/inventory-service/v1/inventory/store"

@@ -1,5 +1,6 @@
 package com.yikejian.user.domain.user;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.yikejian.user.domain.BaseEntity;
 import com.yikejian.user.domain.role.Role;
@@ -23,6 +24,7 @@ public class User extends BaseEntity {
     @GeneratedValue
     private Long id;
     private String name;
+    private String avatar;
 //    @JsonIgnore
     private String password;
     //    @JsonBackReference
@@ -58,6 +60,9 @@ public class User extends BaseEntity {
         if (StringUtils.isNotBlank(other.getName())) {
             setName(other.getName());
         }
+        if (StringUtils.isNotBlank(other.getAvatar())) {
+            setAvatar(other.getAvatar());
+        }
         if (StringUtils.isNotBlank(other.getPassword())) {
             setPassword(other.getPassword());
         }
@@ -92,6 +97,14 @@ public class User extends BaseEntity {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 
     public String getPassword() {

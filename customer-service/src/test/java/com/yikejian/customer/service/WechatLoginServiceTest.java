@@ -27,9 +27,11 @@ public class WechatLoginServiceTest {
     private static RestTemplate restTemplate;
 
     private static final String URL_TEMPLATE = "https://api.weixin.qq.com/sns/jscode2session?appid=%s&secret=%s&js_code=%s&grant_type=authorization_code";
-    private static final String APPID = "wxa85a2b5d75773381";
+//    private static final String APPID = "wxa85a2b5d75773381";
+//    private static final String SECRET = "c1c82e045cb1fb42acb87151e8a3574d";
+    private static final String APPID = "wx74e6f71fdef09122";
     private static final String SECRET = "c1c82e045cb1fb42acb87151e8a3574d";
-    private static final String CODE = "013VUaOI1YKDZ40iIMPI1gS8OI1VUaOf";
+    private static final String CODE = "003zRMpY19wxnU0bLprY1vfZpY1zRMpL";
 
     @BeforeClass
     public static void beforeClass() {
