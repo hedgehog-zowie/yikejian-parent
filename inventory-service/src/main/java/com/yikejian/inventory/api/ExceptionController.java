@@ -37,7 +37,7 @@ public class ExceptionController {
     @ExceptionHandler(InventoryServiceException.class)
     public ResponseEntity handleException(final InventoryServiceException e) {
         LOGGER.error("Error: ", e);
-        return new ResponseEntity(e.getInventoryExceptionCodeConstants(),
+        return new ResponseEntity(e.getInventoryExceptionCode(),
                 HttpStatus.INTERNAL_SERVER_ERROR);
     }
 

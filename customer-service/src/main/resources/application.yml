@@ -27,6 +27,12 @@ yikejian:
   user:
     api:
       url: "http://localhost:8001/user-service/v1/me"
+weixin:
+  token:
+    url: "https://api.weixin.qq.com/sns/jscode2session?appid=%s&secret=%s&js_code=%s&grant_type=authorization_code"
+  app:
+    id:
+    secret:
 ---
 spring:
   profiles: test
@@ -44,6 +50,12 @@ yikejian:
   user:
     api:
       url: "http://192.168.1.101:8001/user-service/v1/me"
+weixin:
+  token:
+    url: "https://api.weixin.qq.com/sns/jscode2session?appid=%s&secret=%s&js_code=%s&grant_type=authorization_code"
+  app:
+    id:
+    secret:
 ---
 spring:
   profiles: production
@@ -61,4 +73,9 @@ yikejian:
   user:
     api:
       url: "http://localhost:8001/user-service/v1/me"
-            
+weixin:
+  token:
+    url: "https://api.weixin.qq.com/sns/jscode2session?appid=%s&secret=%s&js_code=%s&grant_type=authorization_code"
+  app:
+    id:
+    secret:

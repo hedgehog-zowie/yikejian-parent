@@ -14,7 +14,7 @@ import com.yikejian.inventory.domain.store.Device;
 import com.yikejian.inventory.domain.store.DeviceProduct;
 import com.yikejian.inventory.domain.store.Store;
 import com.yikejian.inventory.domain.store.StoreProduct;
-import com.yikejian.inventory.exception.InventoryExceptionCodeConstants;
+import com.yikejian.inventory.exception.InventoryExceptionCode;
 import com.yikejian.inventory.exception.InventoryServiceException;
 import com.yikejian.inventory.repository.InventoryEventRepository;
 import com.yikejian.inventory.repository.InventoryRepository;
@@ -154,13 +154,13 @@ public class InventoryService {
         if (store == null) {
             String msg = "init inventory error. store is null.";
             LOGGER.error(msg);
-            throw new InventoryServiceException(InventoryExceptionCodeConstants.ILLEGAL_STORE, msg);
+            throw new InventoryServiceException(InventoryExceptionCode.ILLEGAL_STORE, msg);
         }
         try {
             DateUtils.dayStrToDate(day);
         } catch (RuntimeException e) {
             LOGGER.error(e.getLocalizedMessage());
-            throw new InventoryServiceException(InventoryExceptionCodeConstants.ILLEGAL_DAY, e.getLocalizedMessage());
+            throw new InventoryServiceException(InventoryExceptionCode.ILLEGAL_DAY, e.getLocalizedMessage());
         }
 
         List<Inventory> result;
@@ -177,7 +177,7 @@ public class InventoryService {
                 if (product == null) {
                     String msg = "init inventory error, not found product for id: " + productId;
                     LOGGER.error(msg);
-                    throw new InventoryServiceException(InventoryExceptionCodeConstants.ILLEGAL_PRODUCT, msg);
+                    throw new InventoryServiceException(InventoryExceptionCode.ILLEGAL_PRODUCT, msg);
                 }
                 inventoryRepository.deleteByStoreIdAndProductIdAndDay(storeId, productId, day);
                 List<String> pieceTimeList = DateUtils.generatePieceTimeOfDay(
@@ -198,13 +198,13 @@ public class InventoryService {
                 if (inventory.getBookedStock() > inventory.getStock()) {
                     String msg = "not exist enough inventory.";
                     LOGGER.error(msg);
-                    throw new InventoryServiceException(InventoryExceptionCodeConstants.INSUFFICIENT_INVENTORY, msg);
+                    throw new InventoryServiceException(InventoryExceptionCode.INSUFFICIENT_INVENTORY, msg);
                 }
             }
             result = (List<Inventory>) inventoryRepository.save(allInventorySet);
         } catch (Exception e) {
             LOGGER.error(e.getLocalizedMessage());
-            throw new InventoryServiceException(InventoryExceptionCodeConstants.OTHER_ERROR, e.getLocalizedMessage());
+            throw new InventoryServiceException(InventoryExceptionCode.OTHER_ERROR, e.getLocalizedMessage());
         } finally {
             inventoryLock.writeLock().unlock();
         }
@@ -265,7 +265,7 @@ public class InventoryService {
                     Inventory inventory = inventoryRepository.findByStoreIdAndProductIdAndPieceTime(storeId, productId, affectedPieceTime);
                     if (inventory == null) {
                         LOGGER.error("not exists inventory. storeId = {}, productId = {}, pieceTime = {}.", storeId, productId, affectedPieceTime);
-                        throw new InventoryServiceException(InventoryExceptionCodeConstants.NOT_EXISTS_INVENTORY, "not exists inventory.");
+                        throw new InventoryServiceException(InventoryExceptionCode.NOT_EXISTS_INVENTORY, "not exists inventory.");
                     }
                     inventoryList.add(inventory);
                     InventoryEvent inventoryEvent = new InventoryEvent(inventory.getStoreId(), inventory.getProductId(), inventory.getPieceTime());
@@ -286,7 +286,7 @@ public class InventoryService {
                 default:
                     String msg = "order status is not illegal.";
                     LOGGER.error(msg);
-                    throw new InventoryServiceException(InventoryExceptionCodeConstants.ILLEGAL_ORDER, msg);
+                    throw new InventoryServiceException(InventoryExceptionCode.ILLEGAL_ORDER, msg);
             }
             inventoryEventRepository.save(inventoryEventList);
             computedInventoryList = Lists.newArrayList(
@@ -296,7 +296,7 @@ public class InventoryService {
                 if (inventory.getBookedStock() > inventory.getStock()) {
                     String msg = "not exist enough inventory.";
                     LOGGER.error(msg);
-                    throw new InventoryServiceException(InventoryExceptionCodeConstants.INSUFFICIENT_INVENTORY, msg);
+                    throw new InventoryServiceException(InventoryExceptionCode.INSUFFICIENT_INVENTORY, msg);
                 }
             }
             // TODO: 2018/2/4 need not change computedInventory, don't need to persist bookedInventory.

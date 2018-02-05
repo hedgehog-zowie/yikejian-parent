@@ -10,8 +10,16 @@ package com.yikejian.customer.exception;
  */
 public class CustomerServiceException extends RuntimeException {
 
-    public CustomerServiceException(String msg) {
-        super(msg);
+    private CustomerExceptionCode customerExceptionCode;
+
+    public CustomerServiceException(CustomerExceptionCode customerExceptionCode,
+                                     String message) {
+        super(message);
+        this.customerExceptionCode = customerExceptionCode;
+    }
+
+    public CustomerServiceException(String message) {
+        super(message);
     }
 
 }

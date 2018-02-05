@@ -8,7 +8,7 @@ package com.yikejian.inventory.exception;
  * @version: 1.0-SNAPSHOT
  * date: 2018/1/31 15:16
  */
-public enum InventoryExceptionCodeConstants {
+public enum InventoryExceptionCode {
 
     /**
      * 不存在的库存
