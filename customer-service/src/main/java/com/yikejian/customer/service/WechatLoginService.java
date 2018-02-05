@@ -62,4 +62,8 @@ public class WechatLoginService {
         }
     }
 
+    private void saveCustomerAsUser(String username){
+
+    }
+
 }
