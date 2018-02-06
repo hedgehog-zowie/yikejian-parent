@@ -50,7 +50,7 @@ public class RoleControllerV1Test {
     
     @Test
     public void testJson(){
-        String roleString = "{\"roleId\":1,\"roleName\":\"ADMIN\",\"authorities\":\"ROLE_READ,ROLE_WRITE,USER_READ,USER_WRITE,LOG_READ,CUSTOMER_READ,CUSTOMER_WRITE,ORDER_READ,ORDER_WRITE,STORE_READ,STORE_WRITE,PRODUCT_READ,PRODUCT_WRITE,DEVICE_READ,DEVICE_WRITE,BOOK_READ,BOOK_WRITE\",\"createdBy\":\"sys\",\"createdAt\":\"Jan 20, 2018 1:14:13 PM\",\"lastModifiedBy\":\"sys\",\"lastModifiedAt\":\"Jan 20, 2018 1:14:13 PM\",\"effective\":1,\"deleted\":0}";
+        String roleString = "{\"roleId\":1,\"roleName\":\"ADMIN\",\"authorities\":\"ROLE_READ,ROLE_WRITE,USER_READ,USER_WRITE,LOG_READ,CUSTOMER_READ,CUSTOMER_WRITE,ORDER_READ,ORDER_WRITE,STORE_READ,STORE_WRITE,PRODUCT_READ,PRODUCT_WRITE,DEVICE_READ,DEVICE_WRITE,INVENTORY_READ,INVENTORY_WRITE\",\"createdBy\":\"sys\",\"createdAt\":\"Jan 20, 2018 1:14:13 PM\",\"lastModifiedBy\":\"sys\",\"lastModifiedAt\":\"Jan 20, 2018 1:14:13 PM\",\"effective\":1,\"deleted\":0}";
         Role role = JsonUtils.fromJson(roleString, Role.class);
         String roleString2 = "{\"roleId\":1,\"roleName\":\"ADMIN\",\"authorities\":\"ROLE_READ\":\"20180101\",\"effective\":1,\"deleted\":0}";
         Role role2 = JsonUtils.fromJson(roleString2, Role.class);
@@ -62,7 +62,7 @@ public class RoleControllerV1Test {
         String url = String.format(GET_ROLE_URL_TEMPLATE, 1, ACCESS_TOKEN);
         Role role = restTemplate.getForObject(url, Role.class);
         assertEquals("ADMIN", role.getRoleName());
-        assertEquals("ROLE_READ,ROLE_WRITE,USER_READ,USER_WRITE,LOG_READ,CUSTOMER_READ,CUSTOMER_WRITE,ORDER_READ,ORDER_WRITE,STORE_READ,STORE_WRITE,PRODUCT_READ,PRODUCT_WRITE,DEVICE_READ,DEVICE_WRITE,BOOK_READ,BOOK_WRITE",
+        assertEquals("ROLE_READ,ROLE_WRITE,USER_READ,USER_WRITE,LOG_READ,CUSTOMER_READ,CUSTOMER_WRITE,ORDER_READ,ORDER_WRITE,STORE_READ,STORE_WRITE,PRODUCT_READ,PRODUCT_WRITE,DEVICE_READ,DEVICE_WRITE,INVENTORY_READ,INVENTORY_WRITE",
                 role.getAuthorities());
         assertEquals(null, role.getUserSet());
         System.out.println(JsonUtils.toJson(role));

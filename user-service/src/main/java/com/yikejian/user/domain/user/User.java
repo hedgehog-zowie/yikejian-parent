@@ -1,12 +1,16 @@
 package com.yikejian.user.domain.user;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.yikejian.user.domain.BaseEntity;
 import com.yikejian.user.domain.role.Role;
 import org.apache.commons.lang.StringUtils;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import java.util.Objects;
 
 /**
@@ -27,6 +31,7 @@ public class User extends BaseEntity {
     private String avatar;
 //    @JsonIgnore
     private String password;
+    private UserType userType;
     //    @JsonBackReference
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "role_id")
@@ -65,6 +70,9 @@ public class User extends BaseEntity {
         }
         if (StringUtils.isNotBlank(other.getPassword())) {
             setPassword(other.getPassword());
+        }
+        if (other.getUserType() != null) {
+            setUserType(other.getUserType());
         }
         if (other.getRole() != null) {
             setRole(other.getRole());
@@ -113,6 +121,14 @@ public class User extends BaseEntity {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public UserType getUserType() {
+        return userType;
+    }
+
+    public void setUserType(UserType userType) {
+        this.userType = userType;
     }
 
     public Role getRole() {

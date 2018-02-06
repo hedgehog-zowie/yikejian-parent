@@ -20,6 +20,8 @@ public interface CustomerRepository extends PagingAndSortingRepository<Customer,
 
     Customer findByCustomerName(String customerName);
 
+    Customer findByOpenId(String openId);
+
     Customer findByEffectiveAndDeleted(Integer effective, Integer deleted);
 
 }

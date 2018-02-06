@@ -22,4 +22,11 @@ public class CustomerServiceException extends RuntimeException {
         super(message);
     }
 
+    public CustomerExceptionCode getCustomerExceptionCode() {
+        return customerExceptionCode;
+    }
+
+    public void setCustomerExceptionCode(CustomerExceptionCode customerExceptionCode) {
+        this.customerExceptionCode = customerExceptionCode;
+    }
 }

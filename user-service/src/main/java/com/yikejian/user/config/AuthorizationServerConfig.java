@@ -129,7 +129,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
                 .authorities("ROLE_TRUSTED_CLIENT")
                 .autoApprove(true)
                 .authorizedGrantTypes("client_credentials", "password", "authorization_code", "refresh_token")
-//                .scopes("read", "write")
+                .scopes("read", "write")
 //                .redirectUris("http://localhost:8000")
                 .accessTokenValiditySeconds(2592000)
         ;

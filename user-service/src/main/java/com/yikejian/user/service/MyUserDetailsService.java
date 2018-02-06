@@ -42,18 +42,19 @@ public class MyUserDetailsService implements UserDetailsService {
 
     private void addDefaultAdmin() {
         LOGGER.info("defining default roles");
-        Role role1 = new Role(1L, "ADMIN", Authority.getAdminAuthority());
-        Role role2 = new Role(2L, "SYSTEM", Authority.getSystemAuthority());
-        Role role3 = new Role(3L, "INFO", Authority.getInfoAuthority());
-        Role role4 = new Role(4L, "CUSTOMER", Authority.getCustomerAuthority());
-        Role role5 = new Role(5L, "ORDER", Authority.getOrderAuthority());
-        roleRepository.save(Arrays.asList(role1, role2, role3, role4, role5));
+        Role role1 = new Role(1L, "ADMIN_MANAGE", Authority.getAdminAuthority());
+        Role role2 = new Role(2L, "SYSTEM_MANAGE", Authority.getSystemManageAuthority());
+        Role role3 = new Role(3L, "INFO_MANAGE", Authority.getInfoManageAuthority());
+        Role role4 = new Role(4L, "CUSTOMER_MANAGE", Authority.getCustomerManageAuthority());
+        Role role5 = new Role(5L, "ORDER_MANAGE", Authority.getOrderManageAuthority());
+        Role role6 = new Role(6L, "CUSTOMER", Authority.getCustomerAuthority());
+        roleRepository.save(Arrays.asList(role1, role2, role3, role4, role5, role6));
         LOGGER.info("defining default users");
-        User user1 = new User(1L,"admin", "admin", role1);
-        User user2 = new User(2L,"system", "system", role2);
-        User user3 = new User(3L,"info", "info", role3);
-        User user4 = new User(4L,"customer", "customer", role4);
-        User user5 = new User(5L,"order", "order", role5);
+        User user1 = new User(1L, "admin", "admin", role1);
+        User user2 = new User(2L, "system", "system", role2);
+        User user3 = new User(3L, "info", "info", role3);
+        User user4 = new User(4L, "customer", "customer", role4);
+        User user5 = new User(5L, "order", "order", role5);
         userRepository.save(Arrays.asList(user1, user2, user3, user4, user5));
     }
 

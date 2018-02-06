@@ -41,6 +41,15 @@ public class Account extends BaseEntity {
     @OneToMany(mappedBy = "account", fetch = FetchType.LAZY)
     private Set<Customer> customerSet;
 
+    public Account() {
+    }
+
+    public Account(Double balance, Double amount, Integer point) {
+        this.balance = balance;
+        this.amount = amount;
+        this.point = point;
+    }
+
     public Long getAccountId() {
         return accountId;
     }

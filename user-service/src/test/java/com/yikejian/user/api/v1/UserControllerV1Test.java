@@ -51,7 +51,7 @@ public class UserControllerV1Test {
         User user = restTemplate.getForObject(url, User.class);
         assertEquals("admin", user.getName());
         assertEquals("ADMIN", user.getRole().getRoleName());
-        assertEquals("ROLE_READ,ROLE_WRITE,USER_READ,USER_WRITE,LOG_READ,CUSTOMER_READ,CUSTOMER_WRITE,ORDER_READ,ORDER_WRITE,STORE_READ,STORE_WRITE,PRODUCT_READ,PRODUCT_WRITE,DEVICE_READ,DEVICE_WRITE,BOOK_READ,BOOK_WRITE",
+        assertEquals("ROLE_READ,ROLE_WRITE,USER_READ,USER_WRITE,LOG_READ,CUSTOMER_READ,CUSTOMER_WRITE,ORDER_READ,ORDER_WRITE,STORE_READ,STORE_WRITE,PRODUCT_READ,PRODUCT_WRITE,DEVICE_READ,DEVICE_WRITE,INVENTORY_READ,INVENTORY_WRITE",
                 user.getRole().getAuthorities());
     }
 

@@ -1,12 +1,15 @@
 package com.yikejian.customer.domain.title;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.yikejian.customer.domain.BaseEntity;
 import com.yikejian.customer.domain.customer.Customer;
 import org.apache.commons.lang.StringUtils;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import java.util.Set;
 
 /**
@@ -36,6 +39,13 @@ public class Title extends BaseEntity {
     @JsonIgnore
     @OneToMany(mappedBy = "title", fetch = FetchType.LAZY)
     private Set<Customer> customerSet;
+
+    public Title() {
+    }
+
+    public Title(Long titleId) {
+        this.titleId = titleId;
+    }
 
     public Title mergeOther(Title other) {
         if (StringUtils.isNotBlank(other.getTitleName())) {

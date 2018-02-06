@@ -1,9 +1,11 @@
 package com.yikejian.customer;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Primary;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.security.oauth2.client.OAuth2ClientContext;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
@@ -26,14 +28,14 @@ public class CustomerServiceApplication {
     }
 
 //    @LoadBalanced
-    @Bean
+    @Bean(name = "oAuth2RestTemplate")
     public OAuth2RestTemplate loadBalancedOauth2RestTemplate(
             OAuth2ProtectedResourceDetails resource, OAuth2ClientContext context) {
         return new OAuth2RestTemplate(resource, context);
     }
 
 //    @LoadBalanced
-    @Bean
+    @Bean(name = "restTemplate")
     public RestTemplate loadBalancedRestTemplate() {
         return new RestTemplate();
     }

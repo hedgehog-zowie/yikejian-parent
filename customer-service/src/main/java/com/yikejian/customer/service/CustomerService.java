@@ -14,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.criteria.Join;
@@ -35,8 +36,11 @@ public class CustomerService {
 
     private CustomerRepository customerRepository;
 
+    private OAuth2RestTemplate oAuth2RestTemplate;
+
     @Autowired
-    public CustomerService(CustomerRepository customerRepository) {
+    public CustomerService(CustomerRepository customerRepository
+    ) {
         this.customerRepository = customerRepository;
     }
 
@@ -68,8 +72,13 @@ public class CustomerService {
     }
 
     @HystrixCommand
-    public Customer getCustomerByCustomerName(String customerName){
+    public Customer getCustomerByCustomerName(String customerName) {
         return customerRepository.findByCustomerName(customerName);
+    }
+
+    @HystrixCommand
+    public Customer getCustomerByOpenId(String openId) {
+        return customerRepository.findByOpenId(openId);
     }
 
     @HystrixCommand

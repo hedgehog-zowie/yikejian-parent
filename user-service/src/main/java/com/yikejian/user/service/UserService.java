@@ -7,6 +7,7 @@ import com.yikejian.user.api.v1.dto.RequestUser;
 import com.yikejian.user.api.v1.dto.ResponseUser;
 import com.yikejian.user.domain.role.Role;
 import com.yikejian.user.domain.user.User;
+import com.yikejian.user.domain.user.UserType;
 import com.yikejian.user.repository.UserRepository;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.criteria.Join;
-import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
 import java.util.ArrayList;
 import java.util.List;
@@ -47,6 +47,16 @@ public class UserService {
 
     @HystrixCommand
     public User saveUser(User user) {
+        if (UserType.CUSTOMER.equals(user.getUserType())) {
+            User savedUser = userRepository.findByName(user.getName());
+            if (savedUser != null) {
+                return savedUser;
+            }
+            user.setEffective(1);
+            user.setDeleted(0);
+            Role role = new Role(6L);
+            user.setRole(role);
+        }
         return userRepository.save(transform(user));
     }
 

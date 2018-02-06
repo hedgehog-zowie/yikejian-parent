@@ -11,7 +11,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -80,10 +88,10 @@ public class UserControllerV1 {
                 throw new UserServiceException(e.getLocalizedMessage());
             }
         }
-        if(requestUser.getUser() == null){
+        if (requestUser.getUser() == null) {
             requestUser.setUser(new User());
         }
-        if(requestUser.getPagination() == null){
+        if (requestUser.getPagination() == null) {
             requestUser.setPagination(new Pagination());
         }
         requestUser.getUser().setDeleted(0);
@@ -97,7 +105,7 @@ public class UserControllerV1 {
     public ResponseEntity me(Principal principal) {
         User user = null;
         if (principal != null) {
-               user = userService.getUserByUsername(principal.getName());
+            user = userService.getUserByUsername(principal.getName());
         }
 
         return Optional.ofNullable(user)

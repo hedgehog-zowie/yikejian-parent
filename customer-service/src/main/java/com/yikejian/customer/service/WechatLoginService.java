@@ -1,16 +1,24 @@
 package com.yikejian.customer.service;
 
+import com.yikejian.customer.domain.customer.Customer;
+import com.yikejian.customer.domain.user.User;
+import com.yikejian.customer.domain.user.UserType;
 import com.yikejian.customer.domain.wechat.SuccessResponse;
 import com.yikejian.customer.exception.CustomerExceptionCode;
 import com.yikejian.customer.exception.CustomerServiceException;
+import com.yikejian.customer.util.CodeUtils;
 import com.yikejian.customer.util.JsonUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.oauth2.client.OAuth2RestTemplate;
+import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -27,19 +35,23 @@ public class WechatLoginService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(WechatLoginService.class);
 
-    @Value("weixin.token.url")
+    @Value("${weixin.token.url}")
     private String URL_TEMPLATE;
-    @Value("weixin.app.id")
+    @Value("${weixin.app.id}")
     private String APPID;
-    @Value("weixin.app.secret")
+    @Value("${weixin.app.secret}")
     private String SECRET;
-
-    private RestTemplate restTemplate;
+    @Value("${yikejian.user.api.user}")
+    private String USER_URL;
+    @Value("${yikejian.user.api.token}")
+    private String TOKEN_URL;
 
     @Autowired
-    public WechatLoginService(RestTemplate restTemplate) {
-        this.restTemplate = restTemplate;
-    }
+    private OAuth2RestTemplate oAuth2RestTemplate;
+    @Autowired
+    private RestTemplate restTemplate;
+    @Autowired
+    private CustomerService customerService;
 
     private SuccessResponse loginToWechat(String code) {
         if (StringUtils.isBlank(code)) {
@@ -62,8 +74,32 @@ public class WechatLoginService {
         }
     }
 
-    private void saveCustomerAsUser(String username){
-
+    public OAuth2AccessToken login(String code) {
+        SuccessResponse successResponse = loginToWechat(code);
+        // find customer by openid
+        String openId = successResponse.getOpenid();
+        Customer customer = customerService.getCustomerByOpenId(openId);
+        if (customer == null) {
+            // save customer
+            customer = new Customer(openId);
+            customerService.saveCustomer(customer);
+        }
+        // generate password
+        String password = CodeUtils.generateCode();
+        // get user from user-service
+        User user = new User(customer.getOpenId(), UserType.CUSTOMER, password);
+        User savedUser = oAuth2RestTemplate.postForObject(USER_URL, user, User.class);
+        if (savedUser == null) {
+            throw new CustomerServiceException("login error");
+        }
+        // get token from user-service
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add("Authorization", "Basic dHJ1c3RlZDpzZWNyZXQ=");
+        httpHeaders.add("Content-Type", "application/x-www-form-urlencoded");
+        String params = String.format("username=%s&password=%s&grant_type=%s", savedUser.getName(), savedUser.getPassword(), "password");
+        HttpEntity httpEntity = new HttpEntity(params, httpHeaders);
+        OAuth2AccessToken oAuth2AccessToken = restTemplate.postForObject(TOKEN_URL, httpEntity, OAuth2AccessToken.class);
+        return oAuth2AccessToken;
     }
 
 }

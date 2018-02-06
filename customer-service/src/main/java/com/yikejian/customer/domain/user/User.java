@@ -12,13 +12,16 @@ public class User {
 
     private Long id;
     private String name;
+    private String password;
+    private UserType userType;
 
     public User() {
     }
 
-    public User(Long id, String name) {
-        this.id = id;
+    public User(String name, UserType userType, String password) {
         this.name = name;
+        this.userType = userType;
+        this.password = password;
     }
 
     public Long getId() {
@@ -37,4 +40,19 @@ public class User {
         this.name = name;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public UserType getUserType() {
+        return userType;
+    }
+
+    public void setUserType(UserType userType) {
+        this.userType = userType;
+    }
 }

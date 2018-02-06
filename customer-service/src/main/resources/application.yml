@@ -26,13 +26,15 @@ security:
 yikejian:
   user:
     api:
-      url: "http://localhost:8001/user-service/v1/me"
+      me: "http://localhost:8001/user-service/v1/me"
+      user: "http://localhost:8001/user-service/v1/user"
+      token: "http://localhost:8001/user-service/oauth/token"
 weixin:
   token:
     url: "https://api.weixin.qq.com/sns/jscode2session?appid=%s&secret=%s&js_code=%s&grant_type=authorization_code"
   app:
-    id:
-    secret:
+    id: wx74e6f71fdef09122
+    secret: 54ee7d4db46487a5cd01492ad9911ed2
 ---
 spring:
   profiles: test
@@ -49,13 +51,15 @@ security:
 yikejian:
   user:
     api:
-      url: "http://192.168.1.101:8001/user-service/v1/me"
+      me: "http://192.168.1.101:8001/user-service/v1/me"
+      user: "http://192.168.1.101:8001/user-service/v1/user"
+      token: "http://192.168.1.101:8001/user-service/oauth/token"
 weixin:
   token:
     url: "https://api.weixin.qq.com/sns/jscode2session?appid=%s&secret=%s&js_code=%s&grant_type=authorization_code"
   app:
-    id:
-    secret:
+    id: wx74e6f71fdef09122
+    secret: 54ee7d4db46487a5cd01492ad9911ed2
 ---
 spring:
   profiles: production
@@ -72,10 +76,12 @@ security:
 yikejian:
   user:
     api:
-      url: "http://localhost:8001/user-service/v1/me"
+      me: "http://localhost:8001/user-service/v1/me"
+      user: "http://localhost:8001/user-service/v1/user"
+      token: "http://localhost:8001/user-service/oauth/token"
 weixin:
   token:
     url: "https://api.weixin.qq.com/sns/jscode2session?appid=%s&secret=%s&js_code=%s&grant_type=authorization_code"
   app:
-    id:
-    secret:
+    id: wx74e6f71fdef09122
+    secret: 54ee7d4db46487a5cd01492ad9911ed2

@@ -1,12 +1,17 @@
 package com.yikejian.customer.domain.customer;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.yikejian.customer.domain.BaseEntity;
 import com.yikejian.customer.domain.account.Account;
 import com.yikejian.customer.domain.title.Title;
 import org.apache.commons.lang.StringUtils;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 /**
  * <code>Customer</code>.
@@ -51,17 +56,26 @@ public class Customer extends BaseEntity {
     @JoinColumn(name = "title_id")
     private Title title;
 
-    public Customer mergeOther(Customer other){
+    public Customer() {
+    }
+
+    public Customer(String openId) {
+        this.openId = openId;
+        this.title = new Title(1L);
+        this.account = new Account(0D, 0D, 0);
+    }
+
+    public Customer mergeOther(Customer other) {
         if (StringUtils.isNotBlank(other.getCustomerName())) {
             setCustomerName(other.getCustomerName());
         }
-        if(StringUtils.isNotBlank(other.getOpenId())){
+        if (StringUtils.isNotBlank(other.getOpenId())) {
             setOpenId(other.getOpenId());
         }
-        if(StringUtils.isNotBlank(other.getMobileNumber())){
+        if (StringUtils.isNotBlank(other.getMobileNumber())) {
             setMobileNumber(other.getMobileNumber());
         }
-        if(StringUtils.isNotBlank(other.getBirthday())){
+        if (StringUtils.isNotBlank(other.getBirthday())) {
             setBirthday(other.getBirthday());
         }
         if (other.getAccount() != null) {

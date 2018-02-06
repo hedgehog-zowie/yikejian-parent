@@ -1,12 +1,10 @@
 package com.yikejian.user.domain.role;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import com.yikejian.user.api.v1.dto.AuthorityDto;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author jackalope
@@ -44,8 +42,8 @@ public enum Authority {
     DEVICE_READ("DEVICE_READ", "查看设备"),
     DEVICE_WRITE("DEVICE_WRITE", "编辑设备"),
     // 预约管理
-    BOOK_READ("BOOK_READ", "查看预约"),
-    BOOK_WRITE("BOOK_WRITE", "编辑预约"),;
+    INVENTORY_READ("INVENTORY_READ", "查看预约"),
+    INVENTORY_WRITE("INVENTORY_WRITE", "编辑预约"),;
 
     private String code;
     private String name;
@@ -101,12 +99,12 @@ public enum Authority {
         sbd.append(PRODUCT_WRITE.name()).append(SPLITTER);
         sbd.append(DEVICE_READ.name()).append(SPLITTER);
         sbd.append(DEVICE_WRITE.name()).append(SPLITTER);
-        sbd.append(BOOK_READ.name()).append(SPLITTER);
-        sbd.append(BOOK_WRITE.name());
+        sbd.append(INVENTORY_READ.name()).append(SPLITTER);
+        sbd.append(INVENTORY_WRITE.name());
         return sbd.toString();
     }
 
-    public static String getSystemAuthority() {
+    public static String getSystemManageAuthority() {
         StringBuilder sbd = new StringBuilder();
 //        sbd.append(SYSTEM.name()).append(SPLITTER);
         sbd.append(ROLE_READ.name()).append(SPLITTER);
@@ -117,7 +115,7 @@ public enum Authority {
         return sbd.toString();
     }
 
-    public static String getInfoAuthority() {
+    public static String getInfoManageAuthority() {
         StringBuilder sbd = new StringBuilder();
 //        sbd.append(INFO.name()).append(SPLITTER);
         sbd.append(STORE_READ.name()).append(SPLITTER);
@@ -126,12 +124,12 @@ public enum Authority {
         sbd.append(PRODUCT_WRITE.name()).append(SPLITTER);
         sbd.append(DEVICE_READ.name()).append(SPLITTER);
         sbd.append(DEVICE_WRITE.name()).append(SPLITTER);
-        sbd.append(BOOK_READ.name()).append(SPLITTER);
-        sbd.append(BOOK_WRITE.name()).append(SPLITTER);
+        sbd.append(INVENTORY_READ.name()).append(SPLITTER);
+        sbd.append(INVENTORY_WRITE.name()).append(SPLITTER);
         return sbd.toString();
     }
 
-    public static String getCustomerAuthority() {
+    public static String getCustomerManageAuthority() {
         StringBuilder sbd = new StringBuilder();
 //        sbd.append(CUSTOMER.name()).append(SPLITTER);
         sbd.append(CUSTOMER_READ.name()).append(SPLITTER);
@@ -139,11 +137,23 @@ public enum Authority {
         return sbd.toString();
     }
 
-    public static String getOrderAuthority() {
+    public static String getOrderManageAuthority() {
         StringBuilder sbd = new StringBuilder();
 //        sbd.append(ORDER.name()).append(SPLITTER);
         sbd.append(ORDER_READ.name()).append(SPLITTER);
         sbd.append(ORDER_WRITE.name()).append(SPLITTER);
+        return sbd.toString();
+    }
+
+    public static String getCustomerAuthority() {
+        StringBuilder sbd = new StringBuilder();
+        sbd.append(CUSTOMER_READ.name()).append(SPLITTER);
+        sbd.append(CUSTOMER_WRITE.name()).append(SPLITTER);
+        sbd.append(ORDER_READ.name()).append(SPLITTER);
+        sbd.append(ORDER_WRITE.name()).append(SPLITTER);
+        sbd.append(STORE_READ.name()).append(SPLITTER);
+        sbd.append(PRODUCT_READ.name()).append(SPLITTER);
+        sbd.append(INVENTORY_READ.name()).append(SPLITTER);
         return sbd.toString();
     }
 
