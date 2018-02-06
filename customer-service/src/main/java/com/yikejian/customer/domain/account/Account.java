@@ -48,6 +48,8 @@ public class Account extends BaseEntity {
         this.balance = balance;
         this.amount = amount;
         this.point = point;
+        this.setDeleted(0);
+        this.setEffective(1);
     }
 
     public Long getAccountId() {

@@ -1,5 +1,6 @@
 spring:
-  profiles: development
+  profiles:
+    active: development
 
 ##############
 # log config #
@@ -29,6 +30,10 @@ yikejian:
       me: "http://localhost:8001/user-service/v1/me"
       user: "http://localhost:8001/user-service/v1/user"
       token: "http://localhost:8001/user-service/oauth/token"
+  message:
+    url: "http://localhost:8011/message-service/v1/message"
+    code:
+      template: "【一刻间】您好，您的验证码是：%s，有效时间5分钟"
 weixin:
   token:
     url: "https://api.weixin.qq.com/sns/jscode2session?appid=%s&secret=%s&js_code=%s&grant_type=authorization_code"
@@ -54,6 +59,10 @@ yikejian:
       me: "http://192.168.1.101:8001/user-service/v1/me"
       user: "http://192.168.1.101:8001/user-service/v1/user"
       token: "http://192.168.1.101:8001/user-service/oauth/token"
+  message:
+    url: "http://192.168.1.101:8011/message-service/v1/message"
+    code:
+      template: "【一刻间】您好，您的验证码是：%s，有效时间5分钟"
 weixin:
   token:
     url: "https://api.weixin.qq.com/sns/jscode2session?appid=%s&secret=%s&js_code=%s&grant_type=authorization_code"
@@ -79,6 +88,10 @@ yikejian:
       me: "http://localhost:8001/user-service/v1/me"
       user: "http://localhost:8001/user-service/v1/user"
       token: "http://localhost:8001/user-service/oauth/token"
+  message:
+    url: "http://localhost:8011/message-service/v1/message"
+    code:
+      template: "【一刻间】您好，您的验证码是：%s，有效时间5分钟"
 weixin:
   token:
     url: "https://api.weixin.qq.com/sns/jscode2session?appid=%s&secret=%s&js_code=%s&grant_type=authorization_code"

@@ -1,6 +1,8 @@
 package com.yikejian.customer.service;
 
+import com.yikejian.customer.domain.code.Code;
 import com.yikejian.customer.domain.customer.Customer;
+import com.yikejian.customer.domain.message.Message;
 import com.yikejian.customer.domain.user.User;
 import com.yikejian.customer.domain.user.UserType;
 import com.yikejian.customer.domain.wechat.SuccessResponse;
@@ -34,6 +36,7 @@ import org.springframework.web.client.RestTemplate;
 public class WechatLoginService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(WechatLoginService.class);
+    private static final int CODE_EXPIRE = 5 * 60 * 1000;
 
     @Value("${weixin.token.url}")
     private String URL_TEMPLATE;
@@ -45,6 +48,10 @@ public class WechatLoginService {
     private String USER_URL;
     @Value("${yikejian.user.api.token}")
     private String TOKEN_URL;
+    @Value("${yikejian.message.url}")
+    private String MESSAGE_URL;
+    @Value("${yikejian.message.code.template}")
+    private String MESSAGE_TEMPLATE;
 
     @Autowired
     private OAuth2RestTemplate oAuth2RestTemplate;
@@ -100,6 +107,18 @@ public class WechatLoginService {
         HttpEntity httpEntity = new HttpEntity(params, httpHeaders);
         OAuth2AccessToken oAuth2AccessToken = restTemplate.postForObject(TOKEN_URL, httpEntity, OAuth2AccessToken.class);
         return oAuth2AccessToken;
+    }
+
+    public Code checkWechatCustomer(String openId, String mobileNumber) {
+        Customer customer = customerService.getCustomerByOpenId(openId);
+        customer.setMobileNumber(mobileNumber);
+        customerService.saveCustomer(customer);
+        // send message
+        String code = CodeUtils.generateCode();
+        String content = String.format(MESSAGE_TEMPLATE, code);
+        Message message = new Message(mobileNumber, code, content);
+        Message sendedMessage = oAuth2RestTemplate.postForObject(MESSAGE_URL, message, Message.class);
+        return new Code(code, CODE_EXPIRE);
     }
 
 }

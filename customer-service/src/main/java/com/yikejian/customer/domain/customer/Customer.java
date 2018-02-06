@@ -63,6 +63,8 @@ public class Customer extends BaseEntity {
         this.openId = openId;
         this.title = new Title(1L);
         this.account = new Account(0D, 0D, 0);
+        this.setDeleted(0);
+        this.setEffective(1);
     }
 
     public Customer mergeOther(Customer other) {

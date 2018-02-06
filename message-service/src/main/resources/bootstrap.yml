@@ -1,6 +1,6 @@
 server:
   port: 8011
-  contextPath: /message
+  contextPath: /message-service
 spring:
   application:
     name: message-service

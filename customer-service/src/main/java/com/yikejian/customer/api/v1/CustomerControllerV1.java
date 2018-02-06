@@ -11,17 +11,7 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.oauth2.common.OAuth2AccessToken;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -90,18 +80,27 @@ public class CustomerControllerV1 {
     public ResponseEntity me(Principal principal) {
         Customer customer = null;
         if (principal != null) {
-            customer = customerService.getCustomerByCustomerName(principal.getName());
+            customer = customerService.getCustomerByOpenId(principal.getName());
         }
         return Optional.ofNullable(customer)
                 .map(a -> new ResponseEntity<>(a, HttpStatus.OK))
-                .orElseThrow(() -> new UsernameNotFoundException("customer not found"));
+                .orElseThrow(() -> new CustomerServiceException("customer not found"));
     }
 
     @GetMapping("/login")
-    public ResponseEntity<OAuth2AccessToken> login(final @RequestParam(value = "code") String code) {
+    public ResponseEntity login(final @RequestParam(value = "code") String code) {
         return Optional.ofNullable(wechatLoginService.login(code))
                 .map(a -> new ResponseEntity<>(a, HttpStatus.OK))
-                .orElseThrow(() -> new UsernameNotFoundException("login failed."));
+                .orElseThrow(() -> new CustomerServiceException("login failed."));
+    }
+
+    @GetMapping("/code")
+    public ResponseEntity getCode(Principal principal,
+                                  final @RequestParam(value = "mobileNumber") String mobileNumber) {
+        String openId = principal.getName();
+        return Optional.ofNullable(wechatLoginService.checkWechatCustomer(openId, mobileNumber))
+                .map(a -> new ResponseEntity<>(a, HttpStatus.OK))
+                .orElseThrow(() -> new CustomerServiceException("get code failed"));
     }
 
 }

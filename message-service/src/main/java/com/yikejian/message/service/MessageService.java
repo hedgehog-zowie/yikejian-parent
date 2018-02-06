@@ -49,10 +49,14 @@ public class MessageService {
 
     private MessageRepository messageRepository;
     private IAcsClient acsClient;
+    private static boolean inited = false;
 
     @Autowired
     public MessageService(MessageRepository messageRepository) {
         this.messageRepository = messageRepository;
+    }
+
+    private void init() {
         //设置超时时间-可自行调整
         System.setProperty("sun.net.client.defaultConnectTimeout", connectTimeout);
         System.setProperty("sun.net.client.defaultReadTimeout", readTimeout);
@@ -69,6 +73,9 @@ public class MessageService {
 
     @HystrixCommand
     public Message sendMessage(Message message) {
+        if (!inited) {
+            init();
+        }
         //组装请求对象
         SendSmsRequest request = new SendSmsRequest();
         //使用post提交
