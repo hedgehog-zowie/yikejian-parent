@@ -10,7 +10,14 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.Optional;
@@ -92,6 +99,15 @@ public class InventoryControllerV1 {
     public ResponseEntity initStoreInventory(final @RequestBody Store store) {
         // TODO: 2018/1/22
         return Optional.ofNullable(inventoryService.initInventoryOfStore(store))
+                .map(a -> new ResponseEntity<>(a, HttpStatus.OK))
+                .orElseThrow(() -> new InventoryServiceException("Not found any inventory."));
+    }
+
+    @RequestMapping(value = "/inventory/store/{day}", method = RequestMethod.POST)
+    public ResponseEntity initStoreInventory(final @RequestBody Store store,
+                                             final @PathVariable(value = "day") String day) {
+        // TODO: 2018/1/22
+        return Optional.ofNullable(inventoryService.initInventoryOfStore(store, day))
                 .map(a -> new ResponseEntity<>(a, HttpStatus.OK))
                 .orElseThrow(() -> new InventoryServiceException("Not found any inventory."));
     }

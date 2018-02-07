@@ -32,6 +32,7 @@ public class User extends BaseEntity {
 //    @JsonIgnore
     private String password;
     private UserType userType;
+    private Long storeId;
     //    @JsonBackReference
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "role_id")
@@ -129,6 +130,14 @@ public class User extends BaseEntity {
 
     public void setUserType(UserType userType) {
         this.userType = userType;
+    }
+
+    public Long getStoreId() {
+        return storeId;
+    }
+
+    public void setStoreId(Long storeId) {
+        this.storeId = storeId;
     }
 
     public Role getRole() {

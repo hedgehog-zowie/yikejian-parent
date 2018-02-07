@@ -110,10 +110,19 @@ public class InventoryService {
     }
 
     @HystrixCommand
-    public List<Inventory> getInventories(Inventory params) {
+    public List<Inventory> getInventories(Inventory inventory) {
         Sort sort = new Sort(Sort.Direction.ASC, "pieceTime");
-        List<Inventory> inventoryList = inventoryRepository.findAll(inventorySpec(params), sort);
-        return inventoryList;
+        List<Inventory> inventoryList = inventoryRepository.findAll(inventorySpec(inventory), sort);
+        List<Inventory> computedInventoryList = Lists.newArrayList(
+                inventoryList.stream().map(this::recomputeInventory).collect(Collectors.toList())
+        );
+        for (Inventory computedInventory : computedInventoryList) {
+            Integer restStock = computedInventory.getStock() - computedInventory.getBookedStock();
+            Integer restResourceNumber = computedInventory.getRestResourceNumber();
+            restStock = restStock > restResourceNumber ? restResourceNumber : restStock;
+            computedInventory.setRestStock(restStock);
+        }
+        return computedInventoryList;
     }
 
     private Specification<Inventory> inventorySpec(final Inventory inventory) {
@@ -187,19 +196,21 @@ public class InventoryService {
                         unitDuration
                 );
                 Set<Inventory> newInventorySet = Sets.newHashSet();
-                Integer stock = productDeviceNums.get(productId) == null ? 0 : productDeviceNums.get(productId);
+                Integer resourceNumber = productDeviceNums.get(productId) == null ? 0 : productDeviceNums.get(productId);
                 for (String pieceTime : pieceTimeList) {
-                    Inventory inventory = new Inventory(storeId, productId, store.getUnitTimes() > stock ? stock : store.getUnitTimes(), day, pieceTime);
+                    Inventory inventory = new Inventory(storeId,
+                            productId,
+                            store.getUnitTimes() > resourceNumber ? resourceNumber : store.getUnitTimes(),
+                            resourceNumber,
+                            resourceNumber,
+                            day,
+                            pieceTime);
                     newInventorySet.add(recomputeInventory(inventory));
                 }
                 allInventorySet.addAll(newInventorySet);
             }
             for (Inventory inventory : allInventorySet) {
-                if (inventory.getBookedStock() > inventory.getStock()) {
-                    String msg = "not exist enough inventory.";
-                    LOGGER.error(msg);
-                    throw new InventoryServiceException(InventoryExceptionCode.INSUFFICIENT_INVENTORY, msg);
-                }
+                checkInventory(inventory);
             }
             result = (List<Inventory>) inventoryRepository.save(allInventorySet);
         } catch (Exception e) {
@@ -261,43 +272,50 @@ public class InventoryService {
                         store.getEndTime().compareTo(product.getEndTime()) > 0 ? product.getEndTime() : store.getEndTime(),
                         duration,
                         unitDuration);
+                Inventory inventory = inventoryRepository.findByStoreIdAndProductIdAndPieceTime(storeId, productId, pieceTime);
+                InventoryEvent inventoryEvent = new InventoryEvent(inventory.getStoreId(), inventory.getProductId(), inventory.getPieceTime());
+                switch (order.getOrderStatus()) {
+                    case CREATED:
+                        inventoryEvent.setInventoryEventType(InventoryEventType.INCREASE_STOCK);
+                        break;
+                    case CANCELED:
+                        inventoryEvent.setInventoryEventType(InventoryEventType.DECREASE_STOCK);
+                        break;
+                    default:
+                        String msg = "order status is not illegal.";
+                        LOGGER.error(msg);
+                        throw new InventoryServiceException(InventoryExceptionCode.ILLEGAL_ORDER, msg);
+                }
+                inventoryEventList.add(inventoryEvent);
                 for (String affectedPieceTime : affectedPieceTimeList) {
-                    Inventory inventory = inventoryRepository.findByStoreIdAndProductIdAndPieceTime(storeId, productId, affectedPieceTime);
-                    if (inventory == null) {
+                    Inventory affectedInventory = inventoryRepository.findByStoreIdAndProductIdAndPieceTime(storeId, productId, affectedPieceTime);
+                    if (affectedInventory == null) {
                         LOGGER.error("not exists inventory. storeId = {}, productId = {}, pieceTime = {}.", storeId, productId, affectedPieceTime);
                         throw new InventoryServiceException(InventoryExceptionCode.NOT_EXISTS_INVENTORY, "not exists inventory.");
                     }
-                    inventoryList.add(inventory);
-                    InventoryEvent inventoryEvent = new InventoryEvent(inventory.getStoreId(), inventory.getProductId(), inventory.getPieceTime());
-                    inventoryEventList.add(inventoryEvent);
+                    inventoryList.add(affectedInventory);
+                    InventoryEvent affectedInventoryEvent = new InventoryEvent(affectedInventory.getStoreId(), affectedInventory.getProductId(), affectedInventory.getPieceTime());
+                    switch (order.getOrderStatus()) {
+                        case CREATED:
+                            affectedInventoryEvent.setInventoryEventType(InventoryEventType.DECREASE_RESOURCE);
+                            break;
+                        case CANCELED:
+                            affectedInventoryEvent.setInventoryEventType(InventoryEventType.INCREASE_RESOURCE);
+                            break;
+                        default:
+                            String msg = "order status is not illegal.";
+                            LOGGER.error(msg);
+                            throw new InventoryServiceException(InventoryExceptionCode.ILLEGAL_ORDER, msg);
+                    }
+                    inventoryEventList.add(affectedInventoryEvent);
                 }
-            }
-            switch (order.getOrderStatus()) {
-                case CREATED:
-                    for (InventoryEvent inventoryEvent : inventoryEventList) {
-                        inventoryEvent.setInventoryEventType(InventoryEventType.INCREASE_STOCK);
-                    }
-                    break;
-                case CANCELED:
-                    for (InventoryEvent inventoryEvent : inventoryEventList) {
-                        inventoryEvent.setInventoryEventType(InventoryEventType.DECREASE_STOCK);
-                    }
-                    break;
-                default:
-                    String msg = "order status is not illegal.";
-                    LOGGER.error(msg);
-                    throw new InventoryServiceException(InventoryExceptionCode.ILLEGAL_ORDER, msg);
             }
             inventoryEventRepository.save(inventoryEventList);
             computedInventoryList = Lists.newArrayList(
                     inventoryList.stream().map(this::recomputeInventory).collect(Collectors.toList())
             );
             for (Inventory inventory : computedInventoryList) {
-                if (inventory.getBookedStock() > inventory.getStock()) {
-                    String msg = "not exist enough inventory.";
-                    LOGGER.error(msg);
-                    throw new InventoryServiceException(InventoryExceptionCode.INSUFFICIENT_INVENTORY, msg);
-                }
+                checkInventory(inventory);
             }
             // TODO: 2018/2/4 need not change computedInventory, don't need to persist bookedInventory.
             inventoryRepository.save(computedInventoryList);
@@ -305,6 +323,18 @@ public class InventoryService {
             inventoryLock.writeLock().unlock();
         }
         return computedInventoryList;
+    }
+
+    private void checkInventory(Inventory inventory) {
+        Integer restStock = inventory.getStock() - inventory.getBookedStock();
+        Integer restResourceNumber = inventory.getRestResourceNumber();
+        restStock = restStock > restResourceNumber ? restResourceNumber : restStock;
+        if (restStock < 0) {
+            String msg = "not exist enough inventory.";
+            LOGGER.error(msg);
+            throw new InventoryServiceException(InventoryExceptionCode.INSUFFICIENT_INVENTORY, msg);
+        }
+        inventory.setRestStock(restStock);
     }
 
     private Inventory recomputeInventory(Inventory inventory) {

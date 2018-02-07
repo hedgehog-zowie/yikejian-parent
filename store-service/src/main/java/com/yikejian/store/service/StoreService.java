@@ -3,18 +3,26 @@ package com.yikejian.store.service;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
-import com.yikejian.store.api.v1.dto.*;
+import com.yikejian.store.api.v1.dto.Location;
+import com.yikejian.store.api.v1.dto.Pagination;
+import com.yikejian.store.api.v1.dto.RequestStore;
+import com.yikejian.store.api.v1.dto.RequestStoreOfClient;
+import com.yikejian.store.api.v1.dto.ResponseStore;
+import com.yikejian.store.api.v1.dto.ResponseStoreOfClient;
+import com.yikejian.store.api.v1.dto.StoreDto;
 import com.yikejian.store.domain.inventory.Inventory;
 import com.yikejian.store.domain.product.Product;
 import com.yikejian.store.domain.store.Device;
 import com.yikejian.store.domain.store.DeviceProduct;
 import com.yikejian.store.domain.store.Store;
 import com.yikejian.store.domain.store.StoreProduct;
+import com.yikejian.store.domain.user.User;
 import com.yikejian.store.exception.StoreServiceException;
 import com.yikejian.store.repository.DeviceRepository;
 import com.yikejian.store.repository.ImageRepository;
 import com.yikejian.store.repository.StoreProductRepository;
 import com.yikejian.store.repository.StoreRepository;
+import com.yikejian.store.util.DateUtils;
 import com.yikejian.store.util.DistanceUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +36,9 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.criteria.Predicate;
 import javax.transaction.Transactional;
+import java.security.Principal;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -44,12 +55,16 @@ import java.util.Set;
 @Service
 public class StoreService {
 
+    private static final Integer BOOKABLE_DAYS = 5;
+
     private StoreRepository storeRepository;
     private StoreProductRepository storeProductRepository;
     private DeviceRepository deviceRepository;
     private ImageRepository imageRepository;
     private OAuth2RestTemplate oAuth2RestTemplate;
 
+    @Value("${yikejian.api.user.url}")
+    private String userUrl;
     @Value("${yikejian.api.product.url}")
     private String productApiUrl;
     @Value("${yikejian.api.inventory.url}")
@@ -119,6 +134,25 @@ public class StoreService {
     }
 
     @HystrixCommand
+    public List<String> getBookableDaysByStoreId(Long storeId) {
+        Store store = storeRepository.findByStoreId(storeId);
+        int workDayStart = store.getWorkDayStart();
+        int workDayEnd = store.getWorkDayEnd();
+        LocalDate startDate = LocalDate.now();
+        List<String> bookableDays = Lists.newArrayList();
+        int i = 0;
+        while (i < BOOKABLE_DAYS) {
+            LocalDate currentDate = startDate.plusDays(i);
+            DayOfWeek dayOfWeek = currentDate.getDayOfWeek();
+            if (dayOfWeek.getValue() < workDayEnd && dayOfWeek.getValue() > workDayStart) {
+                bookableDays.add(DateUtils.dateToDayStr(currentDate));
+            }
+            i++;
+        }
+        return bookableDays;
+    }
+
+    @HystrixCommand
     public StoreDto getStoreById(Long storeId) {
         Store store = storeRepository.findByStoreId(storeId);
         StoreDto storeDto = checkStore(store);
@@ -131,8 +165,18 @@ public class StoreService {
     }
 
     @HystrixCommand
-    public List<StoreDto> getAllEffectiveStores() {
-        List<Store> storeList = storeRepository.findByEffectiveAndDeleted(1, 0);
+    public List<StoreDto> getAllEffectiveStores(Principal principal) {
+        List<Store> storeList = Lists.newArrayList();
+        if (principal == null) {
+            storeList = storeRepository.findByEffectiveAndDeleted(1, 0);
+        } else {
+            User user = oAuth2RestTemplate.getForObject(userUrl, User.class);
+            if (user.getStoreId() == null) {
+                storeList = storeRepository.findByEffectiveAndDeleted(1, 0);
+            } else {
+                storeList.add(storeRepository.findByStoreId(user.getStoreId()));
+            }
+        }
         List<StoreDto> storeDtoList = Lists.newArrayList();
         for (Store store : storeList) {
             storeDtoList.add(checkStore(store));
@@ -144,7 +188,7 @@ public class StoreService {
     public ResponseStoreOfClient getStores(RequestStoreOfClient requestStoreOfClient) {
         Pagination pagination = requestStoreOfClient.getPagination();
         Location location = requestStoreOfClient.getLocation();
-        List<StoreDto> storeDtoList = getAllEffectiveStores();
+        List<StoreDto> storeDtoList = getAllEffectiveStores(null);
         for (StoreDto storeDto : storeDtoList) {
             storeDto.setDistance(DistanceUtils.Distance(location.getLatitude(), location.getLongitude(), storeDto.getLatitude(), storeDto.getLongitude()));
         }

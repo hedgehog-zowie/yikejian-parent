@@ -17,6 +17,10 @@ public class User {
      * 用户名称
      */
     private String userName;
+    /**
+     * 店铺ID
+     */
+    private Long storeId;
 
     public User() {
     }
@@ -42,4 +46,11 @@ public class User {
         this.userName = userName;
     }
 
+    public Long getStoreId() {
+        return storeId;
+    }
+
+    public void setStoreId(Long storeId) {
+        this.storeId = storeId;
+    }
 }

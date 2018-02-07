@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.security.Principal;
 import java.util.Optional;
 
 /**
@@ -60,11 +61,21 @@ public class StoreControllerV1 {
                 .orElseThrow(() -> new StoreServiceException("Not found store."));
     }
 
+    @RequestMapping(value = "/store/{store_id}/days", method = RequestMethod.GET)
+    public ResponseEntity getBookableDays(final @PathVariable(value = "store_id") Long storeId) {
+        // todo send log
+        return Optional.ofNullable(storeService.getBookableDaysByStoreId(storeId))
+                .map(a -> new ResponseEntity<>(a, HttpStatus.OK))
+                .orElseThrow(() -> new StoreServiceException("Not found bookable days."));
+    }
+
     @GetMapping("/stores")
-    public ResponseEntity getStores(final @RequestParam(value = "params", required = false) String params) {
+    public ResponseEntity getStores(
+            Principal principal,
+            final @RequestParam(value = "params", required = false) String params) {
         // todo send log
         if (StringUtils.isBlank(params)) {
-            return Optional.ofNullable(storeService.getAllEffectiveStores())
+            return Optional.ofNullable(storeService.getAllEffectiveStores(principal))
                     .map(a -> new ResponseEntity<>(a, HttpStatus.OK))
                     .orElseThrow(() -> new StoreServiceException("Not found any store."));
         }

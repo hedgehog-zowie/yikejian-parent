@@ -17,5 +17,13 @@ public enum InventoryEventType {
      * 递减已预定库存
      */
     DECREASE_STOCK,
+    /**
+     * 递减资源
+     */
+    DECREASE_RESOURCE,
+    /**
+     * 递增资源
+     */
+    INCREASE_RESOURCE,
 
 }

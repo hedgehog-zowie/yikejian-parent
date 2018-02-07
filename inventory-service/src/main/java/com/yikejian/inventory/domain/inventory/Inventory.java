@@ -6,7 +6,6 @@ import org.apache.commons.lang.StringUtils;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.Transient;
 
 /**
  * <code>Inventory</code>.
@@ -39,6 +38,18 @@ public class Inventory extends BaseEntity {
      */
     private Integer bookedStock;
     /**
+     * 可预约次数
+     */
+    private Integer restStock;
+    /**
+     * 拥有的资源数量总数
+     */
+    private Integer resourceNumber;
+    /**
+     * 剩余的资源数量
+     */
+    private Integer restResourceNumber;
+    /**
      * 日期
      */
     private String day;
@@ -50,9 +61,13 @@ public class Inventory extends BaseEntity {
     public Inventory() {
     }
 
-    public Inventory(Long storeId, Long productId, Integer stock, String day, String pieceTime) {
+    public Inventory(Long storeId, Long productId,
+                     Integer stock, Integer resourceNumber, Integer restResourceNumber,
+                     String day, String pieceTime) {
         this.productId = productId;
         this.stock = stock;
+        this.resourceNumber = resourceNumber;
+        this.restResourceNumber = restResourceNumber;
         this.day = day;
         this.pieceTime = pieceTime;
         this.storeId = storeId;
@@ -107,6 +122,12 @@ public class Inventory extends BaseEntity {
             case INCREASE_STOCK:
                 bookedStock++;
                 break;
+            case INCREASE_RESOURCE:
+                restResourceNumber++;
+                break;
+            case DECREASE_RESOURCE:
+                restResourceNumber--;
+                break;
             default:
                 break;
         }
@@ -151,6 +172,30 @@ public class Inventory extends BaseEntity {
 
     public void setBookedStock(Integer bookedStock) {
         this.bookedStock = bookedStock;
+    }
+
+    public Integer getRestStock() {
+        return restStock;
+    }
+
+    public void setRestStock(Integer restStock) {
+        this.restStock = restStock;
+    }
+
+    public Integer getResourceNumber() {
+        return resourceNumber;
+    }
+
+    public void setResourceNumber(Integer resourceNumber) {
+        this.resourceNumber = resourceNumber;
+    }
+
+    public Integer getRestResourceNumber() {
+        return restResourceNumber;
+    }
+
+    public void setRestResourceNumber(Integer restResourceNumber) {
+        this.restResourceNumber = restResourceNumber;
     }
 
     public String getDay() {
