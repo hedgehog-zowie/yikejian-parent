@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import com.yikejian.inventory.api.v1.dto.InventoryItemsDto;
 import com.yikejian.inventory.domain.inventory.Inventory;
 import com.yikejian.inventory.domain.inventory.InventoryEvent;
 import com.yikejian.inventory.domain.inventory.InventoryEventType;
@@ -107,6 +108,15 @@ public class InventoryService {
             newInventory = oldInventory.mergeOther(inventory);
         }
         return newInventory;
+    }
+
+    @HystrixCommand
+    public List<InventoryItemsDto> getInventoryWithItems(Inventory params){
+        List<Inventory> inventoryList = getInventories(params);
+        for(Inventory inventory: inventoryList){
+            // todo find items from order service
+        }
+        return null;
     }
 
     @HystrixCommand

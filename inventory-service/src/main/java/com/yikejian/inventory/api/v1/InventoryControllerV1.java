@@ -95,6 +95,23 @@ public class InventoryControllerV1 {
                 .orElseThrow(() -> new InventoryServiceException("Not found any inventory."));
     }
 
+    @RequestMapping(value = "/inventories/store/{store_id}/product/{product_id}/items", method = RequestMethod.GET)
+    public ResponseEntity getStoreProductInventoryItems(
+            final @PathVariable(value = "store_id") Long storeId,
+            final @PathVariable(value = "product_id") Long productId,
+            final @RequestParam(value = "day", required = false) String day) {
+        // TODO: 2018/1/22
+        Inventory inventory = new Inventory();
+        inventory.setStoreId(storeId);
+        inventory.setProductId(productId);
+        if (StringUtils.isNotBlank(day)) {
+            inventory.setDay(day);
+        }
+        return Optional.ofNullable(inventoryService.getInventoryWithItems(inventory))
+                .map(a -> new ResponseEntity<>(a, HttpStatus.OK))
+                .orElseThrow(() -> new InventoryServiceException("Not found any inventory."));
+    }
+
     @RequestMapping(value = "/inventory/store", method = RequestMethod.POST)
     public ResponseEntity initStoreInventory(final @RequestBody Store store) {
         // TODO: 2018/1/22

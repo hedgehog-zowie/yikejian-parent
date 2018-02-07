@@ -137,6 +137,12 @@ public class Store extends BaseEntity {
         if (StringUtils.isNotBlank(other.getEndTime())) {
             setEndTime(other.getEndTime());
         }
+        if (other.getUnitDuration() != null) {
+            setUnitDuration(other.getUnitDuration());
+        }
+        if (other.getUnitTimes() != null) {
+            setUnitTimes(other.getUnitTimes());
+        }
         if (StringUtils.isNotBlank(other.getTraffic())) {
             setTraffic(other.getTraffic());
         }

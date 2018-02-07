@@ -2,11 +2,7 @@ package com.yikejian.inventory.util;
 
 import com.google.common.collect.Sets;
 import com.yikejian.inventory.domain.inventory.Inventory;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,14 +43,14 @@ public class JsonUtilsTest {
 
     @Test
     public void inventoriesToJson(){
-        Inventory inventory1 = new Inventory(1L, 1L, 4, "20180120", "201801201000");
-        Inventory inventory2 = new Inventory(1L, 1L, 4, "20180120", "201801201030");
-        Inventory inventory3 = new Inventory(1L, 1L, 4, "20180120", "201801201100");
-        Inventory inventory4 = new Inventory(1L, 1L, 4, "20180120", "201801201130");
-        Inventory inventory5 = new Inventory(1L, 2L, 4, "20180120", "201801201000");
-        Inventory inventory6 = new Inventory(1L, 2L, 4, "20180120", "201801201030");
-        Inventory inventory7 = new Inventory(1L, 2L, 4, "20180120", "201801201100");
-        Inventory inventory8 = new Inventory(1L, 2L, 4, "20180120", "201801201130");
+        Inventory inventory1 = new Inventory(1L, 1L, 4, 16, 16,  "20180120", "201801201000");
+        Inventory inventory2 = new Inventory(1L, 1L, 4,16, 16,  "20180120", "201801201030");
+        Inventory inventory3 = new Inventory(1L, 1L, 4, 16, 16, "20180120", "201801201100");
+        Inventory inventory4 = new Inventory(1L, 1L, 4,16, 16, "20180120", "201801201130");
+        Inventory inventory5 = new Inventory(1L, 2L, 4, 16, 16, "20180120", "201801201000");
+        Inventory inventory6 = new Inventory(1L, 2L, 4, 16, 16, "20180120", "201801201030");
+        Inventory inventory7 = new Inventory(1L, 2L, 4, 16, 16, "20180120", "201801201100");
+        Inventory inventory8 = new Inventory(1L, 2L, 4, 16, 16, "20180120", "201801201130");
         Set inventorySet = Sets.newHashSet();
         inventorySet.add(inventory1);
         inventorySet.add(inventory2);
