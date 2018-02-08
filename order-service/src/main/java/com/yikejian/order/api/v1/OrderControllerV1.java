@@ -67,7 +67,7 @@ public class OrderControllerV1 {
 
     @RequestMapping(value = "/orders/customer/{mobile_number}", method = RequestMethod.GET)
     public ResponseEntity getOrdersOfCustomer(final @PathVariable(value = "mobile_number") String mobileNumber,
-                                              final @RequestParam(value = "params", required = false) String params) {
+                                              final @RequestParam(value = "params") String params) {
         // todo send log
         Order order = new Order();
         order.setMobileNumber(mobileNumber);

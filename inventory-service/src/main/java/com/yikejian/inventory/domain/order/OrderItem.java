@@ -27,8 +27,11 @@ public class OrderItem {
     /**
      * 订单
      */
-    @JsonBackReference
     private Order order;
+    /**
+     * 订单编号
+     */
+    private String orderCode;
     /**
      * 服务状态
      */
@@ -72,6 +75,14 @@ public class OrderItem {
 
     public void setOrder(Order order) {
         this.order = order;
+    }
+
+    public String getOrderCode() {
+        return orderCode;
+    }
+
+    public void setOrderCode(String orderCode) {
+        this.orderCode = orderCode;
     }
 
     public OrderItemStatus getOrderItemStatus() {

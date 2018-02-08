@@ -11,6 +11,7 @@ import com.yikejian.inventory.domain.order.OrderItemStatus;
  */
 public class OrderItemDto {
 
+    private Long itemId;
     private String orderCode;
     private String experiencer;
     private OrderItemStatus orderItemStatus;
@@ -18,10 +19,19 @@ public class OrderItemDto {
     public OrderItemDto() {
     }
 
-    public OrderItemDto(String orderCode, String experiencer, OrderItemStatus orderItemStatus) {
+    public OrderItemDto(Long itemId, String orderCode, String experiencer, OrderItemStatus orderItemStatus) {
+        this.itemId = itemId;
         this.orderCode = orderCode;
         this.experiencer = experiencer;
         this.orderItemStatus = orderItemStatus;
+    }
+
+    public Long getItemId() {
+        return itemId;
+    }
+
+    public void setItemId(Long itemId) {
+        this.itemId = itemId;
     }
 
     public String getOrderCode() {

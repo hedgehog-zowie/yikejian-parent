@@ -17,15 +17,6 @@ public class ResponseOrderItem {
     private List<OrderItem> list;
     private Pagination pagination;
 
-    public ResponseOrderItem(List<OrderItem> list) {
-        this.list = list;
-    }
-
-    public ResponseOrderItem(List<OrderItem> list, Pagination pagination) {
-        this.list = list;
-        this.pagination = pagination;
-    }
-
     public List<OrderItem> getList() {
         return list;
     }

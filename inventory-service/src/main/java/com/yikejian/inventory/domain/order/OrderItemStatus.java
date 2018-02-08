@@ -9,9 +9,13 @@ package com.yikejian.inventory.domain.order;
  */
 public enum OrderItemStatus {
 
-    NOT_SERVE,
-    SERVING,
-    SERVED,
-    CANCELED,
+//    NOT_SERVE,
+//    SERVING,
+//    SERVED,
+//    CANCELED,
+    未服务,
+    服务中,
+    已服务,
+    已取消,
 
 }

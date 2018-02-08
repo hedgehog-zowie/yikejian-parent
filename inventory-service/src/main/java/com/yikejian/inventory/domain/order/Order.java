@@ -32,7 +32,6 @@ public class Order {
     /**
      * 项目
      */
-    @JsonManagedReference
     private Set<OrderItem> orderItems;
 
     public Long getOrderId() {

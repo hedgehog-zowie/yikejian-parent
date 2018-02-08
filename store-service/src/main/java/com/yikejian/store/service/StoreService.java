@@ -144,7 +144,7 @@ public class StoreService {
         while (i < BOOKABLE_DAYS) {
             LocalDate currentDate = startDate.plusDays(i);
             DayOfWeek dayOfWeek = currentDate.getDayOfWeek();
-            if (dayOfWeek.getValue() < workDayEnd && dayOfWeek.getValue() > workDayStart) {
+            if (dayOfWeek.getValue() <= workDayEnd && dayOfWeek.getValue() >= workDayStart) {
                 bookableDays.add(DateUtils.dateToDayStr(currentDate));
             }
             i++;
@@ -207,6 +207,7 @@ public class StoreService {
             if (resultList.size() == pagination.getPageSize()) {
                 break;
             }
+            i++;
         }
         pagination.setTotal((long) storeDtoList.size());
         pagination.setTotalPages((int) Math.ceil(storeDtoList.size() / pagination.getPageSize()));

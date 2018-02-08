@@ -123,11 +123,11 @@ public class InventoryService {
         List<Inventory> inventoryList = getInventories(param);
         List<InventoryItemsDto> inventoryItemsDtoList = Lists.newArrayList();
         for (Inventory inventory : inventoryList) {
-            // todo find items from order service
             Order order = new Order();
             order.setStoreId(inventory.getStoreId());
             OrderItem orderItem = new OrderItem();
             orderItem.setProductId(inventory.getProductId());
+            orderItem.setBookedTime(inventory.getPieceTime());
             orderItem.setOrder(order);
             RequestOrderItem requestOrderItem = new RequestOrderItem();
             requestOrderItem.setOrderItem(orderItem);
@@ -138,17 +138,17 @@ public class InventoryService {
             } catch (UnsupportedEncodingException e) {
                 throw new InventoryServiceException(e, InventoryExceptionCode.OTHER_ERROR);
             }
-            ResponseOrderItem responseOrderItem = oAuth2RestTemplate.getForObject(url, ResponseOrderItem.class, queryItemsParams);
+            ResponseOrderItem responseOrderItem = oAuth2RestTemplate.getForObject(url, ResponseOrderItem.class);
             List<OrderItemDto> orderItemDtoList = Lists.newArrayList();
             for (OrderItem item : responseOrderItem.getList()) {
-                OrderItemDto orderItemDto = new OrderItemDto(item.getOrder().getOrderCode(), item.getExperiencer(), item.getOrderItemStatus());
+                OrderItemDto orderItemDto = new OrderItemDto(item.getOrderItemId(), item.getOrderCode(), item.getExperiencer(), item.getOrderItemStatus());
                 orderItemDtoList.add(orderItemDto);
             }
             InventoryItemsDto inventoryItemsDto = new InventoryItemsDto();
             inventoryItemsDto.setPieceTime(inventory.getPieceTime());
             inventoryItemsDto.setRestStock(inventory.getRestStock());
             inventoryItemsDto.setBookedStock(inventory.getBookedStock());
-            inventoryItemsDto.setOrderItemDtoList(orderItemDtoList);
+            inventoryItemsDto.setItems(orderItemDtoList);
             inventoryItemsDtoList.add(inventoryItemsDto);
         }
         return inventoryItemsDtoList;

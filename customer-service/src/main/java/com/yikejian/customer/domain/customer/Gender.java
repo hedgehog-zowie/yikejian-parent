@@ -10,7 +10,7 @@ package com.yikejian.customer.domain.customer;
  */
 public enum Gender {
 
-    MALE,
-    FEMALE,
+    男,
+    女,
 
 }

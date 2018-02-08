@@ -249,12 +249,15 @@ public class OrderService {
                         Join<OrderItem, Order> join = root.join("order");
                         predicateList.add(cb.equal(join.<String>get("mobileNumber"), orderItem.getOrder().getMobileNumber()));
                     }
+                    if (StringUtils.isNotBlank(orderItem.getBookedTime())) {
+                        predicateList.add(cb.equal(root.get("bookedTime").as(String.class), orderItem.getBookedTime()));
+                    }
                     if (orderItem.getOrderItemStatus() != null) {
                         predicateList.add(cb.equal(root.get("orderItemStatus").as(OrderItemStatus.class), orderItem.getOrderItemStatus()));
                     }
                 }
             }
-            if (running) {
+            if (Boolean.TRUE.equals(running)) {
                 predicateList.add(cb.isNotNull(root.get("startAt").as(String.class)));
             }
             Predicate[] predicates = new Predicate[predicateList.size()];
@@ -281,7 +284,7 @@ public class OrderService {
                 Product product = oAuth2RestTemplate.getForObject(productApi + "/product/" + orderItem.getProductId(), Product.class);
                 orderItem.setProductName(product.getProductName());
                 amount += product.getPrice();
-                orderItem.setOrderItemStatus(OrderItemStatus.NOT_SERVE);
+                orderItem.setOrderItemStatus(OrderItemStatus.未服务);
             }
         }
         newOrder.setAmount(amount);

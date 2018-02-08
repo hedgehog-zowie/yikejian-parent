@@ -50,7 +50,7 @@ public class JsonUtilsTest {
         customer.setCustomerId(1L);
         customer.setCustomerName("客户名");
         customer.setMobileNumber("13812345678");
-        customer.setGender(Gender.MALE);
+        customer.setGender(Gender.男);
         Opinion opinion = new Opinion();
         opinion.setContent("xxxxxx");
         Set opinionSet = Sets.newHashSet();

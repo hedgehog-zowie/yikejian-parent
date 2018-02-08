@@ -14,7 +14,7 @@ public class InventoryItemsDto {
     private String pieceTime;
     private Integer bookedStock;
     private Integer restStock;
-    private List<OrderItemDto> orderItemDtoList;
+    private List<OrderItemDto> items;
 
     public String getPieceTime() {
         return pieceTime;
@@ -40,11 +40,11 @@ public class InventoryItemsDto {
         this.restStock = restStock;
     }
 
-    public List<OrderItemDto> getOrderItemDtoList() {
-        return orderItemDtoList;
+    public List<OrderItemDto> getItems() {
+        return items;
     }
 
-    public void setOrderItemDtoList(List<OrderItemDto> orderItemDtoList) {
-        this.orderItemDtoList = orderItemDtoList;
+    public void setItems(List<OrderItemDto> items) {
+        this.items = items;
     }
 }

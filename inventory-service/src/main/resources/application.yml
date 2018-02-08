@@ -77,4 +77,5 @@ yikejian:
     store:
       url: "http://localhost:8003/store-service/v1"
     order:
-      url: "http://localhost:8006/order-service/v1"
+      item:
+        url: "http://192.168.1.101:8006/order-service/v1/items"
