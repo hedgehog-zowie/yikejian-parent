@@ -21,6 +21,10 @@ public class OrderItem {
      */
     private String bookedTime;
     /**
+     * 体验产品的用户
+     */
+    private String experiencer;
+    /**
      * 订单
      */
     @JsonBackReference
@@ -52,6 +56,14 @@ public class OrderItem {
 
     public void setBookedTime(String bookedTime) {
         this.bookedTime = bookedTime;
+    }
+
+    public String getExperiencer() {
+        return experiencer;
+    }
+
+    public void setExperiencer(String experiencer) {
+        this.experiencer = experiencer;
     }
 
     public Order getOrder() {

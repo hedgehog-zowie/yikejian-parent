@@ -12,6 +12,11 @@ public class InventoryServiceException extends RuntimeException {
 
     private InventoryExceptionCode inventoryExceptionCode;
 
+    public InventoryServiceException(Throwable cause, InventoryExceptionCode inventoryExceptionCode) {
+        super(cause);
+        this.inventoryExceptionCode = inventoryExceptionCode;
+    }
+
     public InventoryServiceException(String message) {
         super(message);
         this.inventoryExceptionCode = InventoryExceptionCode.OTHER_ERROR;

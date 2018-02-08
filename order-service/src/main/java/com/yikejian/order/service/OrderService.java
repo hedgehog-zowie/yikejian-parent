@@ -2,7 +2,11 @@ package com.yikejian.order.service;
 
 import com.google.common.collect.Lists;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
-import com.yikejian.order.api.v1.dto.*;
+import com.yikejian.order.api.v1.dto.Pagination;
+import com.yikejian.order.api.v1.dto.RequestOrder;
+import com.yikejian.order.api.v1.dto.RequestOrderItem;
+import com.yikejian.order.api.v1.dto.ResponseOrder;
+import com.yikejian.order.api.v1.dto.ResponseOrderItem;
 import com.yikejian.order.domain.inventory.Inventory;
 import com.yikejian.order.domain.order.Order;
 import com.yikejian.order.domain.order.OrderExtra;
@@ -233,6 +237,10 @@ public class OrderService {
             List<Predicate> predicateList = new ArrayList<>();
             if (orderItem != null) {
                 if (orderItem.getOrder() != null) {
+                    if (orderItem.getOrder().getStoreId() != null) {
+                        Join<OrderItem, Order> join = root.join("order");
+                        predicateList.add(cb.equal(join.<String>get("storeId"), orderItem.getOrder().getStoreId()));
+                    }
                     if (StringUtils.isNotBlank(orderItem.getOrder().getOrderCode())) {
                         Join<OrderItem, Order> join = root.join("order");
                         predicateList.add(cb.equal(join.<String>get("orderCode"), orderItem.getOrder().getOrderCode()));

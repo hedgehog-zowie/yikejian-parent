@@ -18,6 +18,10 @@ public class Order {
 
     private Long orderId;
     /**
+     * 订单号
+     */
+    private String orderCode;
+    /**
      * 店铺ID
      */
     private Long storeId;
@@ -37,6 +41,14 @@ public class Order {
 
     public void setOrderId(Long orderId) {
         this.orderId = orderId;
+    }
+
+    public String getOrderCode() {
+        return orderCode;
+    }
+
+    public void setOrderCode(String orderCode) {
+        this.orderCode = orderCode;
     }
 
     public Long getStoreId() {

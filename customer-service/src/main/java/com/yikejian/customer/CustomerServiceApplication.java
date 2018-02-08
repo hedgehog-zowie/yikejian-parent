@@ -1,11 +1,14 @@
 package com.yikejian.customer;
 
+import com.yikejian.customer.config.DatabaseInitializer;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.Profile;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.security.oauth2.client.OAuth2ClientContext;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
@@ -38,6 +41,14 @@ public class CustomerServiceApplication {
     @Bean(name = "restTemplate")
     public RestTemplate loadBalancedRestTemplate() {
         return new RestTemplate();
+    }
+
+    @Bean
+    @Profile({"development"})
+    CommandLineRunner commandLineRunner(DatabaseInitializer databaseInitializer) {
+        return args -> {
+            databaseInitializer.initForDevelop();
+        };
     }
 
 }

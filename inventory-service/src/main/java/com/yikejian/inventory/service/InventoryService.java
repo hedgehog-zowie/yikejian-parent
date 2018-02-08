@@ -5,6 +5,9 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.yikejian.inventory.api.v1.dto.InventoryItemsDto;
+import com.yikejian.inventory.api.v1.dto.OrderItemDto;
+import com.yikejian.inventory.api.v1.dto.RequestOrderItem;
+import com.yikejian.inventory.api.v1.dto.ResponseOrderItem;
 import com.yikejian.inventory.domain.inventory.Inventory;
 import com.yikejian.inventory.domain.inventory.InventoryEvent;
 import com.yikejian.inventory.domain.inventory.InventoryEventType;
@@ -20,6 +23,7 @@ import com.yikejian.inventory.exception.InventoryServiceException;
 import com.yikejian.inventory.repository.InventoryEventRepository;
 import com.yikejian.inventory.repository.InventoryRepository;
 import com.yikejian.inventory.util.DateUtils;
+import com.yikejian.inventory.util.JsonUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,6 +37,8 @@ import reactor.core.publisher.Flux;
 
 import javax.persistence.criteria.Predicate;
 import javax.transaction.Transactional;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -66,6 +72,8 @@ public class InventoryService {
     private String storeApi;
     @Value("${yikejian.api.product.url}")
     private String productApi;
+    @Value("${yikejian.api.order.item.url}")
+    private String orderItemApi;
 
     @Autowired
     public InventoryService(InventoryRepository inventoryRepository,
@@ -111,12 +119,39 @@ public class InventoryService {
     }
 
     @HystrixCommand
-    public List<InventoryItemsDto> getInventoryWithItems(Inventory params){
-        List<Inventory> inventoryList = getInventories(params);
-        for(Inventory inventory: inventoryList){
+    public List<InventoryItemsDto> getInventoryWithItems(Inventory param) {
+        List<Inventory> inventoryList = getInventories(param);
+        List<InventoryItemsDto> inventoryItemsDtoList = Lists.newArrayList();
+        for (Inventory inventory : inventoryList) {
             // todo find items from order service
+            Order order = new Order();
+            order.setStoreId(inventory.getStoreId());
+            OrderItem orderItem = new OrderItem();
+            orderItem.setProductId(inventory.getProductId());
+            orderItem.setOrder(order);
+            RequestOrderItem requestOrderItem = new RequestOrderItem();
+            requestOrderItem.setOrderItem(orderItem);
+            String queryItemsParams = JsonUtils.toJson(requestOrderItem);
+            String url;
+            try {
+                url = orderItemApi + "?params=" + URLEncoder.encode(queryItemsParams, "UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                throw new InventoryServiceException(e, InventoryExceptionCode.OTHER_ERROR);
+            }
+            ResponseOrderItem responseOrderItem = oAuth2RestTemplate.getForObject(url, ResponseOrderItem.class, queryItemsParams);
+            List<OrderItemDto> orderItemDtoList = Lists.newArrayList();
+            for (OrderItem item : responseOrderItem.getList()) {
+                OrderItemDto orderItemDto = new OrderItemDto(item.getOrder().getOrderCode(), item.getExperiencer(), item.getOrderItemStatus());
+                orderItemDtoList.add(orderItemDto);
+            }
+            InventoryItemsDto inventoryItemsDto = new InventoryItemsDto();
+            inventoryItemsDto.setPieceTime(inventory.getPieceTime());
+            inventoryItemsDto.setRestStock(inventory.getRestStock());
+            inventoryItemsDto.setBookedStock(inventory.getBookedStock());
+            inventoryItemsDto.setOrderItemDtoList(orderItemDtoList);
+            inventoryItemsDtoList.add(inventoryItemsDto);
         }
-        return null;
+        return inventoryItemsDtoList;
     }
 
     @HystrixCommand

@@ -18,6 +18,13 @@ yikejian:
   user:
     api:
       url: "http://localhost:8001/user-service/v1/me"
+weixin:
+  prepay:
+    url: "https://api.mch.weixin.qq.com/pay/unifiedorder"
+  app:
+    id: wx74e6f71fdef09122
+    secret: 54ee7d4db46487a5cd01492ad9911ed2
+    mch_id:
 ---
 spring:
   profiles: test

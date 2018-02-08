@@ -1,5 +1,6 @@
 package com.yikejian.order.api.v1;
 
+import com.yikejian.order.api.v1.dto.Pagination;
 import com.yikejian.order.api.v1.dto.RequestOrder;
 import com.yikejian.order.domain.order.Order;
 import com.yikejian.order.domain.order.OrderExtra;
@@ -65,12 +66,20 @@ public class OrderControllerV1 {
     }
 
     @RequestMapping(value = "/orders/customer/{mobile_number}", method = RequestMethod.GET)
-    public ResponseEntity getOrdersOfCustomer(final @PathVariable(value = "mobile_number") String mobileNumber) {
+    public ResponseEntity getOrdersOfCustomer(final @PathVariable(value = "mobile_number") String mobileNumber,
+                                              final @RequestParam(value = "params", required = false) String params) {
         // todo send log
         Order order = new Order();
         order.setMobileNumber(mobileNumber);
         RequestOrder requestOrder = new RequestOrder();
         requestOrder.setOrder(order);
+        Pagination pagination;
+        try {
+            pagination = JsonUtils.fromJson(URLDecoder.decode(params, "UTF-8"), Pagination.class);
+        } catch (UnsupportedEncodingException e) {
+            throw new OrderServiceException(e.getLocalizedMessage());
+        }
+        requestOrder.setPagination(pagination);
         return Optional.ofNullable(orderService.getOrders(requestOrder))
                 .map(a -> new ResponseEntity<>(a, HttpStatus.OK))
                 .orElseThrow(() -> new OrderServiceException("Not found order."));

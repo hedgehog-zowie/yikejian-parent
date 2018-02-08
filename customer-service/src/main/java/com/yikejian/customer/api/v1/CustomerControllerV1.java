@@ -2,6 +2,7 @@ package com.yikejian.customer.api.v1;
 
 import com.yikejian.customer.api.v1.dto.Pagination;
 import com.yikejian.customer.api.v1.dto.RequestCustomer;
+import com.yikejian.customer.domain.account.Account;
 import com.yikejian.customer.domain.customer.Customer;
 import com.yikejian.customer.exception.CustomerServiceException;
 import com.yikejian.customer.service.CustomerService;
@@ -34,7 +35,7 @@ public class CustomerControllerV1 {
 
     @PostMapping("/customer")
     public ResponseEntity addCustomer(@RequestBody final Customer customer) {
-        customer.setCustomerId(null);
+        customer.asNew();
         // todo send log
         return Optional.ofNullable(customerService.saveCustomer(customer))
                 .map(a -> new ResponseEntity<>(a, HttpStatus.OK))

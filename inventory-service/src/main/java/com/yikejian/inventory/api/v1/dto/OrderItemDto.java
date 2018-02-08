@@ -15,6 +15,15 @@ public class OrderItemDto {
     private String experiencer;
     private OrderItemStatus orderItemStatus;
 
+    public OrderItemDto() {
+    }
+
+    public OrderItemDto(String orderCode, String experiencer, OrderItemStatus orderItemStatus) {
+        this.orderCode = orderCode;
+        this.experiencer = experiencer;
+        this.orderItemStatus = orderItemStatus;
+    }
+
     public String getOrderCode() {
         return orderCode;
     }
