@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.security.Principal;
 import java.util.Optional;
 
 /**
@@ -81,6 +82,21 @@ public class OrderControllerV1 {
         }
         requestOrder.setPagination(pagination);
         return Optional.ofNullable(orderService.getOrders(requestOrder))
+                .map(a -> new ResponseEntity<>(a, HttpStatus.OK))
+                .orElseThrow(() -> new OrderServiceException("Not found order."));
+    }
+
+    @RequestMapping(value = "/orders", method = RequestMethod.GET)
+    public ResponseEntity getOrdersByPrincipal(Principal principal,
+                                              final @RequestParam(value = "params") String params) {
+        // todo send log
+        Pagination pagination;
+        try {
+            pagination = JsonUtils.fromJson(URLDecoder.decode(params, "UTF-8"), Pagination.class);
+        } catch (UnsupportedEncodingException e) {
+            throw new OrderServiceException(e.getLocalizedMessage());
+        }
+        return Optional.ofNullable(orderService.getOrders(principal, pagination))
                 .map(a -> new ResponseEntity<>(a, HttpStatus.OK))
                 .orElseThrow(() -> new OrderServiceException("Not found order."));
     }

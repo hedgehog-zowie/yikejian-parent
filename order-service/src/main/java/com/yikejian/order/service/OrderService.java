@@ -31,6 +31,7 @@ import org.springframework.web.client.HttpServerErrorException;
 
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Predicate;
+import java.security.Principal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -128,6 +129,13 @@ public class OrderService {
     @HystrixCommand
     public ResponseOrder getAll() {
         return new ResponseOrder((List<Order>) orderRepository.findAll());
+    }
+
+    @HystrixCommand
+    public ResponseOrder getOrders(Principal principal, Pagination pagination) {
+        String customerName = principal.getName();
+        // TODO: 2018/2/9 get order by principal
+        return null;
     }
 
     @HystrixCommand
