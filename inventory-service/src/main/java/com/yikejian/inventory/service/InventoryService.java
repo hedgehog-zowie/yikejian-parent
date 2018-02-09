@@ -384,6 +384,7 @@ public class InventoryService {
 
     private Inventory recomputeInventory(Inventory inventory) {
         inventory.setBookedStock(0);
+        inventory.setRestResourceNumber(inventory.getResourceNumber());
         Flux<InventoryEvent> inventoryEvents =
                 Flux.fromStream(inventoryEventRepository.findByStoreIdAndProductIdAndPieceTime(
                         inventory.getStoreId(), inventory.getProductId(), inventory.getPieceTime()));

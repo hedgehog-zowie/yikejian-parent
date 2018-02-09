@@ -10,8 +10,16 @@ package com.yikejian.payment.exception;
  */
 public class PaymentServiceException extends RuntimeException {
 
-    public PaymentServiceException(String msg) {
-        super(msg);
+    private PaymentExceptionCode paymentExceptionCode;
+
+    public PaymentServiceException(String message, PaymentExceptionCode paymentExceptionCode) {
+        super(message);
+        this.paymentExceptionCode = paymentExceptionCode;
+    }
+
+    public PaymentServiceException(String message) {
+        super(message);
+        this.paymentExceptionCode = PaymentExceptionCode.OTHER_ERROR;
     }
 
 }
