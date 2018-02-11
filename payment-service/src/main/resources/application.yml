@@ -18,6 +18,9 @@ yikejian:
   user:
     api:
       url: "http://localhost:8001/user-service/v1/me"
+  customer:
+    api:
+      url: "http://localhost:8002/customer-service/v1/me"
 weixin:
   pay:
     prepay:
@@ -45,6 +48,9 @@ yikejian:
   user:
     api:
       url: "http://192.168.1.101:8001/user-service/v1/me"
+  customer:
+    api:
+      url: "http://192.168.1.101:8002/customer-service/v1/me"
 weixin:
   pay:
     prepay:
@@ -72,6 +78,9 @@ yikejian:
   user:
     api:
       url: "http://localhost:8001/user-service/v1/me"
+  customer:
+    api:
+      url: "http://localhost:8002/customer-service/v1/me"
 weixin:
   pay:
     prepay:

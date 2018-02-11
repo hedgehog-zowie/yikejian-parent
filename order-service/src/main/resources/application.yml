@@ -20,11 +20,11 @@ yikejian:
     user:
       url: "http://user-service/user-service/v1/me"
     product:
-      url: "http://product-service/product-service/"
+      url: "http://product-service/product-service/v1"
     inventory:
-      url: "http://inventory-service/inventory-service/"
+      url: "http://inventory-service/inventory-service/v1"
     store:
-      url: "http://store-service/store-service/"
+      url: "http://store-service/store-service/v1"
 ---
 spring:
   profiles: test
@@ -43,7 +43,7 @@ yikejian:
     user:
       url: "http://192.168.1.101:8001/user-service/v1/me"
     customer:
-      url: "http://192.168.1.101:8002/customer-service/v1"
+      url: "http://192.168.1.101:8002/customer-service/v1/me"
     product:
       url: "http://192.168.1.101:8004/product-service/v1"
     inventory:
@@ -68,7 +68,7 @@ yikejian:
     user:
       url: "http://localhost:8001/user-service/v1/me"
     customer:
-      url: "http://localhost:8002/customer-service/v1"
+      url: "http://localhost:8002/customer-service/v1/me"
     product:
       url: "http://localhost:8004/product-service/v1"
     inventory:

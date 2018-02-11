@@ -2,11 +2,8 @@ package com.yikejian.order.service;
 
 import com.google.common.collect.Lists;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
-import com.yikejian.order.api.v1.dto.Pagination;
-import com.yikejian.order.api.v1.dto.RequestOrder;
-import com.yikejian.order.api.v1.dto.RequestOrderItem;
-import com.yikejian.order.api.v1.dto.ResponseOrder;
-import com.yikejian.order.api.v1.dto.ResponseOrderItem;
+import com.yikejian.order.api.v1.dto.*;
+import com.yikejian.order.domain.customer.Customer;
 import com.yikejian.order.domain.inventory.Inventory;
 import com.yikejian.order.domain.order.Order;
 import com.yikejian.order.domain.order.OrderExtra;
@@ -31,7 +28,6 @@ import org.springframework.web.client.HttpServerErrorException;
 
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Predicate;
-import java.security.Principal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -61,6 +57,8 @@ public class OrderService {
     private String productApi;
     @Value("${yikejian.api.inventory.url}")
     private String inventoryApiUrl;
+    @Value("${yikejian.api.customer.url}")
+    private String customerApi;
 
     private OrderRepository orderRepository;
     private OrderExtraRepository orderExtraRepository;
@@ -132,10 +130,17 @@ public class OrderService {
     }
 
     @HystrixCommand
-    public ResponseOrder getOrders(Principal principal, Pagination pagination) {
-        String customerName = principal.getName();
-        // TODO: 2018/2/9 get order by principal
-        return null;
+    public ResponseOrder getOrders(Pagination pagination) {
+        Customer customer = oAuth2RestTemplate.getForObject(customerApi, Customer.class);
+        if (customer == null) {
+            throw new OrderServiceException("not found customer");
+        }
+        Order order = new Order();
+        order.setMobileNumber(customer.getMobileNumber());
+        RequestOrder requestOrder = new RequestOrder();
+        requestOrder.setOrder(order);
+        requestOrder.setPagination(pagination);
+        return getOrders(requestOrder);
     }
 
     @HystrixCommand

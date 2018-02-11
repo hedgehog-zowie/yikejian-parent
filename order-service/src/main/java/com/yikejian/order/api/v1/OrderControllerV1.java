@@ -86,20 +86,19 @@ public class OrderControllerV1 {
                 .orElseThrow(() -> new OrderServiceException("Not found order."));
     }
 
-    @RequestMapping(value = "/orders", method = RequestMethod.GET)
-    public ResponseEntity getOrdersByPrincipal(Principal principal,
-                                              final @RequestParam(value = "params") String params) {
-        // todo send log
-        Pagination pagination;
-        try {
-            pagination = JsonUtils.fromJson(URLDecoder.decode(params, "UTF-8"), Pagination.class);
-        } catch (UnsupportedEncodingException e) {
-            throw new OrderServiceException(e.getLocalizedMessage());
-        }
-        return Optional.ofNullable(orderService.getOrders(principal, pagination))
-                .map(a -> new ResponseEntity<>(a, HttpStatus.OK))
-                .orElseThrow(() -> new OrderServiceException("Not found order."));
-    }
+//    @RequestMapping(value = "/orders", method = RequestMethod.GET)
+//    public ResponseEntity getOrdersByPrincipal(final @RequestParam(value = "params") String params) {
+//        // todo send log
+//        Pagination pagination;
+//        try {
+//            pagination = JsonUtils.fromJson(URLDecoder.decode(params, "UTF-8"), Pagination.class);
+//        } catch (UnsupportedEncodingException e) {
+//            throw new OrderServiceException(e.getLocalizedMessage());
+//        }
+//        return Optional.ofNullable(orderService.getOrders(pagination))
+//                .map(a -> new ResponseEntity<>(a, HttpStatus.OK))
+//                .orElseThrow(() -> new OrderServiceException("Not found order."));
+//    }
 
     @GetMapping("/orders")
     public ResponseEntity getOrders(final @RequestParam(value = "params", required = false) String params) {
@@ -110,15 +109,23 @@ public class OrderControllerV1 {
                     .orElseThrow(() -> new OrderServiceException("Not found any store."));
         }
         RequestOrder requestOrder;
+        Pagination pagination;
         try {
             requestOrder = JsonUtils.fromJson(URLDecoder.decode(params, "UTF-8"), RequestOrder.class);
+            pagination = JsonUtils.fromJson(URLDecoder.decode(params, "UTF-8"), Pagination.class);
         } catch (UnsupportedEncodingException e) {
             throw new OrderServiceException(e.getLocalizedMessage());
         }
-        requestOrder.getOrder().setDeleted(0);
-        return Optional.ofNullable(orderService.getOrders(requestOrder))
-                .map(a -> new ResponseEntity<>(a, HttpStatus.OK))
-                .orElseThrow(() -> new OrderServiceException("Not found any order."));
+        if(requestOrder.getOrder() != null) {
+            requestOrder.getOrder().setDeleted(0);
+            return Optional.ofNullable(orderService.getOrders(requestOrder))
+                    .map(a -> new ResponseEntity<>(a, HttpStatus.OK))
+                    .orElseThrow(() -> new OrderServiceException("Not found any order."));
+        }else{
+            return Optional.ofNullable(orderService.getOrders(pagination))
+                    .map(a -> new ResponseEntity<>(a, HttpStatus.OK))
+                    .orElseThrow(() -> new OrderServiceException("Not found any order."));
+        }
     }
 
     @PostMapping("/order/{order_id}/extra")

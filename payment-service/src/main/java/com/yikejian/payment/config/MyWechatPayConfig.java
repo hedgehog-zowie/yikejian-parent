@@ -20,7 +20,7 @@ public class MyWechatPayConfig implements WXPayConfig {
     private byte[] certData;
 
     public MyWechatPayConfig() throws Exception {
-        String certPath = "/path/to/apiclient_cert.p12";
+        String certPath = "D:\\一刻间\\cert\\apiclient_cert.p12";
         File file = new File(certPath);
         InputStream certStream = new FileInputStream(file);
         this.certData = new byte[(int) file.length()];
@@ -30,17 +30,17 @@ public class MyWechatPayConfig implements WXPayConfig {
 
     @Override
     public String getAppID() {
-        return "wx8888888888888888";
+        return "wx74e6f71fdef09122";
     }
 
     @Override
     public String getMchID() {
-        return "12888888";
+        return "1324562801";
     }
 
     @Override
     public String getKey() {
-        return "88888888888888888888888888888888";
+        return "Yikejian001842015704713502801188";
     }
 
     @Override

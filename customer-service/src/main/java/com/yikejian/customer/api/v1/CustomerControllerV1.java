@@ -51,7 +51,7 @@ public class CustomerControllerV1 {
     }
 
     @GetMapping("/customers")
-    public ResponseEntity getCustomers(final @RequestParam(value = "params", required = false) String params) {
+    public ResponseEntity getCustomer(final @RequestParam(value = "params", required = false) String params) {
         RequestCustomer requestCustomer;
         if (StringUtils.isBlank(params)) {
             requestCustomer = new RequestCustomer(new Customer(), new Pagination(), null);
@@ -70,7 +70,7 @@ public class CustomerControllerV1 {
     }
 
     @RequestMapping(value = "/customer/{customer_id}", method = RequestMethod.GET)
-    public ResponseEntity getCustomers(final @PathVariable(value = "customer_id") Long customerId) {
+    public ResponseEntity getCustomer(final @PathVariable(value = "customer_id") Long customerId) {
         // todo send log
         return Optional.ofNullable(customerService.getCustomerById(customerId))
                 .map(a -> new ResponseEntity<>(a, HttpStatus.OK))

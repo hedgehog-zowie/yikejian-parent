@@ -96,7 +96,7 @@ public class Store extends BaseEntity {
     private Set<StoreProduct> storeProductSet;
     @JsonManagedReference
     @OneToMany(mappedBy = "store", cascade = CascadeType.ALL)
-    private Set<Image> imageSet;
+    private List<Image> imageSet;
     /**
      * 设备
      */
@@ -331,7 +331,7 @@ public class Store extends BaseEntity {
                 }
                 imageSet.add(image.fromImageDto(imageDto));
             }
-            setImageSet(imageSet);
+            setImageSet(Lists.newArrayList(imageSet));
         }
         return this;
     }
@@ -472,11 +472,11 @@ public class Store extends BaseEntity {
         this.storeProductSet = storeProductSet;
     }
 
-    public Set<Image> getImageSet() {
+    public List<Image> getImageSet() {
         return imageSet;
     }
 
-    public void setImageSet(Set<Image> imageSet) {
+    public void setImageSet(List<Image> imageSet) {
         this.imageSet = imageSet;
     }
 

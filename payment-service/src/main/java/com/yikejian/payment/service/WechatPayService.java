@@ -27,6 +27,7 @@ import java.util.stream.Collectors;
  * date: 2018/2/9 14:41
  */
 @Service
+@Deprecated
 public class WechatPayService {
 
     private static final String NONCE_STR_KEY = "nonce_str";
